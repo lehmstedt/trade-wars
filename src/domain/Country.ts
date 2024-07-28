@@ -1,23 +1,20 @@
-import type { Resource } from './Resource'
-
 export class Country {
+  resources: Map<string, number>
+
   constructor() {
-    this.resource = undefined
+    this.resources = new Map<string, number>()
   }
-  resource?: Resource
-  setResource(resource: Resource): void {
-    this.resource = resource
+
+  setResource(resourceName: string, resourceQty: number): void {
+    this.resources.set(resourceName, resourceQty)
   }
+
   getResourceQty(resourceName: string): number {
-    if (this.resource) {
-      return this.resource.qty
-    }
-    return 0
+    return this.resources.get(resourceName) ?? 0
   }
-  receiveResource(resourceToReceive: Resource) {
-    if (this.resource) {
-      this.resource.qty += resourceToReceive.qty
-    }
+  receiveResource(resourceName: string, resourceQty: number) {
+    const qty = this.getResourceQty(resourceName) + resourceQty
+    this.setResource(resourceName, qty)
   }
   tradeWith(
     country: Country,
@@ -25,5 +22,11 @@ export class Country {
     resourceToOfferQty: number,
     resourceToReceive: string,
     resourceToReceiveQty: number
-  ) {}
+  ) {
+    this.setResource(resourceToOffer, 0)
+    this.setResource(resourceToReceive, resourceToReceiveQty)
+
+    country.setResource(resourceToOffer, resourceToOfferQty)
+    country.setResource(resourceToReceive, 0)
+  }
 }

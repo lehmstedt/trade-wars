@@ -1,25 +1,49 @@
 import { Country } from '@/domain/Country'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, test } from 'vitest'
 
 describe('Trading', () => {
-  it('should exchange resources between countries', () => {
+  test('a country should send a resource to another country when it has enough qty in stock', () => {
+    const countryA = new Country()
+    const countryB = new Country()
+    const resource = 'r'
+
+    const countryAQty = 2
+    countryA.setResource(resource, countryAQty)
+
+    const countryBQty = 3
+    countryB.setResource(resource, countryBQty)
+
+    const qtyToSend = 1
+    countryA.sendResource(countryB, resource, qtyToSend)
+
+    expect(countryA.getResourceQty(resource)).toEqual(countryAQty - qtyToSend)
+    expect(countryB.getResourceQty(resource)).toEqual(countryBQty + qtyToSend)
+  })
+  it('should exchange resources when receiving and offering quantities are available', () => {
     const countryA = new Country()
     const countryB = new Country()
 
     const resourceA = 'a'
-    const resourceAQty = 1
-    countryA.setResource(resourceA, resourceAQty)
-
     const resourceB = 'b'
-    const resourceBQty = 2
-    countryB.setResource(resourceB, resourceBQty)
 
-    countryA.tradeWith(countryB, resourceA, resourceAQty, resourceB, resourceBQty)
+    countryA.setResource(resourceA, 10)
+    countryB.setResource(resourceB, 1)
+    const countryAResourceAQty = countryA.getResourceQty(resourceA)
+    const countryAResourceBQty = countryA.getResourceQty(resourceB)
 
-    expect(countryA.getResourceQty(resourceA)).toEqual(0)
-    expect(countryA.getResourceQty(resourceB)).toEqual(resourceBQty)
+    countryB.setResource(resourceB, 9)
+    countryB.setResource(resourceA, 2)
+    const countryBResourceAQty = countryB.getResourceQty(resourceA)
+    const countryBResourceBQty = countryB.getResourceQty(resourceB)
 
-    expect(countryB.getResourceQty(resourceA)).toEqual(resourceAQty)
-    expect(countryB.getResourceQty(resourceB)).toEqual(0)
+    const resourceAToOfferQty = 1
+    const resourceBToReceiveQty = 2
+    countryA.tradeWith(countryB, resourceA, resourceAToOfferQty, resourceB, resourceBToReceiveQty)
+
+    expect(countryA.getResourceQty(resourceA)).toEqual(countryAResourceAQty - resourceAToOfferQty)
+    expect(countryA.getResourceQty(resourceB)).toEqual(countryAResourceBQty + resourceBToReceiveQty)
+
+    expect(countryB.getResourceQty(resourceA)).toEqual(countryBResourceAQty + resourceAToOfferQty)
+    expect(countryB.getResourceQty(resourceB)).toEqual(countryBResourceBQty - resourceBToReceiveQty)
   })
 })

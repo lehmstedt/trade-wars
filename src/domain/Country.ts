@@ -23,10 +23,11 @@ export class Country {
     resourceToReceive: string,
     resourceToReceiveQty: number
   ) {
-    this.setResource(resourceToOffer, 0)
-    this.setResource(resourceToReceive, resourceToReceiveQty)
-
-    country.setResource(resourceToOffer, resourceToOfferQty)
-    country.setResource(resourceToReceive, 0)
+    this.sendResource(country, resourceToOffer, resourceToOfferQty)
+    country.sendResource(this, resourceToReceive, resourceToReceiveQty)
+  }
+  sendResource(country: Country, resourceName: string, qty: number) {
+    this.receiveResource(resourceName, -qty)
+    country.receiveResource(resourceName, qty)
   }
 }

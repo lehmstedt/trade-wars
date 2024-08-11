@@ -1,3 +1,5 @@
+type ResourceInventory = { name: string; qty: number }
+
 export class Country {
   resources: Map<string, number>
 
@@ -29,5 +31,12 @@ export class Country {
   sendResource(country: Country, resourceName: string, qty: number) {
     this.receiveResource(resourceName, -qty)
     country.receiveResource(resourceName, qty)
+  }
+  getResourceInventories(): ResourceInventory[] {
+    const inventories: ResourceInventory[] = []
+    for (const [name, qty] of this.resources) {
+      inventories.push({ name, qty })
+    }
+    return inventories
   }
 }

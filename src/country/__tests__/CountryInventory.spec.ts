@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { Country } from '../Country'
-import ThePlayerCountry from '../ThePlayerCountry.vue'
+import ThePlayerCountry from '../CountryInventory.vue'
 
-describe('ThePlayerCountry', () => {
+describe('CountryInventory', () => {
   it('should display its current resource inventories', () => {
     const country = new Country()
     const resourceA = 'a'

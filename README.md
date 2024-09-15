@@ -1,6 +1,10 @@
 # trade-wars
 
-This template should help get you started developing with Vue 3 in Vite.
+- [ ] Prevent trades without needed quantities available
+- [ ] Trade with more than one country
+- [ ] Resource price calculated from another resource quantity
+- [ ] Resource production with a fixed production rate by country
+- [ ] Custom duties/embargos
 
 ## Recommended IDE Setup
 

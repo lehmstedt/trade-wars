@@ -64,4 +64,27 @@ describe('Country', () => {
       firstResourceBReceivingQty + secondResourceBReceivingQty
     )
   })
+
+  it('cant trade if offering more resource quantity than it has', () => {
+    const offeringCountry = new Country()
+    const offeredResource = 'a'
+    const offeredQty = 2
+    offeringCountry.setResource(offeredResource, 1)
+
+    const canTrade = offeringCountry.canTrade(offeredResource, offeredQty)
+    expect(canTrade).toBe(false)
+  })
+
+  it('can trade if offering less or equal resource quantity than it has', () => {
+    const offeringCountry = new Country()
+    const offeredResource = 'a'
+    const inStockQty = 1
+    offeringCountry.setResource(offeredResource, inStockQty)
+
+    const canTradeStockQty = offeringCountry.canTrade(offeredResource, inStockQty)
+    expect(canTradeStockQty).toBe(true)
+
+    const canTradeLessThanStockQty = offeringCountry.canTrade(offeredResource, inStockQty / 2)
+    expect(canTradeLessThanStockQty).toBe(true)
+  })
 })

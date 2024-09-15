@@ -39,4 +39,7 @@ export class Country {
     }
     return inventories
   }
+  canTrade(offeredResource: string, offeredQty: number) {
+    return offeredQty <= this.getResourceQty(offeredResource)
+  }
 }

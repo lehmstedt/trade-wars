@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { Country } from './country/Country'
-import ThePlayerCountry from './country/ThePlayerCountry.vue'
+import Trade from './trade/TheTrade.vue'
 
-const country = new Country()
+const playerCountry = new Country()
 
-country.setResource('Iron', 12)
-country.setResource('Charcoal', 240)
+playerCountry.setResource('Iron', 12)
+playerCountry.setResource('Charcoal', 240)
+
+const anotherCountry = new Country()
+anotherCountry.setResource('Iron', 30)
+anotherCountry.setResource('Whool', 10)
 </script>
 
 <template>
-  <ThePlayerCountry :country="country"></ThePlayerCountry>
+  <Trade :player-country="playerCountry" :other-country="anotherCountry"></Trade>
 </template>

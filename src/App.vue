@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Country } from './country/Country'
-import Trade from './trade/TheTrade.vue'
+import { Country } from '@/domain/entities/Country'
+import Trade from './app/trade/TheTrade.vue'
 
 const playerCountry = new Country()
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Country } from './Country'
+import { Country } from '@/domain/entities/Country'
 
 const props = defineProps({
   country: Country,

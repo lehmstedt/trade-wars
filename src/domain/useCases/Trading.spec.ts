@@ -1,4 +1,4 @@
-import { Country } from '@/country/Country'
+import { Country } from '@/domain/entities/Country'
 import { describe, expect, it, test } from 'vitest'
 
 describe('Trading', () => {

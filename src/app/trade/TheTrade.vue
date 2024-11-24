@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Country } from '@/country/Country'
-import CountryInventory from '@/country/CountryInventory.vue'
+import { Country } from '@/domain/entities/Country'
+import CountryInventory from '@/app/country/CountryInventory.vue'
 import { computed, ref } from 'vue'
 
 const props = defineProps({

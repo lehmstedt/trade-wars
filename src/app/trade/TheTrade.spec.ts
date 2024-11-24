@@ -1,4 +1,4 @@
-import { Country } from '@/country/Country'
+import { Country } from '@/domain/entities/Country'
 import { shallowMount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import Trade from './TheTrade.vue'

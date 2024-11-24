@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { Country } from '../Country'
-import ThePlayerCountry from '../CountryInventory.vue'
+import { Country } from '@/domain/entities/Country'
+import ThePlayerCountry from '@/app/country/CountryInventory.vue'
 
 describe('CountryInventory', () => {
   it('should display its current resource inventories', () => {

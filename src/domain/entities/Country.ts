@@ -1,10 +1,14 @@
+import { CountryId } from "@/domain/entities/CountryId"
+
 type ResourceInventory = { name: string; qty: number }
 
 export class Country {
   resources: Map<string, number>
+  countryId: CountryId
 
   constructor() {
     this.resources = new Map<string, number>()
+    this.countryId = new CountryId(1)
   }
 
   setResource(resourceName: string, resourceQty: number): void {
@@ -41,5 +45,8 @@ export class Country {
   }
   canTrade(offeredResource: string, offeredQty: number) {
     return offeredQty <= this.getResourceQty(offeredResource)
+  }
+  getTariffOnResource(resource: string){
+    return 15
   }
 }

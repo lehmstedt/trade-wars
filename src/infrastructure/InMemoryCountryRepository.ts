@@ -1,16 +1,16 @@
-import { Country } from "@/domain/entities/Country";
-import { CountryId } from "@/domain/entities/CountryId";
-import type { ICountryRepository } from "@/domain/interfaces/ICountryRepository";
+import { Country, CountryId } from "@/domain/entities/Country";
+import { type ICountryRepository } from "@/domain/interfaces/ICountryRepository";
 
 export class InMemoryCountryRepository implements ICountryRepository {
 
-    country: Country = new Country()
-    add(country: Country): CountryId {
-        this.country = country
-        return new CountryId(1)
+    countries: Map<CountryId, Country> = new Map<CountryId, Country>()
+    async add(country: Country): Promise<CountryId> {
+        const id = new CountryId(1)
+        this.countries.set(id, country)
+        return id
     }
-    getById(countryId: CountryId): Country {
-        return this.country
+    async getById(countryId: CountryId): Promise<Country|undefined> {
+        return this.countries.get(countryId)
     }
 
 }

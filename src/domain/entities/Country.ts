@@ -1,6 +1,12 @@
-import { CountryId } from "@/domain/entities/CountryId"
-
 type ResourceInventory = { name: string; qty: number }
+
+export class CountryId{
+  id: number
+
+  constructor(id: number){
+      this.id = id
+  }
+}
 
 export class Country {
   resources: Map<string, number>

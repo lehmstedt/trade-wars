@@ -1,6 +1,6 @@
-import type { Resource, ResourceId } from "@/domain/entities/Resource"
+import type { Resource } from "@/domain/entities/Resource"
 
 export interface IResourceRepository {
     add(resource: Resource): Promise<void>
-    getById(id: ResourceId): Promise<Resource|undefined>
+    getByName(name: string): Promise<Resource|undefined>
 }

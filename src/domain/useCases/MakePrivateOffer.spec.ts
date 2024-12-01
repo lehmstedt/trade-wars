@@ -13,7 +13,4 @@ describe('privateDemand', () => {
         expect(tradeOffer).toEqual(resA)
     })
 
-    it('should ask for a resource it doesnt have yet', () => {
-        
-    })
 })

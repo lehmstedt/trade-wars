@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { SetTariff } from "@/domain/useCases/SetTariff";
 import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
-import { Resource, ResourceId } from "@/domain/entities/Resource";
+import { Resource } from "@/domain/entities/Resource";
 
 describe('setTariff', () => {
 
@@ -14,18 +14,19 @@ describe('setTariff', () => {
         const resourceRepository = new InMemoryResourceRepository()
 
         const setTariff = new SetTariff(countryRepository, resourceRepository)
-        await expect(() => setTariff.execute(new CountryId(1), 15, new ResourceId())).rejects.toThrowError(CountryNotFoundError)
+        await expect(() => setTariff.execute(new CountryId('notExisting'), 15, 'notExisting')).rejects.toThrowError(CountryNotFoundError)
 
     })
 
     it('should throw if resource is not existing', async() => {
 
         const countryRepository = new InMemoryCountryRepository()
-        const countryId = await countryRepository.add(new Country())
+        const country = new Country()
+        await countryRepository.save(country)
         const resourceRepository = new InMemoryResourceRepository()
 
         const setTariff = new SetTariff(countryRepository, resourceRepository)
-        await expect(() => setTariff.execute(countryId, 15, new ResourceId())).rejects.toThrowError(ResourceNotFoundError)
+        await expect(() => setTariff.execute(country.id, 15, 'notExisting')).rejects.toThrowError(ResourceNotFoundError)
 
     })
 
@@ -34,18 +35,20 @@ describe('setTariff', () => {
         const countryRepository = new InMemoryCountryRepository()
         const resourceRepository = new InMemoryResourceRepository()
 
-        const countryId = await countryRepository.add(new Country())
+        const country = new Country() 
+        await countryRepository.save(country)
 
         const resource = new Resource('Wine')
         await resourceRepository.add(resource)
 
-
         const setTariff = new SetTariff(countryRepository, resourceRepository)
-        setTariff.execute(countryId, 15, resource.id)
+        await setTariff.execute(country.id, 15, resource.name)
 
-        const country = await countryRepository.getById(countryId) as Country
+        const countryAfter = await countryRepository.getById(country.id) as Country
+        expect(countryAfter.id).toEqual(country.id)
+        expect(countryAfter).toEqual(country)
 
-        expect(country.getTariffOnResource('Wine')).toEqual(15)
+        expect(countryAfter.getTariffOnResource(resource)).toEqual(15)
 
     })
 }) 

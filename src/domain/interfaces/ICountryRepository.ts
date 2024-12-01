@@ -1,6 +1,6 @@
 import { Country, CountryId } from "@/domain/entities/Country"
 
 export interface ICountryRepository {
-    add(country: Country): Promise<CountryId>
+    save(country: Country): Promise<void>
     getById(countryId: CountryId): Promise<Country|undefined>
 }

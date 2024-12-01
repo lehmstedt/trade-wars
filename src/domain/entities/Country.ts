@@ -1,20 +1,29 @@
+import { Resource } from "./Resource";
+
 type ResourceInventory = { name: string; qty: number }
 
 export class CountryId{
-  id: number
+  value: string
 
-  constructor(id: number){
-      this.id = id
+  constructor(value: string){
+      this.value = value
   }
 }
 
 export class Country {
+  
   resources: Map<string, number>
-  countryId: CountryId
+  id: CountryId
+  tariffs: Map<string, number>
 
   constructor() {
     this.resources = new Map<string, number>()
-    this.countryId = new CountryId(1)
+    this.tariffs = new Map<string, number>()
+    this.id = new CountryId("1")
+  }
+
+  setTariff(rate: number, resource: Resource) {
+    this.tariffs.set(resource.name, rate)
   }
 
   setResource(resourceName: string, resourceQty: number): void {
@@ -52,7 +61,7 @@ export class Country {
   canTrade(offeredResource: string, offeredQty: number) {
     return offeredQty <= this.getResourceQty(offeredResource)
   }
-  getTariffOnResource(resource: string){
-    return 15
+  getTariffOnResource(resource: Resource){
+    return this.tariffs.get(resource.name)
   }
 }

@@ -39,6 +39,6 @@ export class Game {
         if(expressedResourceQty === 0){
             return 0
         }
-        return 1
+        return expressedResourceQty / resourceQty
     }
 }

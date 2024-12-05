@@ -1,7 +1,7 @@
 import { CountryNotFoundError } from "@/domain/Errors";
 import type { CountryId } from "@/domain/entities/Country";
 import type { ICountryRepository } from "@/domain/interfaces/ICountryRepository";
-import type { Tariff } from "@/domain/entities/Tariff";
+import { Tariff } from "@/domain/entities/Tariff";
 
 export class ListTariffs {
     countryRepository: ICountryRepository
@@ -16,7 +16,7 @@ export class ListTariffs {
             throw new CountryNotFoundError()
         }
 
-        return []
+        return country.listTariffs()
         
     }
 }

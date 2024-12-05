@@ -1,4 +1,5 @@
-import { Resource } from "./Resource";
+import { Resource } from "@/domain/entities/Resource";
+import { Tariff } from "@/domain/entities/Tariff";
 
 type ResourceInventory = { name: string; qty: number }
 
@@ -63,5 +64,12 @@ export class Country {
   }
   getTariffOnResource(resource: Resource){
     return this.tariffs.get(resource.name)
+  }
+  listTariffs(): Tariff[]{
+    const tariffs = []
+    for (const [resourceName, rate] of this.tariffs.entries()){
+      tariffs.push(new Tariff(resourceName, rate))
+    }
+    return tariffs
   }
 }

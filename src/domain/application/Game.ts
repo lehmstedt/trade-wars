@@ -28,11 +28,14 @@ export class Game {
             throw new ResourceNotFoundError()
         }
 
-        
-
         const resourceQty = country.getResourceQty(resource.name)
         if(resourceQty === 0){
             return Infinity
+        }
+
+        const expressedResourceQty = country.getResourceQty(expressedResourceName)
+        if(expressedResourceQty === 0){
+            return 0
         }
         return 1
     }

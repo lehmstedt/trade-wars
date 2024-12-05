@@ -45,7 +45,7 @@ describe('prices', () => {
         await expect(() => game.getResourcePrice('TheOneAndOnlyResource', 'TheOneAndOnlyResource', new CountryId('nonExistingCountry'))).rejects.toThrow(CountryNotFoundError)
     })
 
-    test('Wine price is infinite when expressed in Beer, when the country only has Beer', async () => {
+    test('Wine price is infinite when expressed in Beer, and Beer price is zero when expressed in Wine, when the country only has Beer', async () => {
 
         const resourceRepository = new InMemoryResourceRepository()
         const wine = new Resource('Wine')
@@ -61,9 +61,11 @@ describe('prices', () => {
 
         const game = new Game(countryRepository, resourceRepository)
 
-        const price = await game.getResourcePrice('Wine', 'Beer', country.id)
+        const winePriceInBeer = await game.getResourcePrice('Wine', 'Beer', country.id)
+        const beerPriceInWine = await game.getResourcePrice('Beer', 'Wine', country.id)
 
-        expect(price).toEqual(Infinity)
+        expect(winePriceInBeer).toEqual(Infinity)
+        expect(beerPriceInWine).toEqual(0)
     })
 
     test('A resource price cannot be expressed from a non existing resource', async() => {

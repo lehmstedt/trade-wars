@@ -11,18 +11,29 @@ export class Game {
         this.resourceRepository = resourceRepository
     }
 
-    async getResourcePrice(resourceName: string, countryId: CountryId): Promise<number>{
+    async getResourcePrice(resourceName: string, expressedResourceName: string, countryId: CountryId): Promise<number>{
         const resource = await this.resourceRepository.getByName(resourceName)
         if(!resource){
             throw new ResourceNotFoundError()
         }
-
         const country = await this.countryRepository.getById(countryId)
         if(!country){
             throw new CountryNotFoundError()
         }
+        if(resource.name === expressedResourceName){
+            return 1
+        }
+        const expressedResource = await this.resourceRepository.getByName(expressedResourceName)
+        if(!expressedResource){
+            throw new ResourceNotFoundError()
+        }
 
+        
 
+        const resourceQty = country.getResourceQty(resource.name)
+        if(resourceQty === 0){
+            return Infinity
+        }
         return 1
     }
 }

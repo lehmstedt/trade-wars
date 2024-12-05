@@ -81,4 +81,24 @@ describe('prices', () => {
 
         await expect(() => game.getResourcePrice('wood', 'NonExistingResource', country.id)).rejects.toThrow(ResourceNotFoundError)
     })
+
+    test('Wine price should be 1 expressed in Beer, and beer price 1 too expressed in Wine, when country has neither of those resources', async() => {
+        const countryRepository = new InMemoryCountryRepository()
+        const country = new Country()
+        await countryRepository.save(country)
+
+        const resourceRepository = new InMemoryResourceRepository()
+        const wine = new Resource('Wine')
+        const beer = new Resource('Beer')
+        await resourceRepository.add(wine)
+        await resourceRepository.add(beer)
+
+        const game = new Game(countryRepository, resourceRepository)
+
+        const winePriceInBeer = await game.getResourcePrice('Wine', 'Beer', country.id)
+        const beerPriceInWine = await game.getResourcePrice('Beer', 'Wine', country.id)
+
+        expect(winePriceInBeer).toEqual(1)
+        expect(beerPriceInWine).toEqual(1)
+    })
 })

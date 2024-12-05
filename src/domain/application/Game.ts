@@ -29,11 +29,13 @@ export class Game {
         }
 
         const resourceQty = country.getResourceQty(resource.name)
+        const expressedResourceQty = country.getResourceQty(expressedResourceName)
+        if(resourceQty === expressedResourceQty){
+            return 1
+        }
         if(resourceQty === 0){
             return Infinity
         }
-
-        const expressedResourceQty = country.getResourceQty(expressedResourceName)
         if(expressedResourceQty === 0){
             return 0
         }

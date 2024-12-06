@@ -21,7 +21,7 @@ const prices = await props.game.listResourcePrices(props.countryId)
         </tr>
         <tr v-for="resource in resources" :key="resource.name">
             <td>{{ resource.name }}</td>
-            <td v-for="expressedResource in resources" :key="expressedResource.name">{{ prices.get(expressedResource.name)?.get(resource.name) }}</td>
+            <td v-for="expressedResource in resources" :key="expressedResource.name">{{ prices.get(expressedResource.name)?.get(resource.name)?.toFixed(2) }}</td>
         </tr>
     </table>
 </template>

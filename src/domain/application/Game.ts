@@ -16,10 +16,7 @@ export class Game {
         if(!resource){
             throw new ResourceNotFoundError()
         }
-        const country = await this.countryRepository.getById(countryId)
-        if(!country){
-            throw new CountryNotFoundError()
-        }
+        const country = await this.tryGetCountry(countryId)
         if(resource.name === expressedResourceName){
             return 1
         }
@@ -28,17 +25,29 @@ export class Game {
             throw new ResourceNotFoundError()
         }
 
-        const resourceQty = country.getResourceQty(resource.name)
-        const expressedResourceQty = country.getResourceQty(expressedResourceName)
-        if(resourceQty === expressedResourceQty){
-            return 1
-        }
-        if(resourceQty === 0){
-            return Infinity
-        }
-        if(expressedResourceQty === 0){
-            return 0
-        }
-        return expressedResourceQty / resourceQty
+        return country.expressResourcePriceInGivenResource(resource, expressedResource)
     }
+
+    async listResourcePrices(countryId: CountryId){
+        const resources = await this.resourceRepository.list()
+        const country = await this.tryGetCountry(countryId)
+        const resourcePrices = new Map<string, Map<string, number>>()
+        for (const expressedResource of resources){
+            const resourceEntry = new Map<string, number>()
+            for (const comparedResource of resources){
+                resourceEntry.set(comparedResource.name, country.expressResourcePriceInGivenResource(expressedResource, comparedResource))
+            }
+            resourcePrices.set(expressedResource.name, resourceEntry)
+        }
+        return resourcePrices
+    }
+
+    private async tryGetCountry(countryId: CountryId){
+        const country = await this.countryRepository.getById(countryId)
+        if(!country){
+            throw new CountryNotFoundError()
+        }
+        return country
+    }
+    
 }

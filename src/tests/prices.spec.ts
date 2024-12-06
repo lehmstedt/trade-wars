@@ -147,4 +147,32 @@ describe('prices', () => {
         expect(winePriceInBeer).toEqual(2)
         expect(beerPriceInWine).toEqual(0.5)
     })
+
+    test('Wine, Beer and Chocolate can be expressed from each other when country has those resources in various quantities', async() => {
+        
+        const resourceRepository = new InMemoryResourceRepository()
+        const wine = new Resource('Wine')
+        const beer = new Resource('Beer')
+        const chocolate = new Resource('Chocolate')
+        await resourceRepository.saveBulk([wine, beer, chocolate])
+
+        const countryRepository = new InMemoryCountryRepository()
+        const country = new Country()
+        country.setResource('Wine', 2)
+        country.setResource('Beer', 4)
+        country.setResource('Chocolate', 5)
+        await countryRepository.save(country)
+
+        const game = new Game(countryRepository, resourceRepository)
+
+        const priceList = await game.listResourcePrices(country.id)
+
+        expect(priceList.get(wine.name)?.get(wine.name)).toEqual(1)
+        expect(priceList.get(wine.name)?.get(beer.name)).toEqual(2)
+        expect(priceList.get(wine.name)?.get(chocolate.name)).toEqual(2.5)
+
+        expect(priceList.get(beer.name)?.get(wine.name)).toEqual(0.5)
+        expect(priceList.get(beer.name)?.get(beer.name)).toEqual(1)
+        expect(priceList.get(beer.name)?.get(chocolate.name)).toEqual(1.25)
+    })
 })

@@ -25,3 +25,9 @@ const prices = await props.game.listResourcePrices(props.countryId)
         </tr>
     </table>
 </template>
+
+<style scoped>
+table, th, td {
+    border: 1px solid;
+}
+</style>

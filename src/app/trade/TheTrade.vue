@@ -30,6 +30,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['tradeMade'])
+
 const playerCountry = ref<Country>(props.playerCountry)
 const componentKey = ref(0)
 const otherCountry = ref<Country>(props.otherCountry)
@@ -53,6 +55,8 @@ function trade() {
     resourceToAskQty.value
   )
   componentKey.value++
+  emit('tradeMade')
+
 }
 
 defineExpose({ isCurrentTradeValid, trade, playerCountry, otherCountry })

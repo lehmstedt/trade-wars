@@ -1,10 +1,18 @@
 # trade-wars
 
-- [ ] Prevent trades without needed quantities available
+- [ ] Refactor all use cases inside Game
+- [ ] Dropdown for resource selection instead of free text
+- [ ] Move and adapt all uses cases in test dir
+- [ ] Inside vs outside price with tariffs
+- [ ] Trade at the price of outside price with tariff
+- [ ] Reuse of tariff resources for country development (to be analyzed)
+- [x] Prevent trades without needed quantities available
 - [ ] Trade with more than one country
-- [ ] Resource price calculated from another resource quantity
+- [x] Resource price calculated from another resource quantity
 - [ ] Resource production with a fixed production rate by country
-- [ ] Custom duties/embargos
+- [x] Tariffs (crud)
+- [ ] Embargos
+- [ ] Wars
 
 ## Recommended IDE Setup
 

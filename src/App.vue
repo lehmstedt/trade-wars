@@ -6,6 +6,7 @@ import { Game } from '@/domain/application/Game';
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository';
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository';
 import { Resource } from '@/domain/entities/Resource';
+import { ref } from 'vue';
 
 const countryRepo = new InMemoryCountryRepository()
 const resourceRepo = new InMemoryResourceRepository()
@@ -34,12 +35,18 @@ anotherCountry.setResource('Whool', 10)
 countryRepo.save(playerCountry)
 countryRepo.save(anotherCountry)
 
+let iteration = ref(0)
+
+const updateGame = () => {
+  iteration.value = iteration.value + 1
+}
+
 </script>
 
 <template>
-  <Trade :player-country="playerCountry" :other-country="anotherCountry"></Trade>
+  <Trade :player-country="playerCountry" :other-country="anotherCountry" @trade-made="updateGame"></Trade>
   <Suspense>
-    <CountryResourcePrices :country-id="playerCountry.id" :game="game" :resources="resources"></CountryResourcePrices>
+    <CountryResourcePrices :country-id="playerCountry.id" :game="game" :resources="resources" :key="iteration"></CountryResourcePrices>
   </Suspense>
   
 </template>

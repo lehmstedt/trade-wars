@@ -11,7 +11,7 @@ const inventories = props.country?.getResourceInventories()
 defineExpose({ inventories })
 </script>
 <template>
-  <h1>{{ name }}</h1>
+  <h3>{{ name }}</h3>
   <div v-for="inventory in inventories" :key="inventory.name">
     {{ inventory.name }} : {{ inventory.qty }}
   </div>

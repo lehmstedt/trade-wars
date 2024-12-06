@@ -62,23 +62,30 @@ function trade() {
 defineExpose({ isCurrentTradeValid, trade, playerCountry, otherCountry })
 </script>
 <template>
-  <CountryInventory
-    :country="playerCountry"
-    name="The player country"
-    :key="componentKey"
-  ></CountryInventory>
-  <CountryInventory
-    :country="otherCountry"
-    name="Great-Britain"
-    :key="componentKey"
-  ></CountryInventory>
 
-  <h2>Resource to ask</h2>
-  <input v-model="resourceToAsk" placeholder="Name" />
-  <input v-model="resourceToAskQty" placeholder="Qty" type="number" />
+  <div class="row">
+    <div class="column">
+      <h1>Trade</h1>
+      <h2>Resource to ask</h2>
+      <input v-model="resourceToAsk" placeholder="Name" />
+      <input v-model="resourceToAskQty" placeholder="Qty" type="number" />
 
-  <h2>Resource to offer</h2>
-  <input v-model="resourceToOffer" placeholder="Name" />
-  <input v-model="resourceToOfferQty" placeholder="Qty" type="number" />
-  <button :disabled="!isCurrentTradeValid" @click="trade">Trade</button>
+      <h2>Resource to offer</h2>
+      <input v-model="resourceToOffer" placeholder="Name" />
+      <input v-model="resourceToOfferQty" placeholder="Qty" type="number" />
+      <button :disabled="!isCurrentTradeValid" @click="trade">Trade</button>
+    </div>
+
+    <div class="column">
+      <h1>Inventories</h1>
+      <CountryInventory :country="playerCountry" name="The player country" :key="componentKey"></CountryInventory>
+      <CountryInventory :country="otherCountry" name="Great-Britain" :key="componentKey"></CountryInventory>
+    </div>
+  </div>
+
+
+
+
+
+
 </template>

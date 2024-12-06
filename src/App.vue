@@ -44,9 +44,39 @@ const updateGame = () => {
 </script>
 
 <template>
-  <Trade :player-country="playerCountry" :other-country="anotherCountry" @trade-made="updateGame"></Trade>
-  <Suspense>
-    <CountryResourcePrices :country-id="playerCountry.id" :game="game" :resources="resources" :key="iteration"></CountryResourcePrices>
-  </Suspense>
-  
+  <div class="row">
+    <div class="column">
+      <Trade :player-country="playerCountry" :other-country="anotherCountry" @trade-made="updateGame"></Trade>
+    </div>
+
+    <div class="column">
+      <h1>Prices</h1>
+      <h2>Player</h2>
+      <Suspense>
+        <CountryResourcePrices :country-id="playerCountry.id" :game="game" :resources="resources" :key="iteration">
+        </CountryResourcePrices>
+      </Suspense>
+      <h2>Great-Britain</h2>
+      <Suspense>
+        <CountryResourcePrices :country-id="anotherCountry.id" :game="game" :resources="resources" :key="iteration">
+        </CountryResourcePrices>
+      </Suspense>
+    </div>
+    
+    
+  </div>
+
 </template>
+
+<style>
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+  }
+</style>

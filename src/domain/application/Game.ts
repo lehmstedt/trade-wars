@@ -2,6 +2,7 @@ import type { ICountryRepository } from "@/domain/interfaces/ICountryRepository"
 import type { IResourceRepository } from "@/domain/interfaces/IResourceRepository";
 import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
 import type { CountryId } from "@/domain/entities/Country";
+import type { Resource } from "@/domain/entities/Resource";
 
 export class Game {
     countryRepository: ICountryRepository
@@ -40,6 +41,10 @@ export class Game {
             resourcePrices.set(expressedResource.name, resourceEntry)
         }
         return resourcePrices
+    }
+
+    async listResources(): Promise<Resource[]>{
+        return this.resourceRepository.list()
     }
 
     private async tryGetCountry(countryId: CountryId){

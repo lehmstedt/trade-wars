@@ -1,7 +1,7 @@
 import { Resource } from "@/domain/entities/Resource";
 import { Tariff } from "@/domain/entities/Tariff";
 
-type ResourceInventory = { name: string; qty: number }
+export type ResourceInventory = { name: string; qty: number }
 
 export class CountryId{
   value: string

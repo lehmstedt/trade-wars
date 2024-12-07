@@ -1,7 +1,7 @@
 import type { ICountryRepository } from "@/domain/interfaces/ICountryRepository";
 import type { IResourceRepository } from "@/domain/interfaces/IResourceRepository";
 import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
-import { CountryId, type Country } from "@/domain/entities/Country";
+import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";
 
 export class Game {
@@ -49,6 +49,12 @@ export class Game {
 
     async listCountries(): Promise<Country[]>{
         return await this.countryRepository.list()
+    }
+
+    async listCountryInventory(id: CountryId): Promise<ResourceInventory[]>{
+        const country = await this.tryGetCountry(id)
+
+        return country.getResourceInventories()
     }
 
     private async tryGetCountry(countryId: CountryId){

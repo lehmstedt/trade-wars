@@ -1,5 +1,6 @@
 import { Game } from "@/domain/application/Game";
 import { Country, CountryId } from "@/domain/entities/Country";
+import { Resource } from "@/domain/entities/Resource";
 import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { describe, expect, test } from "vitest";
@@ -40,5 +41,26 @@ describe('countries', () => {
         expect(countries.length).toEqual(2)
         expect(countries.find(country => country.id.equals(new CountryId('Spain'))))
         expect(countries.find(country => country.id.equals(new CountryId('France'))))
+    })
+
+    test('A country inventory can be listed when attributing resources', async() => {
+        const countryRepository = new InMemoryCountryRepository()
+        const country = new Country('France')
+        const wine = new Resource('Wine')
+        const cheese = new Resource('Cheese')
+        country.setResource(wine.name, 1)
+        country.setResource(cheese.name, 2)
+        await countryRepository.save(country)
+
+        const resourceRepository = new InMemoryResourceRepository()
+        resourceRepository.saveBulk([wine, cheese])
+
+        const game = new Game(countryRepository, resourceRepository)
+
+        const inventory = await game.listCountryInventory(country.id)
+
+
+        expect(inventory).toContainEqual({ name: wine.name, qty: 1 })
+        expect(inventory).toContainEqual({ name: cheese.name, qty: 2 })
     })
 })

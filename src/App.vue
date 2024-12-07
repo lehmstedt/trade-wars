@@ -1,64 +1,48 @@
 <script setup lang="ts">
-import { Country, CountryId } from '@/domain/entities/Country'
 import Trade from '@/app/trade/TheTrade.vue'
 import CountryResourcePrices from '@/app/country/CountryResourcePrice.vue';
-import { Game } from '@/domain/application/Game';
-import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository';
-import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository';
-import { Resource } from '@/domain/entities/Resource';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { GameFactory } from '@/domain/GameFactory';
+import type { Resource } from '@/domain/entities/Resource';
+import type { Country } from '@/domain/entities/Country';
+import type { Game } from '@/domain/application/Game';
 
-const countryRepo = new InMemoryCountryRepository()
-const resourceRepo = new InMemoryResourceRepository()
-const game = new Game(countryRepo, resourceRepo)
 
-const iron = new Resource('Iron')
-const charcoal = new Resource('Charcoal')
-const whool = new Resource('Whool')
-const resources: Resource[] = [
-  iron, charcoal, whool
-]
-resourceRepo.add(iron)
-resourceRepo.add(charcoal)
-resourceRepo.add(whool)
-
-const playerCountry = new Country()
-playerCountry.id = new CountryId('player')
-
-playerCountry.setResource('Iron', 12)
-playerCountry.setResource('Charcoal', 240)
-
-const anotherCountry = new Country()
-anotherCountry.setResource('Iron', 30)
-anotherCountry.setResource('Whool', 10)
-
-countryRepo.save(playerCountry)
-countryRepo.save(anotherCountry)
 
 let iteration = ref(0)
+let resources: Resource[] = []
+let countries: Country[] = []
+let game: Game
 
 const updateGame = () => {
   iteration.value = iteration.value + 1
 }
 
+onMounted(async() => {
+  const gameFactory = new GameFactory()
+  game = await gameFactory.buildInMemoryGame()
+  resources = await game.listResources()
+  countries = await game.listCountries()
+})
+
 </script>
 
 <template>
-  <div class="row">
+  <div class="row" v-if="countries.length > 0 && resources.length > 0">
     <div class="column">
-      <Trade :player-country="playerCountry" :other-country="anotherCountry" @trade-made="updateGame"></Trade>
+      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame"></Trade>
     </div>
 
     <div class="column">
       <h1>Prices</h1>
       <h2>Player</h2>
       <Suspense>
-        <CountryResourcePrices :country-id="playerCountry.id" :game="game" :resources="resources" :key="iteration">
+        <CountryResourcePrices :country-id="countries[0].id" :game="game" :resources="resources" :key="iteration">
         </CountryResourcePrices>
       </Suspense>
       <h2>Great-Britain</h2>
       <Suspense>
-        <CountryResourcePrices :country-id="anotherCountry.id" :game="game" :resources="resources" :key="iteration">
+        <CountryResourcePrices :country-id="countries[1].id" :game="game" :resources="resources" :key="iteration">
         </CountryResourcePrices>
       </Suspense>
     </div>

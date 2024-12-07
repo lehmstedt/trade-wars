@@ -9,6 +9,10 @@ export class CountryId{
   constructor(value: string){
       this.value = value
   }
+
+  equals(id: CountryId){
+    return this.value === id.value
+  }
 }
 
 export class Country {
@@ -16,11 +20,13 @@ export class Country {
   resources: Map<string, number>
   id: CountryId
   tariffs: Map<string, number>
+  name: string
 
-  constructor() {
+  constructor(name: string) {
     this.resources = new Map<string, number>()
     this.tariffs = new Map<string, number>()
-    this.id = new CountryId("1")
+    this.id = new CountryId(name)
+    this.name = name
   }
 
   setTariff(rate: number, resource: Resource) {

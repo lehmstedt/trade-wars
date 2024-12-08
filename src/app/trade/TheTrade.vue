@@ -2,43 +2,25 @@
 import { Country } from '@/domain/entities/Country'
 import CountryInventory from '@/app/country/CountryInventory.vue'
 import { computed, ref } from 'vue'
+import { Resource } from '@/domain/entities/Resource';
 
-const props = defineProps({
-  playerCountry: {
-    default: new Country(),
-    type: Country
-  },
-  otherCountry: {
-    default: new Country(),
-    type: Country
-  },
-  resourceToAsk: {
-    default: '',
-    type: String
-  },
-  resourceToAskQty: {
-    default: 0,
-    type: Number
-  },
-  resourceToOffer: {
-    default: '',
-    type: String
-  },
-  resourceToOfferQty: {
-    default: 0,
-    type: Number
-  }
-})
+interface Props {
+  playerCountry: Country
+  otherCountry: Country
+  resources: Resource[]
+}
+
+const props = defineProps<Props>()
 
 const emit = defineEmits(['tradeMade'])
 
-const playerCountry = ref<Country>(props.playerCountry)
+const playerCountry = ref(props.playerCountry)
+const otherCountry = ref(props.otherCountry)
 const componentKey = ref(0)
-const otherCountry = ref<Country>(props.otherCountry)
-const resourceToAsk = ref(props.resourceToAsk)
-const resourceToAskQty = ref(props.resourceToAskQty)
-const resourceToOffer = ref(props.resourceToOffer)
-const resourceToOfferQty = ref(props.resourceToOfferQty)
+const resourceToAsk = ref('')
+const resourceToAskQty = ref(1)
+const resourceToOffer = ref('')
+const resourceToOfferQty = ref(1)
 
 const isCurrentTradeValid = computed(
   () =>
@@ -47,8 +29,8 @@ const isCurrentTradeValid = computed(
 )
 
 function trade() {
-  playerCountry.value.tradeWith(
-    otherCountry.value,
+  props.playerCountry.tradeWith(
+    props.otherCountry,
     resourceToOffer.value,
     resourceToOfferQty.value,
     resourceToAsk.value,
@@ -59,7 +41,6 @@ function trade() {
 
 }
 
-defineExpose({ isCurrentTradeValid, trade, playerCountry, otherCountry })
 </script>
 <template>
 
@@ -67,11 +48,15 @@ defineExpose({ isCurrentTradeValid, trade, playerCountry, otherCountry })
     <div class="column">
       <h1>Trade</h1>
       <h2>Resource to ask</h2>
-      <input v-model="resourceToAsk" placeholder="Name" />
+      <select v-model="resourceToAsk">
+        <option v-for="resource in resources" :key="resource.name">{{ resource.name }}</option>
+      </select>
       <input v-model="resourceToAskQty" placeholder="Qty" type="number" />
 
       <h2>Resource to offer</h2>
-      <input v-model="resourceToOffer" placeholder="Name" />
+      <select v-model="resourceToOffer">
+        <option v-for="resource in resources" :key="resource.name">{{ resource.name }}</option>
+      </select>
       <input v-model="resourceToOfferQty" placeholder="Qty" type="number" />
       <button :disabled="!isCurrentTradeValid" @click="trade">Trade</button>
     </div>

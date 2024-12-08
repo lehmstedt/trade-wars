@@ -30,7 +30,7 @@ onMounted(async() => {
 <template>
   <div class="row" v-if="countries.length > 0 && resources.length > 0">
     <div class="column">
-      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame"></Trade>
+      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame" :resources="resources"></Trade>
     </div>
 
     <div class="column">

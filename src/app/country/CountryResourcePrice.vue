@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import type { Game } from '@/domain/application/Game';
 import { CountryId } from '@/domain/entities/Country';
 import type { Resource } from '@/domain/entities/Resource';
 
 interface Props {
-    game: Game,
     resources: Resource[],
-    countryId: CountryId
+    countryId: CountryId,
+    prices: Map<string, Map<string, number>>
 }
-const props = defineProps<Props>()
-
-const prices = await props.game.listResourcePrices(props.countryId)
+defineProps<Props>()
 
 </script>
 <template>

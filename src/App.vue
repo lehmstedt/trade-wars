@@ -6,6 +6,7 @@ import { GameFactory } from '@/domain/GameFactory';
 import type { Resource } from '@/domain/entities/Resource';
 import type { Country } from '@/domain/entities/Country';
 import type { Game } from '@/domain/application/Game';
+import CountryInventory from '@/app/country/CountryInventory.vue';
 
 
 
@@ -42,6 +43,12 @@ onMounted(async() => {
     </div>
 
     <div class="column">
+      <h1>Inventories</h1>
+      <CountryInventory :country="countries[0]" name="The player country"></CountryInventory>
+      <CountryInventory :country="countries[1]" name="Great-Britain"></CountryInventory>
+    </div>
+
+    <div class="column">
       <h1>Prices</h1>
       <h2>Player</h2>
       <Suspense>
@@ -64,11 +71,10 @@ onMounted(async() => {
   .row {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   .column {
     display: flex;
     flex-direction: column;
-    margin: 20px;
   }
 </style>

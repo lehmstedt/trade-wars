@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Country } from '@/domain/entities/Country'
-import CountryInventory from '@/app/country/CountryInventory.vue'
 import { computed, ref } from 'vue'
 import { Resource } from '@/domain/entities/Resource';
 
@@ -59,12 +58,6 @@ function trade() {
       </select>
       <input v-model="resourceToOfferQty" placeholder="Qty" type="number" />
       <button :disabled="!isCurrentTradeValid" @click="trade">Trade</button>
-    </div>
-
-    <div class="column">
-      <h1>Inventories</h1>
-      <CountryInventory :country="playerCountry" name="The player country" :key="componentKey"></CountryInventory>
-      <CountryInventory :country="otherCountry" name="Great-Britain" :key="componentKey"></CountryInventory>
     </div>
   </div>
 

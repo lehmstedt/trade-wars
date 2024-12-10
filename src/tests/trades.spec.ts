@@ -48,6 +48,24 @@ describe('trades', () => {
 
         await expect(() => trade.execute(buyer.id, seller.id, apple, 1)).rejects.toThrow(InsufficientResourceError)
 
+    })
+
+    test('A buyer cannot buy a resource the seller does not have enough', async () => {
+        const buyer = new Country('Buyer')
+        const seller = new Country('Seller')
+        const apple = new Resource('Apple')
+        seller.setResource(apple.name, 1)
+        const countryRepository = new InMemoryCountryRepository()
+        await countryRepository.save(buyer)
+        await countryRepository.save(seller)
+
+        
+        const resourceRepository = new InMemoryResourceRepository()
+        await resourceRepository.add(apple)
+
+        const trade = new Trade(countryRepository, resourceRepository)
+
+        await expect(() => trade.execute(buyer.id, seller.id, apple, 2)).rejects.toThrow(InsufficientResourceError)
 
     })
 })

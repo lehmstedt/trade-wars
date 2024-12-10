@@ -19,7 +19,7 @@ export class Trade {
         const seller = await this.tryGetCountry(sellerId)
         await this.tryGetResource(resourceToBuy)
 
-        if(seller.getResourceQty(resourceToBuy.name) === 0){
+        if(seller.getResourceQty(resourceToBuy.name) < quantity){
             throw new InsufficientResourceError()
         }
     }

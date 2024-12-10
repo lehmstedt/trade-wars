@@ -3,6 +3,12 @@ import { type ICountryRepository } from "@/domain/interfaces/ICountryRepository"
 
 export class InMemoryCountryRepository implements ICountryRepository {
 
+    constructor(countries?: Country[]){
+        if(countries){
+            countries.forEach(async country => await this.save(country))
+        }
+    }
+
 
     async list(): Promise<Country[]> {
         return Array.from(this.countries.values())

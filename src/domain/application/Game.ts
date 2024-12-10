@@ -57,12 +57,25 @@ export class Game {
         return country.getResourceInventories()
     }
 
+    async trade(buyerId: CountryId, sellerId: CountryId, resource: Resource, quantity: number): Promise<void>{
+        const buyer = await this.tryGetCountry(buyerId)
+        await this.tryGetResource(resource)
+    }
+
     private async tryGetCountry(countryId: CountryId){
         const country = await this.countryRepository.getById(countryId)
         if(!country){
             throw new CountryNotFoundError()
         }
         return country
+    }
+
+    private async tryGetResource(resource: Resource){
+        const existingResource = await this.resourceRepository.getByName(resource.name)
+        if(!existingResource){
+            throw new ResourceNotFoundError()
+        }
+        return existingResource
     }
     
 }

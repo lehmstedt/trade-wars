@@ -9,7 +9,7 @@ import { describe, expect, test } from "vitest";
 describe('prices', () => {
     test('an resource price is 1 expressed in terms of itself when there is only one resource', async () => {
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         await countryRepository.save(country)
 
         const resourceRepository = new InMemoryResourceRepository()
@@ -24,7 +24,7 @@ describe('prices', () => {
 
     test('A non existing resource cannot have a price', async () => {
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         await countryRepository.save(country)
 
         const resourceRepository = new InMemoryResourceRepository()
@@ -54,7 +54,7 @@ describe('prices', () => {
         await resourceRepository.add(beer)
 
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         country.setResource('Beer', 1)
         await countryRepository.save(country)
         
@@ -70,7 +70,7 @@ describe('prices', () => {
 
     test('A resource price cannot be expressed from a non existing resource', async() => {
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         await countryRepository.save(country)
 
         const resourceRepository = new InMemoryResourceRepository()
@@ -84,7 +84,7 @@ describe('prices', () => {
 
     test('Wine price should be 1 expressed in Beer, and beer price 1 too expressed in Wine, when country has neither of those resources', async() => {
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         await countryRepository.save(country)
 
         const resourceRepository = new InMemoryResourceRepository()
@@ -111,7 +111,7 @@ describe('prices', () => {
         await resourceRepository.add(beer)
 
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         country.setResource('Wine', 2)
         country.setResource('Beer', 2)
         await countryRepository.save(country)
@@ -134,7 +134,7 @@ describe('prices', () => {
         await resourceRepository.add(beer)
 
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         country.setResource('Wine', 2)
         country.setResource('Beer', 4)
         await countryRepository.save(country)
@@ -157,7 +157,7 @@ describe('prices', () => {
         await resourceRepository.saveBulk([wine, beer, chocolate])
 
         const countryRepository = new InMemoryCountryRepository()
-        const country = new Country()
+        const country = new Country('')
         country.setResource('Wine', 2)
         country.setResource('Beer', 4)
         country.setResource('Chocolate', 5)

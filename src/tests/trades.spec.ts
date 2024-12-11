@@ -1,6 +1,6 @@
 import { Country } from "@/domain/entities/Country";
 import { Resource } from "@/domain/entities/Resource";
-import { BuyerResourceNotFoundError, CountryNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, SellerResourceNotFoundError } from "@/domain/Errors";
+import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
 import { MakeTrade, TradeLeg, TradeRequest } from "@/domain/useCases/MakeTrade";
 import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
@@ -9,17 +9,36 @@ import { TestPriceProvider } from "@/tests/TestPriceProvider";
 
 describe('trades', () => {
 
-    test('A trade cannot be made without countries', async () => {
+    it('Cannot be made when seller is not existing', async () => {
+        const buyer = new Country('Buyer')
+        const seller = new Country('Seller')
         const countryRepository = new InMemoryCountryRepository()
+        await countryRepository.save(buyer)
         const resourceRepository = new InMemoryResourceRepository()
 
         const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
         const tradeRequest = new TradeRequest(
-            new TradeLeg(new Country('NotExisting'), new Resource('NotExisting')),
-            new TradeLeg(new Country('NotExisting'), new Resource('NotExisting'))
+            new TradeLeg(buyer, new Resource('NotExisting')),
+            new TradeLeg(seller, new Resource('NotExisting'))
         )
 
-        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(CountryNotFoundError)
+        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(SellerCountryNotFoundError)
+    })
+
+    it('Cannot be made when buyer is not existing', async () => {
+        const buyer = new Country('Buyer')
+        const seller = new Country('Seller')
+        const countryRepository = new InMemoryCountryRepository()
+        await countryRepository.save(seller)
+        const resourceRepository = new InMemoryResourceRepository()
+
+        const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
+        const tradeRequest = new TradeRequest(
+            new TradeLeg(buyer, new Resource('NotExisting')),
+            new TradeLeg(seller, new Resource('NotExisting'))
+        )
+
+        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(BuyerCountryNotFoundError)
     })
 
     it('Cannot be made when buyer resource is not existing', async () => {

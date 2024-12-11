@@ -2,11 +2,12 @@ import type { ICountryRepository } from "@/domain/ports/ICountryRepository";
 import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
 import type { Resource } from "@/domain/entities/Resource";
 import { 
+    BuyerCountryNotFoundError,
     BuyerResourceNotFoundError,
-    CountryNotFoundError,
     InsufficientResourceFromBuyerError,
     InsufficientResourceFromSellerError,
     NoPriceEstablishedError,
+    SellerCountryNotFoundError,
     SellerResourceNotFoundError } from "@/domain/Errors";
 import type { Country, CountryId } from "@/domain/entities/Country";
 import type { IPriceProvider } from "@/domain/IPriceProvider";
@@ -46,8 +47,14 @@ export class MakeTrade {
     }
 
     async execute(request: TradeRequest): Promise<void>{
-        const buyer = await this.tryGetCountry(request.buyer.countryId)
-        const seller = await this.tryGetCountry(request.seller.countryId)
+        const buyer = await this.countryRepository.getById(request.buyer.countryId)
+        if(!buyer){
+            throw new BuyerCountryNotFoundError()
+        }
+        const seller = await this.countryRepository.getById(request.seller.countryId)
+        if(!seller){
+            throw new SellerCountryNotFoundError()
+        }
 
         const sellerResource = await this.resourceRepository.getByName(request.seller.resource.name)
         if(!sellerResource){
@@ -72,13 +79,5 @@ export class MakeTrade {
             throw new InsufficientResourceFromBuyerError()
         }
 
-    }
-
-    private async tryGetCountry(countryId: CountryId){
-        const country = await this.countryRepository.getById(countryId)
-        if(!country){
-            throw new CountryNotFoundError()
-        }
-        return country
     }
 }

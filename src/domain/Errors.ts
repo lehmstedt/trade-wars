@@ -5,3 +5,5 @@ export class InsufficientResourceFromBuyerError {}
 export class NoPriceEstablishedError {}
 export class BuyerResourceNotFoundError {}
 export class SellerResourceNotFoundError {}
+export class BuyerCountryNotFoundError {}
+export class SellerCountryNotFoundError {}

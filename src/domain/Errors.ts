@@ -1,3 +1,7 @@
-export class CountryNotFoundError extends Error {}
-export class ResourceNotFoundError extends Error {}
-export class InsufficientResourceError extends Error {}
+export class CountryNotFoundError {}
+export class ResourceNotFoundError {}
+export class InsufficientResourceFromSellerError {}
+export class InsufficientResourceFromBuyerError {}
+export class NoPriceEstablishedError {}
+export class BuyerResourceNotFoundError {}
+export class SellerResourceNotFoundError {}

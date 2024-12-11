@@ -1,5 +1,5 @@
 import { type Resource } from "@/domain/entities/Resource";
-import type { IResourceRepository } from "@/domain/interfaces/IResourceRepository";
+import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
 
 export class InMemoryResourceRepository implements IResourceRepository{
 

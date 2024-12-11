@@ -1,7 +1,7 @@
 import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors"
-import type { ICountryRepository } from "@/domain/interfaces/ICountryRepository"
+import type { ICountryRepository } from "@/domain/ports/ICountryRepository"
 import type { CountryId } from "@/domain/entities/Country"
-import type { IResourceRepository } from "@/domain/interfaces/IResourceRepository"
+import type { IResourceRepository } from "@/domain/ports/IResourceRepository"
 
 export class SetTariff{
 

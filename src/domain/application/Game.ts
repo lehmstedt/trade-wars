@@ -1,5 +1,5 @@
-import type { ICountryRepository } from "@/domain/interfaces/ICountryRepository";
-import type { IResourceRepository } from "@/domain/interfaces/IResourceRepository";
+import type { ICountryRepository } from "@/domain/ports/ICountryRepository";
+import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
 import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
 import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";

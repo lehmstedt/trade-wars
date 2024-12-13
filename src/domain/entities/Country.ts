@@ -33,30 +33,30 @@ export class Country {
     this.tariffs.set(resource.name, rate)
   }
 
-  setResource(resourceName: string, resourceQty: number): void {
-    this.resources.set(resourceName, resourceQty)
+  setResource(resource: Resource, resourceQty: number): void {
+    this.resources.set(resource.name, resourceQty)
   }
 
-  getResourceQty(resourceName: string): number {
-    return this.resources.get(resourceName) ?? 0
+  getResourceQty(resource: Resource): number {
+    return this.resources.get(resource.name) ?? 0
   }
-  receiveResource(resourceName: string, resourceQty: number) {
-    const qty = this.getResourceQty(resourceName) + resourceQty
-    this.setResource(resourceName, qty)
+  receiveResource(resource: Resource, resourceQty: number) {
+    const qty = this.getResourceQty(resource) + resourceQty
+    this.setResource(resource, qty)
   }
   tradeWith(
     country: Country,
-    resourceToOffer: string,
+    resourceToOffer: Resource,
     resourceToOfferQty: number,
-    resourceToReceive: string,
+    resourceToReceive: Resource,
     resourceToReceiveQty: number
   ) {
     this.sendResource(country, resourceToOffer, resourceToOfferQty)
     country.sendResource(this, resourceToReceive, resourceToReceiveQty)
   }
-  sendResource(country: Country, resourceName: string, qty: number) {
-    this.receiveResource(resourceName, -qty)
-    country.receiveResource(resourceName, qty)
+  sendResource(country: Country, resource: Resource, qty: number) {
+    this.receiveResource(resource, -qty)
+    country.receiveResource(resource, qty)
   }
   getResourceInventories(): ResourceInventory[] {
     const inventories: ResourceInventory[] = []
@@ -65,7 +65,7 @@ export class Country {
     }
     return inventories
   }
-  canTrade(offeredResource: string, offeredQty: number) {
+  canTrade(offeredResource: Resource, offeredQty: number) {
     return offeredQty <= this.getResourceQty(offeredResource)
   }
   getTariffOnResource(resource: Resource){
@@ -79,8 +79,8 @@ export class Country {
     return tariffs
   }
   expressResourcePriceInGivenResource(resource: Resource, givenResource: Resource) {
-    const resourceQty = this.getResourceQty(resource.name)
-    const expressedResourceQty = this.getResourceQty(givenResource.name)
+    const resourceQty = this.getResourceQty(resource)
+    const expressedResourceQty = this.getResourceQty(givenResource)
     if (resourceQty === expressedResourceQty) {
       return 1
     }

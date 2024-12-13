@@ -9,28 +9,28 @@ import {
     NoPriceEstablishedError,
     SellerCountryNotFoundError,
     SellerResourceNotFoundError } from "@/domain/Errors";
-import type { Country, CountryId } from "@/domain/entities/Country";
+import { Country, type CountryId } from "@/domain/entities/Country";
 import type { IPriceProvider } from "@/domain/IPriceProvider";
 
 
 export class TradeLeg {
     countryId: CountryId
     resource: Resource
-    quantity?: number
-    constructor(country: Country, proposedResource: Resource, quantity?: number){
+    constructor(country: Country, proposedResource: Resource){
         this.countryId = country.id
         this.resource = proposedResource
-        this.quantity = quantity
     }
 }
 
 export class TradeRequest {
     buyer: TradeLeg
     seller: TradeLeg
+    askedQuantity: number
 
-    constructor(buyer: TradeLeg, seller: TradeLeg){
+    constructor(buyer: TradeLeg, seller: TradeLeg, askedQuantity: number){
         this.buyer = buyer
         this.seller = seller
+        this.askedQuantity = askedQuantity
     }
 }
 
@@ -66,18 +66,23 @@ export class MakeTrade {
             throw new BuyerResourceNotFoundError()
         }
 
-        if(request.seller.quantity && seller.getResourceQty(request.seller.resource.name) < request.seller.quantity){
+        if(seller.getResourceQty(request.seller.resource) < request.askedQuantity){
             throw new InsufficientResourceFromSellerError()
         }
 
-        const price = await this.priceProvider.getPriceForResource(request.seller.resource, request.buyer.resource)
+        const price = await this.priceProvider.getPrice(new Country('NotDefined'), request.seller.resource, request.buyer.resource)
         if(!price){
             throw new NoPriceEstablishedError()
         }
 
-        if(buyer.getResourceQty(buyerResource.name) < price){
+        if(buyer.getResourceQty(buyerResource) < price){
             throw new InsufficientResourceFromBuyerError()
         }
+
+        buyer.tradeWith(seller, buyerResource, price, sellerResource, request.askedQuantity)
+
+        await this.countryRepository.save(buyer)
+        await this.countryRepository.save(seller)
 
     }
 }

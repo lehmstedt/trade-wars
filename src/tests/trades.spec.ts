@@ -1,6 +1,6 @@
 import { Country } from "@/domain/entities/Country";
 import { Resource } from "@/domain/entities/Resource";
-import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
+import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, NoResourceQuantityAskedError, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
 import { MakeTrade, TradeLeg, TradeRequest } from "@/domain/useCases/MakeTrade";
 import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
@@ -19,7 +19,8 @@ describe('trades', () => {
         const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, new Resource('NotExisting')),
-            new TradeLeg(seller, new Resource('NotExisting'))
+            new TradeLeg(seller, new Resource('NotExisting')),
+            0
         )
 
         await expect(() => trade.execute(tradeRequest)).rejects.toThrow(SellerCountryNotFoundError)
@@ -35,7 +36,8 @@ describe('trades', () => {
         const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, new Resource('NotExisting')),
-            new TradeLeg(seller, new Resource('NotExisting'))
+            new TradeLeg(seller, new Resource('NotExisting')),
+            0
         )
 
         await expect(() => trade.execute(tradeRequest)).rejects.toThrow(BuyerCountryNotFoundError)
@@ -56,7 +58,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, new Resource('NotExisting')),
-            new TradeLeg(seller, apple)
+            new TradeLeg(seller, apple),
+            0
         )
 
         await expect(() => trade.execute(tradeRequest)).rejects.toThrow(BuyerResourceNotFoundError)
@@ -77,7 +80,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, apple),
-            new TradeLeg(seller, new Resource('NotExisting'))
+            new TradeLeg(seller, new Resource('NotExisting')),
+            0
         )
 
         await expect(() => trade.execute(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
@@ -96,7 +100,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, apple),
-            new TradeLeg(seller, apple, 1)
+            new TradeLeg(seller, apple),
+            1
         )
 
         const makeTrade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
@@ -109,7 +114,7 @@ describe('trades', () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
-        seller.setResource(apple.name, 1)
+        seller.setResource(apple, 1)
         const countryRepository = new InMemoryCountryRepository()
         await countryRepository.save(buyer)
         await countryRepository.save(seller)
@@ -120,7 +125,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, apple),
-            new TradeLeg(seller, apple, 2)
+            new TradeLeg(seller, apple),
+            2
         )
 
         const makeTrade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
@@ -133,7 +139,7 @@ describe('trades', () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
-        seller.setResource(apple.name, 1)
+        seller.setResource(apple, 1)
         const countryRepository = new InMemoryCountryRepository()
         await countryRepository.save(buyer)
         await countryRepository.save(seller)
@@ -144,7 +150,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, apple),
-            new TradeLeg(seller, new Resource('NotExisting'), 1)
+            new TradeLeg(seller, new Resource('NotExisting')),
+            1
         )
 
         const makeTrade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
@@ -158,8 +165,8 @@ describe('trades', () => {
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
-        seller.setResource(apple.name, 1)
-        buyer.setResource(banana.name, 2)
+        seller.setResource(apple, 1)
+        buyer.setResource(banana, 2)
         const countryRepository = new InMemoryCountryRepository()
         await countryRepository.save(buyer)
         await countryRepository.save(seller)
@@ -171,7 +178,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, banana),
-            new TradeLeg(seller, apple, 1)
+            new TradeLeg(seller, apple),
+            1
         )
 
         const priceProvider = new TestPriceProvider()
@@ -188,8 +196,8 @@ describe('trades', () => {
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
-        seller.setResource(apple.name, 1)
-        buyer.setResource(banana.name, 2)
+        seller.setResource(apple, 1)
+        buyer.setResource(banana, 2)
         const countryRepository = new InMemoryCountryRepository()
         await countryRepository.save(buyer)
         await countryRepository.save(seller)
@@ -201,7 +209,8 @@ describe('trades', () => {
 
         const tradeRequest = new TradeRequest(
             new TradeLeg(buyer, banana),
-            new TradeLeg(seller, apple, 1)
+            new TradeLeg(seller, apple),
+            1
         )
 
         const priceProvider = new TestPriceProvider()
@@ -211,5 +220,47 @@ describe('trades', () => {
 
         await expect(() => makeTrade.execute(tradeRequest)).rejects.toThrow(InsufficientResourceFromBuyerError)
 
+    })
+
+    it('can me made when countries and resources exist, and both trade legs have enough resources in stock', async () => {
+        const buyer = new Country('Buyer')
+        const seller = new Country('Seller')
+        const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
+        seller.setResource(apple, 4)
+        buyer.setResource(banana, 4)
+        const countryRepository = new InMemoryCountryRepository()
+        await countryRepository.save(buyer)
+        await countryRepository.save(seller)
+
+        
+        const resourceRepository = new InMemoryResourceRepository()
+        await resourceRepository.add(apple)
+        await resourceRepository.add(banana)
+
+        const tradeRequest = new TradeRequest(
+            new TradeLeg(buyer, banana),
+            new TradeLeg(seller, apple),
+            1
+        )
+
+        const priceProvider = new TestPriceProvider()
+        priceProvider.setPriceForAnyResource(3)
+
+        const makeTrade = new MakeTrade(countryRepository, resourceRepository, priceProvider)
+
+        await makeTrade.execute(tradeRequest)
+
+        const buyerAfter = await countryRepository.getById(buyer.id) as Country
+
+        expect(buyerAfter).toBeDefined()
+
+        expect(buyerAfter.getResourceQty(banana)).toEqual(1)
+        expect(buyerAfter.getResourceQty(apple)).toEqual(1)
+
+        const sellerAfter = await countryRepository.getById(seller.id) as Country
+
+        expect(sellerAfter.getResourceQty(banana)).toEqual(3)
+        expect(sellerAfter.getResourceQty(apple)).toEqual(3)
     })
 })

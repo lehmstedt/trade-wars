@@ -55,7 +55,7 @@ describe('prices', () => {
 
         const countryRepository = new InMemoryCountryRepository()
         const country = new Country('')
-        country.setResource('Beer', 1)
+        country.setResource(beer, 1)
         await countryRepository.save(country)
         
 
@@ -112,8 +112,8 @@ describe('prices', () => {
 
         const countryRepository = new InMemoryCountryRepository()
         const country = new Country('')
-        country.setResource('Wine', 2)
-        country.setResource('Beer', 2)
+        country.setResource(wine, 2)
+        country.setResource(beer, 2)
         await countryRepository.save(country)
 
         const game = new Game(countryRepository, resourceRepository)
@@ -135,8 +135,8 @@ describe('prices', () => {
 
         const countryRepository = new InMemoryCountryRepository()
         const country = new Country('')
-        country.setResource('Wine', 2)
-        country.setResource('Beer', 4)
+        country.setResource(wine, 2)
+        country.setResource(beer, 4)
         await countryRepository.save(country)
 
         const game = new Game(countryRepository, resourceRepository)
@@ -158,9 +158,9 @@ describe('prices', () => {
 
         const countryRepository = new InMemoryCountryRepository()
         const country = new Country('')
-        country.setResource('Wine', 2)
-        country.setResource('Beer', 4)
-        country.setResource('Chocolate', 5)
+        country.setResource(wine, 2)
+        country.setResource(beer, 4)
+        country.setResource(chocolate, 5)
         await countryRepository.save(country)
 
         const game = new Game(countryRepository, resourceRepository)

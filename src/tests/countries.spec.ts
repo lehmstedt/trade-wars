@@ -48,8 +48,8 @@ describe('countries', () => {
         const country = new Country('France')
         const wine = new Resource('Wine')
         const cheese = new Resource('Cheese')
-        country.setResource(wine.name, 1)
-        country.setResource(cheese.name, 2)
+        country.setResource(wine, 1)
+        country.setResource(cheese, 2)
         await countryRepository.save(country)
 
         const resourceRepository = new InMemoryResourceRepository()

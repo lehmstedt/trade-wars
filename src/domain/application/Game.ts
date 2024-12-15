@@ -3,7 +3,6 @@ import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
 import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, CountryNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, ResourceNotFoundError, SellerCountryNotFoundError, SellerResourceNotFoundError, type ITradeError } from "@/domain/Errors";
 import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";
-import { MakeTrade } from "@/domain/useCases/MakeTrade";
 import type { IPriceProvider } from "../IPriceProvider";
 
 export class TradeId {
@@ -46,12 +45,10 @@ export class TradeRequest {
 export class Game {
     countryRepository: ICountryRepository
     resourceRepository: IResourceRepository
-    makeTradeUseCase: MakeTrade
     priceProvider: IPriceProvider
     constructor(countryRepository: ICountryRepository, resourceRepository: IResourceRepository, priceProvider: IPriceProvider){
         this.countryRepository = countryRepository
         this.resourceRepository = resourceRepository
-        this.makeTradeUseCase = new MakeTrade(this.countryRepository, this.resourceRepository, priceProvider)
         this.priceProvider = priceProvider
     }
 
@@ -138,10 +135,12 @@ export class Game {
             return new TradeValidation(new InsufficientResourceFromSellerError())
         }
 
-        const price = await this.priceProvider.getPrice(seller, request.soldResource, request.currency)
-        if(!price){
+        const unitPrice = await this.priceProvider.getPrice(seller, request.soldResource, request.currency)
+        if(!unitPrice){
             return new TradeValidation(new NoPriceEstablishedError())
         }
+
+        const price = unitPrice * request.soldQuantity
 
         if(buyer.getResourceQty(buyerResource) < price){
             return new TradeValidation(new InsufficientResourceFromBuyerError(), price)

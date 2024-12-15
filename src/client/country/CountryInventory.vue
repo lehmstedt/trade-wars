@@ -13,6 +13,6 @@ defineExpose({ inventories })
 <template>
   <h3>{{ name }}</h3>
   <div v-for="inventory in inventories" :key="inventory.name">
-    {{ inventory.name }} : {{ inventory.qty }}
+    {{ inventory.name }} : {{ inventory.qty?.toFixed(2) }}
   </div>
 </template>

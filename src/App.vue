@@ -39,27 +39,23 @@ onMounted(async() => {
 <template>
   <div class="row" v-if="gameReady">
     <div class="column">
-      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame" :resources="resources"></Trade>
+      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame" :resources="resources" :game="game" ></Trade>
     </div>
 
     <div class="column">
       <h1>Inventories</h1>
-      <CountryInventory :country="countries[0]" name="The player country"></CountryInventory>
-      <CountryInventory :country="countries[1]" name="Great-Britain"></CountryInventory>
+      <CountryInventory :country="countries[0]" :key="iteration" name="The player country"></CountryInventory>
+      <CountryInventory :country="countries[1]" :key="iteration" name="Great-Britain"></CountryInventory>
     </div>
 
     <div class="column">
       <h1>Prices</h1>
       <h2>Player</h2>
-      <Suspense>
-        <CountryResourcePrices :country-id="countries[0].id" :prices="playerPrices" :resources="resources" :key="iteration">
-        </CountryResourcePrices>
-      </Suspense>
+      <CountryResourcePrices :country-id="countries[0].id" :prices="playerPrices" :resources="resources" :key="iteration">
+      </CountryResourcePrices>
       <h2>Great-Britain</h2>
-      <Suspense>
-        <CountryResourcePrices :country-id="countries[1].id" :prices="otherCountryPrices" :resources="resources" :key="iteration">
-        </CountryResourcePrices>
-      </Suspense>
+      <CountryResourcePrices :country-id="countries[1].id" :prices="otherCountryPrices" :resources="resources" :key="iteration">
+      </CountryResourcePrices>
     </div>
     
     

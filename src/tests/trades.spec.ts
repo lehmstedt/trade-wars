@@ -228,4 +228,38 @@ describe('trades', () => {
         expect(sellerAfter.getResourceQty(banana)).toEqual(3)
         expect(sellerAfter.getResourceQty(apple)).toEqual(3)
     })
+
+    it('can be made when countries and resources exist, and both trade legs have enough resources in stock, and quantity is greater than 1', async () => {
+        const buyer = new Country('Buyer')
+        const seller = new Country('Seller')
+        const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
+        seller.setResource(apple, 4)
+        buyer.setResource(banana, 7)
+        const countryRepository = new InMemoryCountryRepository([buyer, seller])
+        const resourceRepository = new InMemoryResourceRepository([apple, banana])
+  
+        const game = new Game(countryRepository, resourceRepository, new TestPriceProvider(3))
+
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 2, banana)
+
+        const validation = await game.validateTrade(tradeRequest)
+
+        expect(validation.isValid).toBe(true)
+        expect(validation.price).toEqual(6)
+
+        await game.makeTrade(tradeRequest)
+
+        const buyerAfter = await countryRepository.getById(buyer.id) as Country
+
+        expect(buyerAfter).toBeDefined()
+
+        expect(buyerAfter.getResourceQty(banana)).toEqual(1)
+        expect(buyerAfter.getResourceQty(apple)).toEqual(2)
+
+        const sellerAfter = await countryRepository.getById(seller.id) as Country
+
+        expect(sellerAfter.getResourceQty(banana)).toEqual(6)
+        expect(sellerAfter.getResourceQty(apple)).toEqual(2)
+    })
 })

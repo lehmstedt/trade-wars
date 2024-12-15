@@ -3,6 +3,7 @@ import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { Resource } from "@/domain/entities/Resource";
 import { Country } from "@/domain/entities/Country";
+import { CountryPriceProvider } from "./CountryPriceProvider";
 
 export class GameFactory {
 
@@ -31,6 +32,6 @@ export class GameFactory {
         await countryRepo.save(playerCountry)
         await countryRepo.save(anotherCountry)
 
-        return new Game(countryRepo, resourceRepo)
+        return new Game(countryRepo, resourceRepo, new CountryPriceProvider())
     }
 }

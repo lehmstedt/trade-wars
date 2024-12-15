@@ -3,6 +3,14 @@ import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
 
 export class InMemoryResourceRepository implements IResourceRepository{
 
+    constructor(resources?: Resource[]){
+        if(resources){
+            for (const resource of resources){
+                this.resources.set(resource.name, resource)
+            }
+        }
+    }
+
     async list(): Promise<Resource[]> {
         return Array.from(this.resources.values())
     }

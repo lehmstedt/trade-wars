@@ -1,112 +1,112 @@
 import { Country } from "@/domain/entities/Country";
 import { Resource } from "@/domain/entities/Resource";
-import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, NoResourceQuantityAskedError, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
-import { MakeTrade, TradeLeg, TradeRequest } from "@/domain/useCases/MakeTrade";
+import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyer, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, NoResourceQuantityAskedError, SellerCountryNotFound, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
 import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { describe, expect, it, test } from "vitest";
 import { TestPriceProvider } from "@/tests/TestPriceProvider";
+import { Game, TradeRequest } from "@/domain/application/Game";
+
+const buildGameFromEntities = (countries: Country[], resources: Resource[], transactionPrice?: number) => {
+    const countryRepository = new InMemoryCountryRepository(countries)
+    const resourceRepository = new InMemoryResourceRepository(resources)
+
+    return new Game(countryRepository, resourceRepository, new TestPriceProvider(transactionPrice))
+}
 
 describe('trades', () => {
 
     it('Cannot be made when seller is not existing', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        const resourceRepository = new InMemoryResourceRepository()
+        const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
 
-        const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, new Resource('NotExisting')),
-            new TradeLeg(seller, new Resource('NotExisting')),
-            0
-        )
+        const game = buildGameFromEntities([buyer], [])
 
-        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(SellerCountryNotFoundError)
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+        const validation = await game.validateTrade(tradeRequest)
+
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(SellerCountryNotFoundError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(SellerCountryNotFoundError)
     })
 
     it('Cannot be made when buyer is not existing', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(seller)
-        const resourceRepository = new InMemoryResourceRepository()
+        const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
 
-        const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, new Resource('NotExisting')),
-            new TradeLeg(seller, new Resource('NotExisting')),
-            0
-        )
+        const game = buildGameFromEntities([seller], [])
 
-        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(BuyerCountryNotFoundError)
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+
+        const validation = await game.validateTrade(tradeRequest)
+
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(BuyerCountryNotFoundError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(BuyerCountryNotFoundError)
     })
 
     it('Cannot be made when buyer resource is not existing', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
         
         const apple = new Resource('apple')
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
+        const banana = new Resource('Banana')
 
-        const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
+        const game = buildGameFromEntities([buyer, seller], [apple])
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, new Resource('NotExisting')),
-            new TradeLeg(seller, apple),
-            0
-        )
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
 
-        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(BuyerResourceNotFoundError)
+        const validation = await game.validateTrade(tradeRequest)
+
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(BuyerResourceNotFoundError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(BuyerResourceNotFoundError)
     })
 
-    it('Cannot be made when seller resource is not existing', async () => {
+    it('Cannot be made when sold resource is not existing', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
         
         const apple = new Resource('apple')
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
+        const banana = new Resource('Banana')
 
-        const trade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
+        const game = buildGameFromEntities([buyer, seller], [banana])
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, apple),
-            new TradeLeg(seller, new Resource('NotExisting')),
-            0
-        )
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
 
-        await expect(() => trade.execute(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
+        const validation = await game.validateTrade(tradeRequest)
+
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(SellerResourceNotFoundError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
     })
 
     it('Cannot be made when the seller does not have asked resource', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
 
         const apple = new Resource('Apple')
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
+        const banana = new Resource('Banana')
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, apple),
-            new TradeLeg(seller, apple),
-            1
-        )
 
-        const makeTrade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
+        const game = buildGameFromEntities([buyer, seller], [apple, banana])
 
-        await expect(() => makeTrade.execute(tradeRequest)).rejects.toThrow(InsufficientResourceFromSellerError)
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+
+        const validation = await game.validateTrade(tradeRequest)
+
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(InsufficientResourceFromSellerError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(InsufficientResourceFromSellerError)
 
     })
 
@@ -114,142 +114,107 @@ describe('trades', () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
         seller.setResource(apple, 1)
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
 
         
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
+        const game = buildGameFromEntities([buyer, seller], [apple, banana])
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, apple),
-            new TradeLeg(seller, apple),
-            2
-        )
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 2, banana)
 
-        const makeTrade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
+        const validation = await game.validateTrade(tradeRequest)
 
-        await expect(() => makeTrade.execute(tradeRequest)).rejects.toThrow(InsufficientResourceFromSellerError)
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(InsufficientResourceFromSellerError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(InsufficientResourceFromSellerError)
 
     })
 
-    test('A trade cannot me made if the resource given by the seller is not existing', async () => {
+    test('A trade cannot be made if the sold resource is not existing', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
         seller.setResource(apple, 1)
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
 
-        
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
+        const game = buildGameFromEntities([buyer, seller], [banana])
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, apple),
-            new TradeLeg(seller, new Resource('NotExisting')),
-            1
-        )
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
 
-        const makeTrade = new MakeTrade(countryRepository, resourceRepository, new TestPriceProvider())
+        const validation = await game.validateTrade(tradeRequest)
 
-        await expect(() => makeTrade.execute(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(SellerResourceNotFoundError)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
 
     })
 
-    test('A trade cannot me made if not price can be established', async () => {
+    test('A trade cannot be made if not price can be established', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
         seller.setResource(apple, 1)
         buyer.setResource(banana, 2)
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
 
-        
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
-        await resourceRepository.add(banana)
+        const game = buildGameFromEntities([buyer, seller], [apple, banana])
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, banana),
-            new TradeLeg(seller, apple),
-            1
-        )
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
 
-        const priceProvider = new TestPriceProvider()
-        priceProvider.setPriceForAnyResource(undefined)
+        const validation = await game.validateTrade(tradeRequest)
 
-        const makeTrade = new MakeTrade(countryRepository, resourceRepository, priceProvider)
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(NoPriceEstablishedError)
 
-        await expect(() => makeTrade.execute(tradeRequest)).rejects.toThrow(NoPriceEstablishedError)
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(NoPriceEstablishedError)
 
     })
 
-    test('A trade cannot me made if the buyer does not have the asked resource quantity', async () => {
+    test('A trade cannot be made if the buyer does not have the asked resource quantity', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
         seller.setResource(apple, 1)
         buyer.setResource(banana, 2)
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
 
-        
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
-        await resourceRepository.add(banana)
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, banana),
-            new TradeLeg(seller, apple),
-            1
-        )
+        const game = buildGameFromEntities([buyer, seller], [apple, banana], 3)
 
-        const priceProvider = new TestPriceProvider()
-        priceProvider.setPriceForAnyResource(3)
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
 
-        const makeTrade = new MakeTrade(countryRepository, resourceRepository, priceProvider)
+        const validation = await game.validateTrade(tradeRequest)
 
-        await expect(() => makeTrade.execute(tradeRequest)).rejects.toThrow(InsufficientResourceFromBuyerError)
+        expect(validation.isValid).toBe(false)
+        expect(validation.error).toBeInstanceOf(InsufficientResourceFromBuyerError)
+        expect(validation.price).toEqual(3)
+
+        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(InsufficientResourceFromBuyerError)
 
     })
 
-    it('can me made when countries and resources exist, and both trade legs have enough resources in stock', async () => {
+    it('can be made when countries and resources exist, and both trade legs have enough resources in stock', async () => {
         const buyer = new Country('Buyer')
         const seller = new Country('Seller')
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
         seller.setResource(apple, 4)
         buyer.setResource(banana, 4)
-        const countryRepository = new InMemoryCountryRepository()
-        await countryRepository.save(buyer)
-        await countryRepository.save(seller)
+        const countryRepository = new InMemoryCountryRepository([buyer, seller])
+        const resourceRepository = new InMemoryResourceRepository([apple, banana])
+  
+        const game = new Game(countryRepository, resourceRepository, new TestPriceProvider(3))
 
-        
-        const resourceRepository = new InMemoryResourceRepository()
-        await resourceRepository.add(apple)
-        await resourceRepository.add(banana)
+        const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
 
-        const tradeRequest = new TradeRequest(
-            new TradeLeg(buyer, banana),
-            new TradeLeg(seller, apple),
-            1
-        )
+        const validation = await game.validateTrade(tradeRequest)
 
-        const priceProvider = new TestPriceProvider()
-        priceProvider.setPriceForAnyResource(3)
+        expect(validation.isValid).toBe(true)
+        expect(validation.price).toEqual(3)
 
-        const makeTrade = new MakeTrade(countryRepository, resourceRepository, priceProvider)
-
-        await makeTrade.execute(tradeRequest)
+        await game.makeTrade(tradeRequest)
 
         const buyerAfter = await countryRepository.getById(buyer.id) as Country
 

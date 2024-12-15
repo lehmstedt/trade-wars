@@ -15,21 +15,21 @@ export class GameFactory {
         const charcoal = new Resource('Charcoal')
         const whool = new Resource('Whool')
 
-        resourceRepo.add(iron)
-        resourceRepo.add(charcoal)
-        resourceRepo.add(whool)
+        await resourceRepo.add(iron)
+        await resourceRepo.add(charcoal)
+        await resourceRepo.add(whool)
 
         const playerCountry = new Country('Player')
 
-        playerCountry.setResource('Iron', 12)
-        playerCountry.setResource('Charcoal', 240)
+        playerCountry.setResource(iron, 12)
+        playerCountry.setResource(charcoal, 240)
 
         const anotherCountry = new Country('Great-Britain')
-        anotherCountry.setResource('Iron', 30)
-        anotherCountry.setResource('Whool', 10)
+        anotherCountry.setResource(iron, 30)
+        anotherCountry.setResource(whool, 10)
 
-        countryRepo.save(playerCountry)
-        countryRepo.save(anotherCountry)
+        await countryRepo.save(playerCountry)
+        await countryRepo.save(anotherCountry)
 
         return new Game(countryRepo, resourceRepo)
     }

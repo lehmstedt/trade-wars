@@ -13,27 +13,6 @@ import { Country, type CountryId } from "@/domain/entities/Country";
 import type { IPriceProvider } from "@/domain/IPriceProvider";
 
 
-export class TradeLeg {
-    countryId: CountryId
-    resource: Resource
-    constructor(country: Country, proposedResource: Resource){
-        this.countryId = country.id
-        this.resource = proposedResource
-    }
-}
-
-export class TradeRequest {
-    buyer: TradeLeg
-    seller: TradeLeg
-    askedQuantity: number
-
-    constructor(buyer: TradeLeg, seller: TradeLeg, askedQuantity: number){
-        this.buyer = buyer
-        this.seller = seller
-        this.askedQuantity = askedQuantity
-    }
-}
-
 export class MakeTrade {
 
     countryRepository: ICountryRepository
@@ -70,7 +49,7 @@ export class MakeTrade {
             throw new InsufficientResourceFromSellerError()
         }
 
-        const price = await this.priceProvider.getPrice(new Country('NotDefined'), request.seller.resource, request.buyer.resource)
+        const price = await this.priceProvider.getPrice(seller, request.seller.resource, request.buyer.resource)
         if(!price){
             throw new NoPriceEstablishedError()
         }

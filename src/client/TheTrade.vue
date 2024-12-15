@@ -23,7 +23,7 @@ const resourceToOfferQty = ref(1)
 
 const isCurrentTradeValid = computed(
   () =>
-    playerCountry.value.canTrade(resourceToOffer.value, resourceToOfferQty.value) &&
+    playerCountry.value.getResourceQty()
     otherCountry.value.canTrade(resourceToAsk.value, resourceToAskQty.value)
 )
 
@@ -56,7 +56,7 @@ function trade() {
       <select v-model="resourceToOffer">
         <option v-for="resource in resources" :key="resource.name">{{ resource.name }}</option>
       </select>
-      <input v-model="resourceToOfferQty" placeholder="Qty" type="number" />
+      <p>Price in {{ resourceToOffer }} : {{ price }}</p>
       <button :disabled="!isCurrentTradeValid" @click="trade">Trade</button>
     </div>
   </div>

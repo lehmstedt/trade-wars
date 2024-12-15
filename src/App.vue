@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import Trade from '@/ui/trade/TheTrade.vue'
-import CountryResourcePrices from '@/ui/country/CountryResourcePrice.vue';
+import Trade from '@/client/TheTrade.vue'
+import CountryResourcePrices from '@/client/country/CountryResourcePrice.vue';
 import { onMounted, ref } from 'vue';
-import { GameFactory } from '@/infrastructure/GameFactory';
+import { GameFactory } from '@/client/GameFactory';
 import type { Resource } from '@/domain/entities/Resource';
 import type { Country } from '@/domain/entities/Country';
 import type { Game } from '@/domain/application/Game';
-import CountryInventory from '@/ui/country/CountryInventory.vue';
+import CountryInventory from '@/client/country/CountryInventory.vue';
 
 
 

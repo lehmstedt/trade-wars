@@ -1,15 +1,58 @@
 import type { ICountryRepository } from "@/domain/ports/ICountryRepository";
 import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
-import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
+import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, CountryNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, ResourceNotFoundError, SellerCountryNotFoundError, SellerResourceNotFoundError, type ITradeError } from "@/domain/Errors";
 import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";
+import { MakeTrade } from "@/domain/useCases/MakeTrade";
+import type { IPriceProvider } from "../IPriceProvider";
+
+export class TradeId {
+
+}
+
+export class TradeValidation {
+    isValid: Boolean = false
+    price?: number = 0
+    error?: ITradeError = {}
+
+    constructor(error?: ITradeError, price?: number){
+
+        this.price = price
+        this.error = error
+        
+        if(!this.error){
+            this.isValid = true
+        }
+    }
+}
+
+export class TradeRequest {
+    buyer: Country
+    seller: Country
+    soldResource: Resource
+    soldQuantity: number
+    currency: Resource
+
+    constructor(buyer: Country, seller: Country, soldResource: Resource, soldQuantity: number, currency: Resource){
+        this.buyer = buyer
+        this.seller = seller
+        this.soldResource = soldResource
+        this.soldQuantity = soldQuantity
+        this.currency = currency
+    }
+
+}
 
 export class Game {
     countryRepository: ICountryRepository
     resourceRepository: IResourceRepository
-    constructor(countryRepository: ICountryRepository, resourceRepository: IResourceRepository){
+    makeTradeUseCase: MakeTrade
+    priceProvider: IPriceProvider
+    constructor(countryRepository: ICountryRepository, resourceRepository: IResourceRepository, priceProvider: IPriceProvider){
         this.countryRepository = countryRepository
         this.resourceRepository = resourceRepository
+        this.makeTradeUseCase = new MakeTrade(this.countryRepository, this.resourceRepository, priceProvider)
+        this.priceProvider = priceProvider
     }
 
     async getResourcePrice(resourceName: string, expressedResourceName: string, countryId: CountryId): Promise<number>{
@@ -57,20 +100,62 @@ export class Game {
         return country.getResourceInventories()
     }
 
+    async makeTrade(request: TradeRequest): Promise<void> {
+        
+        const validation = await this.validateTrade(request)
+        if(!validation.isValid){
+            throw validation.error
+        }
+
+        request.buyer.tradeWith(request.seller, request.currency, validation.price ?? 0, request.soldResource, request.soldQuantity)
+
+        await this.countryRepository.save(request.buyer)
+        await this.countryRepository.save(request.seller)
+    }
+
+    async validateTrade(request: TradeRequest): Promise<TradeValidation>{
+
+        const buyer = await this.countryRepository.getById(request.buyer.id)
+        if(!buyer){
+            return new TradeValidation(new BuyerCountryNotFoundError())
+        }
+        const seller = await this.countryRepository.getById(request.seller.id)
+        if(!seller){
+            return new TradeValidation(new SellerCountryNotFoundError())
+        }
+
+        const sellerResource = await this.resourceRepository.getByName(request.soldResource.name)
+        if(!sellerResource){
+            return new TradeValidation(new SellerResourceNotFoundError())
+        }
+
+        const buyerResource = await this.resourceRepository.getByName(request.currency.name)
+        if(!buyerResource){
+            return new TradeValidation(new BuyerResourceNotFoundError())
+        }
+
+        if(seller.getResourceQty(request.soldResource) < request.soldQuantity){
+            return new TradeValidation(new InsufficientResourceFromSellerError())
+        }
+
+        const price = await this.priceProvider.getPrice(seller, request.soldResource, request.currency)
+        if(!price){
+            return new TradeValidation(new NoPriceEstablishedError())
+        }
+
+        if(buyer.getResourceQty(buyerResource) < price){
+            return new TradeValidation(new InsufficientResourceFromBuyerError(), price)
+        }
+
+        return new TradeValidation(undefined, price)
+    }
+
     private async tryGetCountry(countryId: CountryId){
         const country = await this.countryRepository.getById(countryId)
         if(!country){
             throw new CountryNotFoundError()
         }
         return country
-    }
-
-    private async tryGetResource(resource: Resource){
-        const existingResource = await this.resourceRepository.getByName(resource.name)
-        if(!existingResource){
-            throw new ResourceNotFoundError()
-        }
-        return existingResource
     }
     
 }

@@ -8,17 +8,10 @@ import { CountryPriceProvider } from "./CountryPriceProvider";
 export class GameFactory {
 
     async buildInMemoryGame(): Promise<Game> {
-        const countryRepo = new InMemoryCountryRepository()
-        const resourceRepo = new InMemoryResourceRepository()
-
 
         const iron = new Resource('Iron')
         const charcoal = new Resource('Charcoal')
         const whool = new Resource('Whool')
-
-        await resourceRepo.add(iron)
-        await resourceRepo.add(charcoal)
-        await resourceRepo.add(whool)
 
         const playerCountry = new Country('Player')
 
@@ -29,9 +22,10 @@ export class GameFactory {
         anotherCountry.setResource(iron, 30)
         anotherCountry.setResource(whool, 10)
 
-        await countryRepo.save(playerCountry)
-        await countryRepo.save(anotherCountry)
+        const countryRepository = new InMemoryCountryRepository([playerCountry, anotherCountry])
+        const resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
 
-        return new Game(countryRepo, resourceRepo, new CountryPriceProvider())
+
+        return new Game(countryRepository, resourceRepository, new CountryPriceProvider())
     }
 }

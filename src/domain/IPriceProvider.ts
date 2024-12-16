@@ -3,5 +3,5 @@ import type { Country } from "@/domain/entities/Country";
 
 export interface IPriceProvider {
 
-    getPrice(owningCountry: Country, resource: Resource, currencyResource: Resource): Promise<number|undefined>
+    getPrice(buyer: Country, seller: Country, resource: Resource, currency: Resource): Promise<number
 }

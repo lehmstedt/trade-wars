@@ -16,7 +16,7 @@ const props = defineProps<Props>()
 const emit = defineEmits(['tradeMade'])
 
 const soldResource = ref(props.resources[0])
-const soldQuantity = ref(0)
+const soldQuantity = ref(1)
 const currency = ref(props.resources[0])
 const validation = ref(new TradeValidation())
 
@@ -27,10 +27,6 @@ const tradeRequest = computed(
 
 watch(tradeRequest, async(newRequest) => {
   validation.value = await props.game.validateTrade(newRequest)
-})
-
-onMounted(async () => {
-  validation.value = await props.game.validateTrade(tradeRequest.value)
 })
 
 

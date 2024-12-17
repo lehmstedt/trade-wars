@@ -2,18 +2,14 @@ import type { IPriceProvider } from "@/domain/IPriceProvider";
 
 export class TestPriceProvider implements IPriceProvider {
 
-    constructor(price?: number){
+    constructor(price: number){
         this.price = price
     }
 
-    price?: number
+    price: number
 
-    async getPrice(): Promise<number | undefined> {
+    getPrice(): number {
         return this.price
-    }
-
-    setPriceForAnyResource(price: number|undefined){
-        this.price = price
     }
 
 }

@@ -19,6 +19,43 @@ describe('CountryPairPriceProvider', () => {
         expect(price).toEqual(1)
     })
 
+    it('should return the price of the buyer when it is the only one to have resource and currency', () => {
+
+        const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
+
+        const buyer = new Country('Buyer')
+        buyer.setResource(apple, 1)
+        buyer.setResource(banana, 2)
+
+        const seller = new Country('Seller')
+        seller.setResource(banana, 2)
+    
+        const provider = new CountryPairPriceProvider()
+        const price = provider.getPrice(buyer, seller, apple, banana)
+    
+        expect(price).toEqual(2)
+    })
+
+    it('should return the price of the seller when it does have resource and currency', () => {
+
+        const apple = new Resource('Apple')
+        const banana = new Resource('Banana')
+
+        const buyer = new Country('Buyer')
+        buyer.setResource(apple, 1)
+        buyer.setResource(banana, 2)
+
+        const seller = new Country('Seller')
+        seller.setResource(banana, 2)
+        seller.setResource(apple, 3)
+    
+        const provider = new CountryPairPriceProvider()
+        const price = provider.getPrice(buyer, seller, apple, banana)
+    
+        expect(price).toBeCloseTo(2/3)
+    })
+
 
     
 })

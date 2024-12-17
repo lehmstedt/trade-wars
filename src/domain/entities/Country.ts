@@ -78,17 +78,14 @@ export class Country {
     }
     return tariffs
   }
-  expressResourcePriceInGivenResource(resource: Resource, givenResource: Resource) {
+  expressResourcePriceInGivenResource(resource: Resource, currency: Resource): number|undefined {
     const resourceQty = this.getResourceQty(resource)
-    const expressedResourceQty = this.getResourceQty(givenResource)
+    const expressedResourceQty = this.getResourceQty(currency)
     if (resourceQty === expressedResourceQty) {
       return 1
     }
-    if (resourceQty === 0) {
-      return Infinity
-    }
-    if (expressedResourceQty === 0) {
-      return 0
+    if (resourceQty === 0 || expressedResourceQty === 0) {
+      return undefined
     }
     return expressedResourceQty / resourceQty
   }

@@ -4,8 +4,8 @@ import type { IPriceProvider } from "@/domain/IPriceProvider";
 
 export class CountryPriceProvider implements IPriceProvider {
 
-    async getPrice(owningCountry: Country, resource: Resource, currencyResource: Resource): Promise<number | undefined> {
-        return owningCountry.expressResourcePriceInGivenResource(resource, currencyResource)
+    getPrice(owningCountry: Country, resource: Resource, currencyResource: Resource): number {
+        return owningCountry.expressResourcePriceInGivenResource(resource, currencyResource) ?? 1
     }
 
 }

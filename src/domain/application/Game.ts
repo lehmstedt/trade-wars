@@ -135,7 +135,7 @@ export class Game {
             return new TradeValidation(new InsufficientResourceFromSellerError())
         }
 
-        const unitPrice = await this.priceProvider.getPrice(seller, request.soldResource, request.currency)
+        const unitPrice = await this.priceProvider.getPrice(buyer, seller, request.soldResource, request.currency)
         if(!unitPrice){
             return new TradeValidation(new NoPriceEstablishedError())
         }

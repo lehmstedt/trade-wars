@@ -3,7 +3,7 @@ import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { Resource } from "@/domain/entities/Resource";
 import { Country } from "@/domain/entities/Country";
-import { CountryPriceProvider } from "./CountryPriceProvider";
+import { CountryPairPriceProvider } from "@/domain/CountryPairPriceProvider";
 
 export class GameFactory {
 
@@ -26,6 +26,6 @@ export class GameFactory {
         const resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
 
 
-        return new Game(countryRepository, resourceRepository, new CountryPriceProvider())
+        return new Game(countryRepository, resourceRepository, new CountryPairPriceProvider())
     }
 }

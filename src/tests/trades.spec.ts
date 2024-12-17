@@ -1,6 +1,6 @@
 import { Country } from "@/domain/entities/Country";
 import { Resource } from "@/domain/entities/Resource";
-import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyer, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, NoResourceQuantityAskedError, SellerCountryNotFound, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
+import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, NoResourceQuantityAskedError, SellerCountryNotFound, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
 import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { describe, expect, it, test } from "vitest";
@@ -11,7 +11,7 @@ const buildGameFromEntities = (countries: Country[], resources: Resource[], tran
     const countryRepository = new InMemoryCountryRepository(countries)
     const resourceRepository = new InMemoryResourceRepository(resources)
 
-    return new Game(countryRepository, resourceRepository, new TestPriceProvider(transactionPrice))
+    return new Game(countryRepository, resourceRepository, new TestPriceProvider(transactionPrice ?? 0))
 }
 
 describe('trades', () => {

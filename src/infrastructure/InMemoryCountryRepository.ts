@@ -1,5 +1,5 @@
 import { Country, CountryId } from "@/domain/entities/Country";
-import { type ICountryRepository } from "@/domain/ports/ICountryRepository";
+import { type ICountryRepository } from "@/domain/drivenPorts/ICountryRepository";
 
 export class InMemoryCountryRepository implements ICountryRepository {
 

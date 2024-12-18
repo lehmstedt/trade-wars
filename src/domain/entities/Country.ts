@@ -89,4 +89,7 @@ export class Country {
     }
     return expressedResourceQty / resourceQty
   }
+  setGoal(resource: Resource, quantity: number){
+    
+  }
 }

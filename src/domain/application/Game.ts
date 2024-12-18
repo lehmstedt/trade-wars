@@ -1,5 +1,5 @@
-import type { ICountryRepository } from "@/domain/ports/ICountryRepository";
-import type { IResourceRepository } from "@/domain/ports/IResourceRepository";
+import type { ICountryRepository } from "@/domain/drivenPorts/ICountryRepository";
+import type { IResourceRepository } from "@/domain/drivenPorts/IResourceRepository";
 import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, CountryNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, ResourceNotFoundError, SellerCountryNotFoundError, SellerResourceNotFoundError, type ITradeError } from "@/domain/Errors";
 import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";
@@ -135,7 +135,7 @@ export class Game {
             return new TradeValidation(new InsufficientResourceFromSellerError())
         }
 
-        const unitPrice = await this.priceProvider.getPrice(buyer, seller, request.soldResource, request.currency)
+        const unitPrice = this.priceProvider.getPrice(buyer, seller, request.soldResource, request.currency)
         if(!unitPrice){
             return new TradeValidation(new NoPriceEstablishedError())
         }

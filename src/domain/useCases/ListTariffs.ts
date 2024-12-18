@@ -1,6 +1,6 @@
 import { CountryNotFoundError } from "@/domain/Errors";
 import type { CountryId } from "@/domain/entities/Country";
-import type { ICountryRepository } from "@/domain/ports/ICountryRepository";
+import type { ICountryRepository } from "@/domain/drivenPorts/ICountryRepository";
 import { Tariff } from "@/domain/entities/Tariff";
 
 export class ListTariffs {

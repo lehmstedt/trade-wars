@@ -2,6 +2,7 @@ import { Resource } from "@/domain/entities/Resource";
 import { Tariff } from "@/domain/entities/Tariff";
 
 export type ResourceInventory = { name: string; qty: number }
+type Goal = {resource: Resource, quantity: number }
 
 export class CountryId{
   value: string
@@ -21,12 +22,14 @@ export class Country {
   id: CountryId
   tariffs: Map<string, number>
   name: string
+  goals: Map<string, Goal>
 
   constructor(name: string) {
     this.resources = new Map<string, number>()
     this.tariffs = new Map<string, number>()
     this.id = new CountryId(name)
     this.name = name
+    this.goals = new Map<string, Goal>()
   }
 
   setTariff(rate: number, resource: Resource) {
@@ -90,6 +93,10 @@ export class Country {
     return expressedResourceQty / resourceQty
   }
   setGoal(resource: Resource, quantity: number){
-    
+    this.goals.set(resource.name, {resource, quantity})
+  }
+
+  listGoals(): Goal[]{
+    return Array.from(this.goals.values())
   }
 }

@@ -14,7 +14,20 @@ export class ForCheckingIfGameIsOver {
     }
 
     async execute(): Promise<GameState>{
-        return new GameState()
+        const countries = await this.forCheckingIfACountryIsWinner.list()
+        const country = countries[0]
+
+        const gameState = new GameState()
+
+        const goals = country.listGoals()
+
+        for(const goal of goals){
+            if(country.getResourceQty(goal.resource) < goal.quantity){
+                return gameState
+            }
+        }
+
+        return {isGameOver: true, winnerName: country.name}
     }
     
 }

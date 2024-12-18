@@ -13,6 +13,16 @@ export class CountryBuilder {
         return this
     }
 
+    withResource(resource: Resource, quantity: number){
+        this.country.setResource(resource, quantity)
+        return this
+    }
+
+    withName(name: string){
+        this.country.name = name
+        return this
+    }
+
     build(){
         return this.country
     }

@@ -57,6 +57,51 @@ describe('For checking if game is over', () => {
         expect(gameState.winnerName).toBe(country.name)
     })
 
+    it('should have a winner when a country has more than its resource goal', async () => {
+        const pinapple = new Resource('Pinapple')
+        const country = new CountryBuilder()
+            .withName('Pinapple')
+            .withGoal(pinapple, 10)
+            .withResource(pinapple, 11)
+            .build()
+
+        const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
+
+
+        const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+
+        const gameState = await forCheckingIfGameIsOver.execute()
+
+        expect(gameState.isGameOver).toBe(true)
+        expect(gameState.winnerName).toBe(country.name)
+    })
+
+    it('should have a winner when a country has reached its goal, and another not', async () => {
+        const pinapple = new Resource('Pinapple')
+
+        const loser = new CountryBuilder()
+            .withName('Pinapple')
+            .withGoal(pinapple, 10)
+            .withResource(pinapple, 9)
+            .build()
+
+        const winner = new CountryBuilder()
+            .withName('Pinapple')
+            .withGoal(pinapple, 10)
+            .withResource(pinapple, 10)
+            .build()
+
+        const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([loser, winner])
+
+
+        const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+
+        const gameState = await forCheckingIfGameIsOver.execute()
+
+        expect(gameState.isGameOver).toBe(true)
+        expect(gameState.winnerName).toBe(winner.name)
+    })
+
     it('should not have a winner when a country has reached only one on two goals', async () => {
         const pinapple = new Resource('Pinapple')
         const apple = new Resource('Apple')
@@ -105,5 +150,31 @@ describe('For checking if game is over', () => {
 
         expect(gameState.isGameOver).toBe(false)
         expect(gameState.winnerName).toBe(undefined)
+    })
+
+    it('should be game over but no country is winner when two countries have reached theirs goal', async () => {
+        const pinapple = new Resource('Pinapple')
+
+        const country1 = new CountryBuilder()
+            .withName('Country1')
+            .withGoal(pinapple, 10)
+            .withResource(pinapple, 10)
+            .build()
+
+        const country2 = new CountryBuilder()
+            .withName('Country2')
+            .withGoal(pinapple, 10)
+            .withResource(pinapple, 10)
+            .build()
+
+        const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country1, country2])
+
+
+        const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+
+        const gameState = await forCheckingIfGameIsOver.execute()
+
+        expect(gameState.isGameOver).toBe(true)
+        expect(gameState.winnerName).toBeUndefined()
     })
 })

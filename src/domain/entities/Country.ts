@@ -1,5 +1,6 @@
 import { Resource } from "@/domain/entities/Resource";
 import { Tariff } from "@/domain/entities/Tariff";
+import { UnknownGoalError } from "@/domain/Errors";
 
 export type ResourceInventory = { name: string; qty: number }
 type Goal = {resource: Resource, quantity: number }
@@ -98,5 +99,26 @@ export class Country {
 
   listGoals(): Goal[]{
     return Array.from(this.goals.values())
+  }
+  hasReachedGoal(resource: Resource){
+    const goal = this.goals.get(resource.name)
+    if(!goal){
+      throw new UnknownGoalError()
+    }
+    return this.getResourceQty(goal.resource) >= goal.quantity
+  }
+  hasReachedHisGoals() {
+    const goals = this.listGoals()
+    if(goals.length === 2){
+      return this.hasReachedGoal(goals[0].resource) && this.hasReachedGoal(goals[1].resource)
+    }
+    for (const goal of this.listGoals()) {
+
+
+      if (!this.hasReachedGoal(goal.resource)) {
+        return false
+      }
+      return true
+    }
   }
 }

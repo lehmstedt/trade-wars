@@ -71,10 +71,16 @@ describe('For checking if game is over', () => {
 
         const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
 
-
         const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
 
+        const countries = await forCheckingIfACountryIsWinner.list()
+        expect(countries.length).toEqual(1)
+        expect(countries[0].hasReachedGoal(pinapple)).toBe(true)
+        expect(countries[0].hasReachedGoal(new Resource(apple.name))).toBe(false)
+        expect(countries[0].hasReachedHisGoals()).toBe(false)
+
         const gameState = await forCheckingIfGameIsOver.execute()
+
 
         expect(gameState.isGameOver).toBe(false)
         expect(gameState.winnerName).toBe(undefined)

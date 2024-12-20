@@ -3,6 +3,8 @@ import type { IResourceRepository } from "@/domain/drivenPorts/IResourceReposito
 
 export class InMemoryResourceRepository implements IResourceRepository{
 
+    resources = new Map<string, Resource>()
+
     constructor(resources?: Resource[]){
         if(resources){
             for (const resource of resources){
@@ -20,7 +22,7 @@ export class InMemoryResourceRepository implements IResourceRepository{
             this.resources.set(resource.name, resource)
         }
     }
-    resources = new Map<string, Resource>()
+    
     async add(resource: Resource): Promise<void> {
         this.resources.set(resource.name, resource)
     }

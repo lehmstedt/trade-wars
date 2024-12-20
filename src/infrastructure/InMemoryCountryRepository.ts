@@ -1,7 +1,10 @@
 import { Country, CountryId } from "@/domain/entities/Country";
 import { type ICountryRepository } from "@/domain/drivenPorts/ICountryRepository";
+import type { ForCheckingIfACountryIsWinner } from "@/domain/drivenPorts/ForCheckingIfACountryIsWinner";
 
-export class InMemoryCountryRepository implements ICountryRepository {
+export class InMemoryCountryRepository implements ICountryRepository, ForCheckingIfACountryIsWinner {
+
+    countries = new Map<string, Country>()
 
     constructor(countries?: Country[]){
         if(countries){
@@ -13,8 +16,7 @@ export class InMemoryCountryRepository implements ICountryRepository {
     async list(): Promise<Country[]> {
         return Array.from(this.countries.values())
     }
-    
-    countries = new Map<string, Country>()
+
 
     async save(country: Country): Promise<void> {
         this.countries.set(country.id.value, country)

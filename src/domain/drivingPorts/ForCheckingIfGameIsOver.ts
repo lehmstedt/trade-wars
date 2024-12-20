@@ -1,4 +1,5 @@
 import type { ForCheckingIfACountryIsWinner } from "@/domain/drivenPorts/ForCheckingIfACountryIsWinner"
+import { Resource } from "../entities/Resource"
 
 class GameState {
     isGameOver: Boolean = false
@@ -17,17 +18,12 @@ export class ForCheckingIfGameIsOver {
         const countries = await this.forCheckingIfACountryIsWinner.list()
         const country = countries[0]
 
-        const gameState = new GameState()
-
-        const goals = country.listGoals()
-
-        for(const goal of goals){
-            if(country.getResourceQty(goal.resource) < goal.quantity){
-                return gameState
-            }
+        if(country.hasReachedHisGoals()){
+            return {isGameOver: true, winnerName: country.name}
         }
 
-        return {isGameOver: true, winnerName: country.name}
+        return {isGameOver: false}
+        
     }
     
 }

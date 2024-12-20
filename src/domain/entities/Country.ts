@@ -109,16 +109,12 @@ export class Country {
   }
   hasReachedHisGoals() {
     const goals = this.listGoals()
-    if(goals.length === 2){
-      return this.hasReachedGoal(goals[0].resource) && this.hasReachedGoal(goals[1].resource)
-    }
-    for (const goal of this.listGoals()) {
-
-
+    for (const goal of goals) {
       if (!this.hasReachedGoal(goal.resource)) {
         return false
       }
-      return true
+       
     }
+    return true
   }
 }

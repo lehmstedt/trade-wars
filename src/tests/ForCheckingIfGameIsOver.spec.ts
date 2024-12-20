@@ -57,7 +57,7 @@ describe('For checking if game is over', () => {
         expect(gameState.winnerName).toBe(country.name)
     })
 
-    it('should not have a winner when a country has reached only one on multiple goals', async () => {
+    it('should not have a winner when a country has reached only one on two goals', async () => {
         const pinapple = new Resource('Pinapple')
         const apple = new Resource('Apple')
 
@@ -73,11 +73,32 @@ describe('For checking if game is over', () => {
 
         const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
 
-        const countries = await forCheckingIfACountryIsWinner.list()
-        expect(countries.length).toEqual(1)
-        expect(countries[0].hasReachedGoal(pinapple)).toBe(true)
-        expect(countries[0].hasReachedGoal(new Resource(apple.name))).toBe(false)
-        expect(countries[0].hasReachedHisGoals()).toBe(false)
+        const gameState = await forCheckingIfGameIsOver.execute()
+
+
+        expect(gameState.isGameOver).toBe(false)
+        expect(gameState.winnerName).toBe(undefined)
+    })
+
+    it('should not have a winner when a country has reached only two on three goals', async () => {
+        const pinapple = new Resource('Pinapple')
+        const apple = new Resource('Apple')
+        const table = new Resource('Table')
+
+        const country = new CountryBuilder()
+            .withName('NotAWinner')
+            .withGoal(pinapple, 10)
+            .withGoal(apple, 2)
+            .withGoal(table, 3)
+            .withResource(pinapple, 10)
+            .withResource(apple, 2)
+            .withResource(table, 2)
+            .build()
+
+        const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
+
+        const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+
 
         const gameState = await forCheckingIfGameIsOver.execute()
 

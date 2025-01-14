@@ -3,14 +3,14 @@ import type { CountryId } from "@/domain/entities/Country";
 import type { ICountryRepository } from "@/domain/drivenPorts/ICountryRepository";
 import { Tariff } from "@/domain/entities/Tariff";
 
-export class ListTariffs {
-    countryRepository: ICountryRepository
+export class ForListingTariffs {
+    forListingCountryTariffs: ICountryRepository
     constructor(countryRepo: ICountryRepository){
-        this.countryRepository = countryRepo
+        this.forListingCountryTariffs = countryRepo
     }
 
     async execute(id: CountryId): Promise<Tariff[]>{
-        const country = await this.countryRepository.getById(id)
+        const country = await this.forListingCountryTariffs.getById(id)
 
         if(!country){
             throw new CountryNotFoundError()

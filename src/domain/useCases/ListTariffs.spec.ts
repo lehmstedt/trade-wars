@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CountryNotFoundError } from "@/domain/Errors";
-import { ListTariffs } from "@/domain/useCases/ListTariffs";
+import { ForListingTariffs } from "@/domain/drivingPorts/ForListingTariffs";
 import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
 import { Country, CountryId } from "@/domain/entities/Country";
 import { SetTariff } from "@/domain/useCases/SetTariff";
@@ -10,7 +10,7 @@ import { Resource } from "@/domain/entities/Resource";
 describe("ListTariffs", () => {
     it("should throw when country is not existing", async () => {
         const countryRepository = new InMemoryCountryRepository()
-        const listTariffs = new ListTariffs(countryRepository)
+        const listTariffs = new ForListingTariffs(countryRepository)
         await expect(() => listTariffs.execute(new CountryId('notExisting'))).rejects.toThrowError(CountryNotFoundError)
 
     })
@@ -18,11 +18,11 @@ describe("ListTariffs", () => {
     it('should return empty when country has not tariff set', async() => {
         const countryRepository = new InMemoryCountryRepository()
 
-        const country = new Country()
+        const country = new Country("")
 
         await countryRepository.save(country)
 
-        const listTariffs = new ListTariffs(countryRepository)
+        const listTariffs = new ForListingTariffs(countryRepository)
         const tariffList = await listTariffs.execute(country.id)
 
         expect(tariffList.length).toEqual(0)
@@ -37,14 +37,14 @@ describe("ListTariffs", () => {
 
         resourceRepository.add(wood)
 
-        const country = new Country()
+        const country = new Country("")
         await countryRepository.save(country)
         const setTariff = new SetTariff(countryRepository, resourceRepository)
 
         await setTariff.execute(country.id, 10, wood.name)
 
         // ACT
-        const listTariffs = new ListTariffs(countryRepository)
+        const listTariffs = new ForListingTariffs(countryRepository)
         const tariffList = await listTariffs.execute(country.id)
 
         // ASSERT

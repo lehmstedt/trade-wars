@@ -1,4 +1,4 @@
-import type { Country, CountryId } from "@/domain/entities/Country";
+import type { Country } from "@/domain/entities/Country";
 
 export interface ForCheckingIfACountryIsWinner {
     list(): Promise<Country[]>

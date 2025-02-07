@@ -25,4 +25,9 @@ export class InMemoryCountryRepository implements ICountryRepository, ForCheckin
         return this.countries.get(countryId.value)
     }
 
+    set(countries: Country[]){
+        this.countries.clear();
+        countries.forEach(country => this.countries.set(country.id.value, country))
+    }
+
 }

@@ -29,5 +29,9 @@ export class InMemoryResourceRepository implements IResourceRepository{
     async getByName(name: string): Promise<Resource|undefined> {
         return this.resources.get(name)
     }
+    set(resources:  Resource[]){
+        this.resources.clear();
+        resources.forEach(resource => this.resources.set(resource.name, resource))
+    }
 
 }

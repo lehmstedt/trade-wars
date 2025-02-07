@@ -5,14 +5,14 @@ import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { describe, expect, it, test } from "vitest";
 import { TestPriceProvider } from "@/tests/TestPriceProvider";
-import { Game, TradeRequest } from "@/domain/application/Game";
+import { Game } from "@/domain/application/Game";
+import { ForValidatingTrade } from "@/domain/drivingPorts/ForValidatingTrade";
+import { TestConfigurator } from "@/configurator/TestConfigurator";
+import { TradeRequest } from "@/domain/entities/TradeRequest";
+import { TradeValidationStatus } from "@/domain/entities/TradeValidation";
 
-const buildGameFromEntities = (countries: Country[], resources: Resource[], transactionPrice?: number) => {
-    const countryRepository = new InMemoryCountryRepository(countries)
-    const resourceRepository = new InMemoryResourceRepository(resources)
 
-    return new Game(countryRepository, resourceRepository, new TestPriceProvider(transactionPrice ?? 0))
-}
+const testConfigurator = new TestConfigurator()
 
 describe('trades', () => {
 
@@ -22,15 +22,19 @@ describe('trades', () => {
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
 
-        const game = buildGameFromEntities([buyer], [])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer], [])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(SellerCountryNotFoundError)
+        expect(validation.status).toEqual(TradeValidationStatus.SellerCountryNotFound)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(SellerCountryNotFoundError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer], [])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.SellerCountryNotFound)
     })
 
     it('Cannot be made when buyer is not existing', async () => {
@@ -39,16 +43,19 @@ describe('trades', () => {
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
 
-        const game = buildGameFromEntities([seller], [])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([seller], [])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(BuyerCountryNotFoundError)
+        expect(validation.status).toEqual(TradeValidationStatus.BuyerCountryNotFound)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(BuyerCountryNotFoundError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([seller], [])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.BuyerCountryNotFound)
     })
 
     it('Cannot be made when buyer resource is not existing', async () => {
@@ -58,16 +65,19 @@ describe('trades', () => {
         const apple = new Resource('apple')
         const banana = new Resource('Banana')
 
-        const game = buildGameFromEntities([buyer, seller], [apple])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(BuyerResourceNotFoundError)
+        expect(validation.status).toEqual(TradeValidationStatus.BuyerResourceNotFound)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(BuyerResourceNotFoundError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.BuyerResourceNotFound)
     })
 
     it('Cannot be made when sold resource is not existing', async () => {
@@ -77,16 +87,19 @@ describe('trades', () => {
         const apple = new Resource('apple')
         const banana = new Resource('Banana')
 
-        const game = buildGameFromEntities([buyer, seller], [banana])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [banana])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(SellerResourceNotFoundError)
+        expect(validation.status).toEqual(TradeValidationStatus.SellerResourceNotFound)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [banana])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.SellerResourceNotFound)
     })
 
     it('Cannot be made when the seller does not have asked resource', async () => {
@@ -96,17 +109,19 @@ describe('trades', () => {
         const apple = new Resource('Apple')
         const banana = new Resource('Banana')
 
-
-        const game = buildGameFromEntities([buyer, seller], [apple, banana])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple, banana])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(InsufficientResourceFromSellerError)
+        expect(validation.status).toEqual(TradeValidationStatus.InsufficientResourceFromSeller)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(InsufficientResourceFromSellerError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.InsufficientResourceFromSeller)
 
     })
 
@@ -117,17 +132,19 @@ describe('trades', () => {
         const banana = new Resource('Banana')
         seller.setResource(apple, 1)
 
-        
-        const game = buildGameFromEntities([buyer, seller], [apple, banana])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple, banana])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 2, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(InsufficientResourceFromSellerError)
+        expect(validation.status).toEqual(TradeValidationStatus.InsufficientResourceFromSeller)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(InsufficientResourceFromSellerError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.InsufficientResourceFromSeller)
 
     })
 
@@ -138,17 +155,19 @@ describe('trades', () => {
         const banana = new Resource('Banana')
         seller.setResource(apple, 1)
 
-        const game = buildGameFromEntities([buyer, seller], [banana])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [banana])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(SellerResourceNotFoundError)
+        expect(validation.status).toEqual(TradeValidationStatus.SellerResourceNotFound)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(SellerResourceNotFoundError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [banana])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
 
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.SellerResourceNotFound)
     })
 
     test('A trade cannot be made if not price can be established', async () => {
@@ -159,16 +178,19 @@ describe('trades', () => {
         seller.setResource(apple, 1)
         buyer.setResource(banana, 2)
 
-        const game = buildGameFromEntities([buyer, seller], [apple, banana])
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple, banana])
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(NoPriceEstablishedError)
+        expect(validation.status).toEqual(TradeValidationStatus.NoPriceEstablished)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(NoPriceEstablishedError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana])
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.NoPriceEstablished)
 
     })
 
@@ -180,18 +202,19 @@ describe('trades', () => {
         seller.setResource(apple, 1)
         buyer.setResource(banana, 2)
 
-
-        const game = buildGameFromEntities([buyer, seller], [apple, banana], 3)
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple, banana], 3)
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(false)
-        expect(validation.error).toBeInstanceOf(InsufficientResourceFromBuyerError)
-        expect(validation.price).toEqual(3)
+        expect(validation.status).toEqual(TradeValidationStatus.InsufficientResourceFromBuyer)
 
-        await expect(() => game.makeTrade(tradeRequest)).rejects.toThrow(InsufficientResourceFromBuyerError)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana], 3)
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
+
+        expect(tradeExecution.isValid).toBe(false)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.InsufficientResourceFromBuyer)
 
     })
 
@@ -202,28 +225,29 @@ describe('trades', () => {
         const banana = new Resource('Banana')
         seller.setResource(apple, 4)
         buyer.setResource(banana, 4)
-        const countryRepository = new InMemoryCountryRepository([buyer, seller])
-        const resourceRepository = new InMemoryResourceRepository([apple, banana])
-  
-        const game = new Game(countryRepository, resourceRepository, new TestPriceProvider(3))
+
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple, banana], 3)
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
-
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(true)
-        expect(validation.price).toEqual(3)
+        expect(validation.status).toEqual(TradeValidationStatus.OK)
 
-        await game.makeTrade(tradeRequest)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana], 3)
+        const tradeExecution = await forMakingTrade.execute(tradeRequest)
 
-        const buyerAfter = await countryRepository.getById(buyer.id) as Country
+        expect(tradeExecution.isValid).toBe(true)
+        expect(tradeExecution.status).toEqual(TradeValidationStatus.OK)
+
+        const buyerAfter = await testConfigurator.countryRepository.getById(buyer.id) as Country
 
         expect(buyerAfter).toBeDefined()
 
         expect(buyerAfter.getResourceQty(banana)).toEqual(1)
         expect(buyerAfter.getResourceQty(apple)).toEqual(1)
 
-        const sellerAfter = await countryRepository.getById(seller.id) as Country
+        const sellerAfter = await testConfigurator.countryRepository.getById(seller.id) as Country
 
         expect(sellerAfter.getResourceQty(banana)).toEqual(3)
         expect(sellerAfter.getResourceQty(apple)).toEqual(3)
@@ -236,28 +260,27 @@ describe('trades', () => {
         const banana = new Resource('Banana')
         seller.setResource(apple, 4)
         buyer.setResource(banana, 7)
-        const countryRepository = new InMemoryCountryRepository([buyer, seller])
-        const resourceRepository = new InMemoryResourceRepository([apple, banana])
   
-        const game = new Game(countryRepository, resourceRepository, new TestPriceProvider(3))
+        const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple, banana], 3)
+        const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana], 3)
 
         const tradeRequest = new TradeRequest(buyer, seller, apple, 2, banana)
 
-        const validation = await game.validateTrade(tradeRequest)
+        const validation = await forValidatingTrade.execute(tradeRequest)
 
         expect(validation.isValid).toBe(true)
         expect(validation.price).toEqual(6)
 
-        await game.makeTrade(tradeRequest)
+        await forMakingTrade.execute(tradeRequest)
 
-        const buyerAfter = await countryRepository.getById(buyer.id) as Country
+        const buyerAfter = await testConfigurator.countryRepository.getById(buyer.id) as Country
 
         expect(buyerAfter).toBeDefined()
 
         expect(buyerAfter.getResourceQty(banana)).toEqual(1)
         expect(buyerAfter.getResourceQty(apple)).toEqual(2)
 
-        const sellerAfter = await countryRepository.getById(seller.id) as Country
+        const sellerAfter = await testConfigurator.countryRepository.getById(seller.id) as Country
 
         expect(sellerAfter.getResourceQty(banana)).toEqual(6)
         expect(sellerAfter.getResourceQty(apple)).toEqual(2)

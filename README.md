@@ -1,7 +1,6 @@
 # trade-wars
 
-- [ ] Refactor all use cases inside Game
-- [ ] Dropdown for resource selection instead of free text
+- [x] Dropdown for resource selection instead of free text
 - [ ] Move and adapt all uses cases in test dir
 - [ ] Inside vs outside price with tariffs
 - [ ] Trade at the price of outside price with tariff
@@ -13,6 +12,8 @@
 - [x] Tariffs (crud)
 - [ ] Embargos
 - [ ] Wars
+- [x] Use responses instead of exceptions
+- [ ] Refactor trade validator and trade validation into one trade entity
 
 ## Recommended IDE Setup
 

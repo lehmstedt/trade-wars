@@ -1,6 +1,6 @@
 import type { ICountryRepository } from "@/domain/drivenPorts/ICountryRepository";
 import type { IResourceRepository } from "@/domain/drivenPorts/IResourceRepository";
-import { ResourceNotFoundError } from "@/domain/Errors";
+import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
 import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";
 import type { IPriceProvider } from "../IPriceProvider";

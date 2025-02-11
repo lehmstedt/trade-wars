@@ -7,6 +7,9 @@ import type { Resource } from '@/domain/entities/Resource';
 import type { Country } from '@/domain/entities/Country';
 import type { Game } from '@/domain/application/Game';
 import CountryInventory from '@/client/country/CountryInventory.vue';
+import type { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade';
+import { InMemoryConfigurator } from './configurator/InMemoryConfigurator';
+import type { ForMakingTrade } from './domain/drivingPorts/ForMakingTrade';
 
 
 
@@ -16,6 +19,8 @@ let countries: Country[] = []
 let game: Game
 let playerPrices: Map<string, Map<string, number>>
 let otherCountryPrices: Map<string, Map<string, number>>
+let forValidatingTrade: ForValidatingTrade
+let forMakingTrade: ForMakingTrade
 
 const gameReady = ref(false)
 
@@ -30,6 +35,9 @@ onMounted(async() => {
   game = await gameFactory.buildInMemoryGame()
   resources = await game.listResources()
   countries = await game.listCountries()
+  const configurator = new InMemoryConfigurator()
+  forValidatingTrade = configurator.buildForValidatingTrade(countries, resources)
+  forMakingTrade = configurator.buildForMakingTrade(countries, resources)
   await updateGame()
   gameReady.value = true
 })
@@ -39,7 +47,7 @@ onMounted(async() => {
 <template>
   <div class="row" v-if="gameReady">
     <div class="column">
-      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame" :resources="resources" :game="game" ></Trade>
+      <Trade :player-country="countries[0]" :other-country="countries[1]" @trade-made="updateGame" :resources="resources" :for-validating-trade="forValidatingTrade" :for-making-trade="forMakingTrade"></Trade>
     </div>
 
     <div class="column">

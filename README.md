@@ -1,19 +1,34 @@
 # trade-wars
 
+## What is this ?
+This is a game about trade wars. The features intended to be implemented are :
+- [x] Trading
+- [ ] Tariffs
+- [ ] Embargos
+- [ ] Military wars
+- [ ] Evolving resource production productivity
+- [ ] Technological trees and dependencies
+
+## Why this ?
+This is a sandbox project demonstrating what can be done in TDD with a Clean and Hexagonal architecture, leveraging Domain Driven Design
+
+## What is the current state ?
+
 - [x] Dropdown for resource selection instead of free text
+- [x] Prevent trades without needed quantities available
+- [x] Resource price calculated from another resource quantity
+- [x] Tariffs (crud)
+- [x] Use responses instead of exceptions
 - [ ] Move and adapt all uses cases in test dir
 - [ ] Inside vs outside price with tariffs
 - [ ] Trade at the price of outside price with tariff
 - [ ] Reuse of tariff resources for country development (to be analyzed)
-- [x] Prevent trades without needed quantities available
 - [ ] Trade with more than one country
-- [x] Resource price calculated from another resource quantity
 - [ ] Resource production with a fixed production rate by country
-- [x] Tariffs (crud)
 - [ ] Embargos
 - [ ] Wars
-- [x] Use responses instead of exceptions
 - [ ] Refactor trade validator and trade validation into one trade entity
+- [ ] Fully implement Hexagonal architecture by replacing the god mod Game object by driving ports
 
 ## Recommended IDE Setup
 

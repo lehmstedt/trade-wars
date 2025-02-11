@@ -3,7 +3,7 @@ import { Country } from '@/domain/entities/Country'
 import { computed, ref, watch, type Ref } from 'vue'
 import { Resource } from '@/domain/entities/Resource';
 import { TradeRequest } from '@/domain/entities/TradeRequest';
-import { TradeValidation } from '@/domain/entities/TradeValidation';
+import { TradeValidation, TradeValidationStatus } from '@/domain/entities/TradeValidation';
 import type { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade';
 import type { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade';
 
@@ -59,6 +59,7 @@ async function trade() {
       </select>
       <p>Price in {{ currency.name }} : {{ validation?.price?.toFixed(2) }}</p>
       <button :disabled="!validation?.isValid" @click="trade">Trade</button>
+      <p v-if="validation?.status">{{ TradeValidationStatus[validation.status] }}</p>
     </div>
   </div>
 

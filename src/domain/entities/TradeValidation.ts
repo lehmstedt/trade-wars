@@ -1,12 +1,12 @@
 export enum TradeValidationStatus {
-    'OK',
-    'SellerCountryNotFound',
-    'BuyerCountryNotFound',
-    'BuyerResourceNotFound',
-    'SellerResourceNotFound',
-    'InsufficientResourceFromSeller',
-    'NoPriceEstablished',
-    'InsufficientResourceFromBuyer'
+    OK,
+    SellerCountryNotFound,
+    BuyerCountryNotFound,
+    BuyerResourceNotFound,
+    SellerResourceNotFound,
+    InsufficientResourceFromSeller,
+    NoPriceEstablished,
+    InsufficientResourceFromBuyer
 }
 
 export class TradeValidation {

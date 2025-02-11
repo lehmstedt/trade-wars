@@ -4,13 +4,14 @@ import { CountryNotFoundError, ResourceNotFoundError } from "@/domain/Errors";
 import { CountryId, type Country, type ResourceInventory } from "@/domain/entities/Country";
 import type { Resource } from "@/domain/entities/Resource";
 import type { IPriceProvider } from "../IPriceProvider";
+import { CountryPairPriceProvider } from "@/domain/CountryPairPriceProvider";
 
 
 export class Game {
     countryRepository: ICountryRepository
     resourceRepository: IResourceRepository
     priceProvider: IPriceProvider
-    constructor(countryRepository: ICountryRepository, resourceRepository: IResourceRepository, priceProvider: IPriceProvider){
+    constructor(countryRepository: ICountryRepository, resourceRepository: IResourceRepository, priceProvider: IPriceProvider = new CountryPairPriceProvider){
         this.countryRepository = countryRepository
         this.resourceRepository = resourceRepository
         this.priceProvider = priceProvider
@@ -59,19 +60,6 @@ export class Game {
         const country = await this.tryGetCountry(id)
 
         return country.getResourceInventories()
-    }
-
-    async makeTrade(request: TradeRequest): Promise<void> {
-        
-        const validation = await this.validateTrade(request)
-        if(!validation.isValid){
-            throw validation.error
-        }
-
-        request.buyer.tradeWith(request.seller, request.currency, validation.price ?? 0, request.soldResource, request.soldQuantity)
-
-        await this.countryRepository.save(request.buyer)
-        await this.countryRepository.save(request.seller)
     }
 
     private async tryGetCountry(countryId: CountryId){

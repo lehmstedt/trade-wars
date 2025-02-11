@@ -1,12 +1,6 @@
 import { Country } from "@/domain/entities/Country";
 import { Resource } from "@/domain/entities/Resource";
-import { BuyerCountryNotFoundError, BuyerResourceNotFoundError, InsufficientResourceFromBuyerError, InsufficientResourceFromSellerError, NoPriceEstablishedError, NoResourceQuantityAskedError, SellerCountryNotFound, SellerCountryNotFoundError, SellerResourceNotFoundError } from "@/domain/Errors";
-import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
-import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
 import { describe, expect, it, test } from "vitest";
-import { TestPriceProvider } from "@/tests/TestPriceProvider";
-import { Game } from "@/domain/application/Game";
-import { ForValidatingTrade } from "@/domain/drivingPorts/ForValidatingTrade";
 import { TestConfigurator } from "@/configurator/TestConfigurator";
 import { TradeRequest } from "@/domain/entities/TradeRequest";
 import { TradeValidationStatus } from "@/domain/entities/TradeValidation";

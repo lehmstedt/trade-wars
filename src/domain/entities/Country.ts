@@ -25,7 +25,7 @@ export class Country {
   name: string
   goals: Map<string, Goal>
 
-  constructor(name: string) {
+  constructor(name: string = "unnamed") {
     this.resources = new Map<string, number>()
     this.tariffs = new Map<string, number>()
     this.id = new CountryId(name)

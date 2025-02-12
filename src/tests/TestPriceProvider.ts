@@ -1,15 +1,13 @@
-import type { IPriceProvider } from "@/domain/IPriceProvider";
+import type { IPriceProvider } from '@/domain/IPriceProvider'
 
 export class TestPriceProvider implements IPriceProvider {
+  constructor(price: number) {
+    this.price = price
+  }
 
-    constructor(price: number){
-        this.price = price
-    }
+  price: number
 
-    price: number
-
-    getPrice(): number {
-        return this.price
-    }
-
+  getPrice(): number {
+    return this.price
+  }
 }

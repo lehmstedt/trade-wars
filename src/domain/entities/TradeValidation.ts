@@ -1,26 +1,25 @@
 export enum TradeValidationStatus {
-    OK,
-    SellerCountryNotFound,
-    BuyerCountryNotFound,
-    BuyerResourceNotFound,
-    SellerResourceNotFound,
-    InsufficientResourceFromSeller,
-    NoPriceEstablished,
-    InsufficientResourceFromBuyer
+  OK,
+  SellerCountryNotFound,
+  BuyerCountryNotFound,
+  BuyerResourceNotFound,
+  SellerResourceNotFound,
+  InsufficientResourceFromSeller,
+  NoPriceEstablished,
+  InsufficientResourceFromBuyer
 }
 
 export class TradeValidation {
-    isValid: Boolean = false
-    price?: number = 0
-    status: TradeValidationStatus
+  isValid: Boolean = false
+  price?: number = 0
+  status: TradeValidationStatus
 
-    constructor(status: TradeValidationStatus, price?: number){
+  constructor(status: TradeValidationStatus, price?: number) {
+    this.price = price
+    this.status = status
 
-        this.price = price
-        this.status = status
-        
-        if(this.status === TradeValidationStatus.OK){
-            this.isValid = true
-        }
+    if (this.status === TradeValidationStatus.OK) {
+      this.isValid = true
     }
+  }
 }

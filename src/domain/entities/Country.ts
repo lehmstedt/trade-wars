@@ -1,31 +1,30 @@
-import { Resource } from "@/domain/entities/Resource";
-import { Tariff } from "@/domain/entities/Tariff";
-import { UnknownGoalError } from "@/domain/Errors";
+import { Resource } from '@/domain/entities/Resource'
+import { Tariff } from '@/domain/entities/Tariff'
+import { UnknownGoalError } from '@/domain/Errors'
 
 export type ResourceInventory = { name: string; qty: number }
-type Goal = {resource: Resource, quantity: number }
+type Goal = { resource: Resource; quantity: number }
 
-export class CountryId{
+export class CountryId {
   value: string
 
-  constructor(value: string){
-      this.value = value
+  constructor(value: string) {
+    this.value = value
   }
 
-  equals(id: CountryId){
+  equals(id: CountryId) {
     return this.value === id.value
   }
 }
 
 export class Country {
-  
   resources: Map<string, number>
   id: CountryId
   tariffs: Map<string, number>
   name: string
   goals: Map<string, Goal>
 
-  constructor(name: string = "unnamed") {
+  constructor(name: string = 'unnamed') {
     this.resources = new Map<string, number>()
     this.tariffs = new Map<string, number>()
     this.id = new CountryId(name)
@@ -72,17 +71,17 @@ export class Country {
   canTrade(offeredResource: Resource, offeredQty: number) {
     return offeredQty <= this.getResourceQty(offeredResource)
   }
-  getTariffOnResource(resource: Resource){
+  getTariffOnResource(resource: Resource) {
     return this.tariffs.get(resource.name)
   }
-  listTariffs(): Tariff[]{
+  listTariffs(): Tariff[] {
     const tariffs = []
-    for (const [resourceName, rate] of this.tariffs.entries()){
+    for (const [resourceName, rate] of this.tariffs.entries()) {
       tariffs.push(new Tariff(resourceName, rate))
     }
     return tariffs
   }
-  expressResourcePriceInGivenResource(resource: Resource, currency: Resource): number|undefined {
+  expressResourcePriceInGivenResource(resource: Resource, currency: Resource): number | undefined {
     const resourceQty = this.getResourceQty(resource)
     const expressedResourceQty = this.getResourceQty(currency)
     if (resourceQty === expressedResourceQty) {
@@ -93,16 +92,16 @@ export class Country {
     }
     return expressedResourceQty / resourceQty
   }
-  setGoal(resource: Resource, quantity: number){
-    this.goals.set(resource.name, {resource, quantity})
+  setGoal(resource: Resource, quantity: number) {
+    this.goals.set(resource.name, { resource, quantity })
   }
 
-  listGoals(): Goal[]{
+  listGoals(): Goal[] {
     return Array.from(this.goals.values())
   }
-  hasReachedGoal(resource: Resource){
+  hasReachedGoal(resource: Resource) {
     const goal = this.goals.get(resource.name)
-    if(!goal){
+    if (!goal) {
       throw new UnknownGoalError()
     }
     return this.getResourceQty(goal.resource) >= goal.quantity
@@ -113,7 +112,6 @@ export class Country {
       if (!this.hasReachedGoal(goal.resource)) {
         return false
       }
-       
     }
     return true
   }

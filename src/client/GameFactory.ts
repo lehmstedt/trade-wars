@@ -1,31 +1,28 @@
-import { Game } from "@/domain/application/Game";
-import { InMemoryCountryRepository } from "@/infrastructure/InMemoryCountryRepository";
-import { InMemoryResourceRepository } from "@/infrastructure/InMemoryResourceRepository";
-import { Resource } from "@/domain/entities/Resource";
-import { Country } from "@/domain/entities/Country";
-import { CountryPairPriceProvider } from "@/domain/CountryPairPriceProvider";
+import { Game } from '@/domain/application/Game'
+import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
+import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
+import { Resource } from '@/domain/entities/Resource'
+import { Country } from '@/domain/entities/Country'
+import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 
 export class GameFactory {
+  async buildInMemoryGame(): Promise<Game> {
+    const iron = new Resource('Iron')
+    const charcoal = new Resource('Charcoal')
+    const whool = new Resource('Whool')
 
-    async buildInMemoryGame(): Promise<Game> {
+    const playerCountry = new Country('Player')
 
-        const iron = new Resource('Iron')
-        const charcoal = new Resource('Charcoal')
-        const whool = new Resource('Whool')
+    playerCountry.setResource(iron, 12)
+    playerCountry.setResource(charcoal, 240)
 
-        const playerCountry = new Country('Player')
+    const anotherCountry = new Country('Great-Britain')
+    anotherCountry.setResource(iron, 30)
+    anotherCountry.setResource(whool, 10)
 
-        playerCountry.setResource(iron, 12)
-        playerCountry.setResource(charcoal, 240)
+    const countryRepository = new InMemoryCountryRepository([playerCountry, anotherCountry])
+    const resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
 
-        const anotherCountry = new Country('Great-Britain')
-        anotherCountry.setResource(iron, 30)
-        anotherCountry.setResource(whool, 10)
-
-        const countryRepository = new InMemoryCountryRepository([playerCountry, anotherCountry])
-        const resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
-
-
-        return new Game(countryRepository, resourceRepository, new CountryPairPriceProvider())
-    }
+    return new Game(countryRepository, resourceRepository, new CountryPairPriceProvider())
+  }
 }

@@ -1,16 +1,15 @@
-import { describe, expect, it } from "vitest";
-import MakePrivateOffer from "./MakePrivateOffer";
+import { describe, expect, it } from 'vitest'
+import MakePrivateOffer from './MakePrivateOffer'
 
 describe('privateDemand', () => {
-    it('should ask the resource it has less', () => {
-        const resA = 'A'
-        const resAQty = 1
+  it('should ask the resource it has less', () => {
+    const resA = 'A'
+    const resAQty = 1
 
-        const resB = 'B'
-        const resBQty = 2
+    const resB = 'B'
+    const resBQty = 2
 
-        const tradeOffer = MakePrivateOffer.makeOffer(resA, resAQty, resB, resBQty)
-        expect(tradeOffer).toEqual(resA)
-    })
-
+    const tradeOffer = MakePrivateOffer.makeOffer(resA, resAQty, resB, resBQty)
+    expect(tradeOffer).toEqual(resA)
+  })
 })

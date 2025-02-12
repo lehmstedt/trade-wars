@@ -5,7 +5,7 @@ import type { Resource } from '@/domain/entities/Resource';
 interface Props {
     resources: Resource[],
     countryId: CountryId,
-    prices: Map<string, Map<string, number>>
+    prices: Map<string, Map<string, number | undefined>>
 }
 defineProps<Props>()
 

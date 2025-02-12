@@ -17,8 +17,8 @@ let iteration = ref(0)
 let resources: Resource[] = []
 let countries: Country[] = []
 let game: Game
-let playerPrices: Map<string, Map<string, number>>
-let otherCountryPrices: Map<string, Map<string, number>>
+let playerPrices: Map<string, Map<string, number | undefined>>
+let otherCountryPrices: Map<string, Map<string, number | undefined>>
 let forValidatingTrade: ForValidatingTrade
 let forMakingTrade: ForMakingTrade
 

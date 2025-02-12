@@ -17,7 +17,7 @@ export class Game {
         this.priceProvider = priceProvider
     }
 
-    async getResourcePrice(resourceName: string, expressedResourceName: string, countryId: CountryId): Promise<number>{
+    async getResourcePrice(resourceName: string, expressedResourceName: string, countryId: CountryId): Promise<number | undefined>{
         const resource = await this.resourceRepository.getByName(resourceName)
         if(!resource){
             throw new ResourceNotFoundError()
@@ -37,9 +37,9 @@ export class Game {
     async listResourcePrices(countryId: CountryId){
         const resources = await this.resourceRepository.list()
         const country = await this.tryGetCountry(countryId)
-        const resourcePrices = new Map<string, Map<string, number>>()
+        const resourcePrices = new Map<string, Map<string, number | undefined>>()
         for (const expressedResource of resources){
-            const resourceEntry = new Map<string, number>()
+            const resourceEntry = new Map<string, number | undefined>()
             for (const comparedResource of resources){
                 resourceEntry.set(comparedResource.name, country.expressResourcePriceInGivenResource(expressedResource, comparedResource))
             }

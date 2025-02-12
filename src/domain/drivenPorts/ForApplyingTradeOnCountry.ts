@@ -1,4 +1,4 @@
-import type { Country } from "@/domain/entities/Country";
+import type { Country, CountryId } from "@/domain/entities/Country";
 
 export interface ForApplyingTradeOnCountry {
     save(country: Country): Promise<void>

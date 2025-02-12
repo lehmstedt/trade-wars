@@ -1,6 +1,6 @@
 import type { ICountryRepository } from '@/domain/drivenPorts/ICountryRepository'
 import type { IResourceRepository } from '@/domain/drivenPorts/IResourceRepository'
-import { CountryNotFoundError, ResourceNotFoundError } from '@/domain/Errors'
+import { CountryNotFoundError } from '@/domain/Errors'
 import { CountryId, type Country, type ResourceInventory } from '@/domain/entities/Country'
 import type { Resource } from '@/domain/entities/Resource'
 import type { IPriceProvider } from '../IPriceProvider'
@@ -18,27 +18,6 @@ export class Game {
     this.countryRepository = countryRepository
     this.resourceRepository = resourceRepository
     this.priceProvider = priceProvider
-  }
-
-  async getResourcePrice(
-    resourceName: string,
-    expressedResourceName: string,
-    countryId: CountryId
-  ): Promise<number | undefined> {
-    const resource = await this.resourceRepository.getByName(resourceName)
-    if (!resource) {
-      throw new ResourceNotFoundError()
-    }
-    const country = await this.tryGetCountry(countryId)
-    if (resource.name === expressedResourceName) {
-      return 1
-    }
-    const expressedResource = await this.resourceRepository.getByName(expressedResourceName)
-    if (!expressedResource) {
-      throw new ResourceNotFoundError()
-    }
-
-    return country.expressResourcePriceInGivenResource(resource, expressedResource)
   }
 
   async listResourcePrices(countryId: CountryId) {

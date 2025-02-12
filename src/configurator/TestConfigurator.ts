@@ -1,3 +1,4 @@
+import { ForKnowingResourcePrice } from '@/domain/drivingPorts/ForKnowingResourcePrice'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import type { Country } from '@/domain/entities/Country'
@@ -40,6 +41,19 @@ export class TestConfigurator {
       this.countryRepository,
       this.resourceRepository,
       new TestPriceProvider(price)
+    )
+  }
+
+  buildForKnowingResourcePrice(
+    countries: Country[],
+    resources: Resource[],
+    price: number = 0
+  ): ForKnowingResourcePrice {
+    this.countryRepository.set(countries)
+    this.resourceRepository.set(resources)
+    return new ForKnowingResourcePrice(
+      this.countryRepository,
+      this.resourceRepository
     )
   }
 }

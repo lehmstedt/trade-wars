@@ -21,6 +21,8 @@ let otherCountryPrices: Map<string, Map<string, number | undefined>>
 let forValidatingTrade: ForValidatingTrade
 let forMakingTrade: ForMakingTrade
 let forListingResourcePrices: ForListingResourcePrices
+const configurator = new InMemoryConfigurator()
+const forListingResources = configurator.buildForListingResources()
 
 const gameReady = ref(false)
 
@@ -33,9 +35,8 @@ const updateGame = async () => {
 onMounted(async () => {
   const gameFactory = new GameFactory()
   game = await gameFactory.buildInMemoryGame()
-  resources = await game.listResources()
+  resources = await forListingResources.execute()
   countries = await game.listCountries()
-  const configurator = new InMemoryConfigurator()
   forValidatingTrade = configurator.buildForValidatingTrade(countries, resources)
   forMakingTrade = configurator.buildForMakingTrade(countries, resources)
   forListingResourcePrices = configurator.buildForListingResourcePrices(countries, resources)

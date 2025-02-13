@@ -1,9 +1,7 @@
 import { Country, CountryId } from '@/domain/entities/Country'
 import { type ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 
-export class InMemoryCountryRepository
-  implements ICountryPort
-{
+export class InMemoryCountryRepository implements ICountryPort {
   countries = new Map<string, Country>()
 
   constructor(countries?: Country[]) {

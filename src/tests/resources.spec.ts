@@ -1,44 +1,37 @@
-import { Game } from '@/domain/application/Game'
+import { TestConfigurator } from '@/configurator/TestConfigurator'
 import { Resource } from '@/domain/entities/Resource'
-import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
-import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 import { describe, expect, it } from 'vitest'
+
+const testConfigurator = new TestConfigurator()
 
 describe('Resources', () => {
   it('should list no resource when no resource is existing', async () => {
-    const countryRepository = new InMemoryCountryRepository()
-    const resourceRepository = new InMemoryResourceRepository()
+    const forListingResources = testConfigurator.buildForListingResources([])
 
-    const game = new Game(countryRepository, resourceRepository)
-
-    const resourceList = await game.listResources()
+    const resourceList = await forListingResources.execute()
 
     expect(resourceList.length).toEqual(0)
   })
 
   it('should list one resource when one resource is existing', async () => {
-    const countryRepository = new InMemoryCountryRepository()
-    const resourceRepository = new InMemoryResourceRepository()
-    await resourceRepository.add(new Resource('Pinapple'))
+    const forListingResources = testConfigurator.buildForListingResources([
+      new Resource('Pinapple')
+    ])
 
-    const game = new Game(countryRepository, resourceRepository)
-
-    const resourceList = await game.listResources()
+    const resourceList = await forListingResources.execute()
 
     expect(resourceList.length).toEqual(1)
     expect(resourceList[0].name).toEqual('Pinapple')
   })
 
   it('should list multiple resource when multiple resource are existing, in no specific order', async () => {
-    const countryRepository = new InMemoryCountryRepository()
-    const resourceRepository = new InMemoryResourceRepository()
-    await resourceRepository.add(new Resource('Pinapple'))
-    await resourceRepository.add(new Resource('Banana'))
-    await resourceRepository.add(new Resource('Pear'))
+    const forListingResources = testConfigurator.buildForListingResources([
+      new Resource('Pinapple'),
+      new Resource('Banana'),
+      new Resource('Pear')
+    ])
 
-    const game = new Game(countryRepository, resourceRepository)
-
-    const resourceList = await game.listResources()
+    const resourceList = await forListingResources.execute()
 
     expect(resourceList.length).toEqual(3)
     expect(resourceList.find((resource) => resource.name === 'Pinapple')).toBeTruthy()

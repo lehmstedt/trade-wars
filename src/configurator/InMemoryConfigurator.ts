@@ -1,9 +1,10 @@
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
+import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import type { Country } from '@/domain/entities/Country'
-import type { Resource } from '@/domain/entities/Resource'
+import { Resource } from '@/domain/entities/Resource'
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 
@@ -12,8 +13,11 @@ export class InMemoryConfigurator {
   resourceRepository: InMemoryResourceRepository
 
   constructor() {
+    const iron = new Resource('Iron')
+    const charcoal = new Resource('Charcoal')
+    const whool = new Resource('Whool')
     this.countryRepository = new InMemoryCountryRepository()
-    this.resourceRepository = new InMemoryResourceRepository()
+    this.resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
   }
 
   buildForValidatingTrade(countries: Country[], resources: Resource[]): ForValidatingTrade {
@@ -37,15 +41,15 @@ export class InMemoryConfigurator {
   }
 
   buildForListingResourcePrices(
-      countries: Country[],
-      resources: Resource[],
-      price: number = 0
-    ): ForListingResourcePrices {
-      this.countryRepository.set(countries)
-      this.resourceRepository.set(resources)
-      return new ForListingResourcePrices(
-        this.countryRepository,
-        this.resourceRepository
-      )
-    }
+    countries: Country[],
+    resources: Resource[]
+  ): ForListingResourcePrices {
+    this.countryRepository.set(countries)
+    this.resourceRepository.set(resources)
+    return new ForListingResourcePrices(this.countryRepository, this.resourceRepository)
+  }
+
+  buildForListingResources(): ForListingResources {
+    return new ForListingResources(this.resourceRepository)
+  }
 }

@@ -1,4 +1,5 @@
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
+import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import type { Country } from '@/domain/entities/Country'
@@ -46,14 +47,15 @@ export class TestConfigurator {
 
   buildForListingResourcePrices(
     countries: Country[],
-    resources: Resource[],
-    price: number = 0
+    resources: Resource[]
   ): ForListingResourcePrices {
     this.countryRepository.set(countries)
     this.resourceRepository.set(resources)
-    return new ForListingResourcePrices(
-      this.countryRepository,
-      this.resourceRepository
-    )
+    return new ForListingResourcePrices(this.countryRepository, this.resourceRepository)
+  }
+
+  buildForListingResources(resources: Resource[]): ForListingResources {
+    this.resourceRepository.set(resources)
+    return new ForListingResources(this.resourceRepository)
   }
 }

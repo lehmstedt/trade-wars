@@ -1,4 +1,5 @@
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
+import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import type { Country } from '@/domain/entities/Country'
@@ -34,4 +35,17 @@ export class InMemoryConfigurator {
       new CountryPairPriceProvider()
     )
   }
+
+  buildForListingResourcePrices(
+      countries: Country[],
+      resources: Resource[],
+      price: number = 0
+    ): ForListingResourcePrices {
+      this.countryRepository.set(countries)
+      this.resourceRepository.set(resources)
+      return new ForListingResourcePrices(
+        this.countryRepository,
+        this.resourceRepository
+      )
+    }
 }

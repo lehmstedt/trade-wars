@@ -10,6 +10,7 @@ import CountryInventory from '@/client/country/CountryInventory.vue'
 import type { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import { InMemoryConfigurator } from './configurator/InMemoryConfigurator'
 import type { ForMakingTrade } from './domain/drivingPorts/ForMakingTrade'
+import { ForListingResourcePrices } from './domain/drivingPorts/ForListingResourcePrices'
 
 let iteration = ref(0)
 let resources: Resource[] = []
@@ -19,12 +20,13 @@ let playerPrices: Map<string, Map<string, number | undefined>>
 let otherCountryPrices: Map<string, Map<string, number | undefined>>
 let forValidatingTrade: ForValidatingTrade
 let forMakingTrade: ForMakingTrade
+let forListingResourcePrices: ForListingResourcePrices
 
 const gameReady = ref(false)
 
 const updateGame = async () => {
-  playerPrices = await game.listResourcePrices(countries[0].id)
-  otherCountryPrices = await game.listResourcePrices(countries[1].id)
+  playerPrices = await forListingResourcePrices.execute(countries[0].id)
+  otherCountryPrices = await forListingResourcePrices.execute(countries[1].id)
   iteration.value = iteration.value + 1
 }
 
@@ -36,6 +38,7 @@ onMounted(async () => {
   const configurator = new InMemoryConfigurator()
   forValidatingTrade = configurator.buildForValidatingTrade(countries, resources)
   forMakingTrade = configurator.buildForMakingTrade(countries, resources)
+  forListingResourcePrices = configurator.buildForListingResourcePrices(countries, resources)
   await updateGame()
   gameReady.value = true
 })

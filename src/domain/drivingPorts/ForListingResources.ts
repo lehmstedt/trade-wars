@@ -2,12 +2,12 @@ import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 import type { Resource } from '@/domain/entities/Resource'
 
 export class ForListingResources {
-  forListingResouces: IResourcePort
+  forListingResources: IResourcePort
 
   constructor(forListingResources: IResourcePort) {
-    this.forListingResouces = forListingResources
+    this.forListingResources = forListingResources
   }
   async execute(): Promise<Resource[]> {
-    return this.forListingResouces.list()
+    return this.forListingResources.list()
   }
 }

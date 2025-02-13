@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const testConfigurator = new TestConfigurator()
 
-describe('Resources', () => {
+describe('For listing resources', () => {
   it('should list no resource when no resource is existing', async () => {
     const forListingResources = testConfigurator.buildForListingResources([])
 

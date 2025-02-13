@@ -7,7 +7,7 @@ import { TradeValidationStatus } from '@/domain/entities/TradeValidation'
 
 const testConfigurator = new TestConfigurator()
 
-describe('trades', () => {
+describe('For validating and making trade', () => {
   it('Cannot be made when seller is not existing', async () => {
     const buyer = new Country('Buyer')
     const seller = new Country('Seller')

@@ -2,7 +2,6 @@ import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 import { CountryNotFoundError } from '@/domain/Errors'
 import { CountryId, type Country, type ResourceInventory } from '@/domain/entities/Country'
-import type { Resource } from '@/domain/entities/Resource'
 import type { IPriceProvider } from '../IPriceProvider'
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 
@@ -18,10 +17,6 @@ export class Game {
     this.countryRepository = countryRepository
     this.resourceRepository = resourceRepository
     this.priceProvider = priceProvider
-  }
-
-  async listResources(): Promise<Resource[]> {
-    return this.resourceRepository.list()
   }
 
   async listCountries(): Promise<Country[]> {

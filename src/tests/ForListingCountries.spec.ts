@@ -1,3 +1,4 @@
+import { TestConfigurator } from '@/configurator/TestConfigurator'
 import { Game } from '@/domain/application/Game'
 import { Country, CountryId } from '@/domain/entities/Country'
 import { Resource } from '@/domain/entities/Resource'
@@ -5,26 +6,23 @@ import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 import { describe, expect, test } from 'vitest'
 
+const testConfigurator = new TestConfigurator()
+
 describe('countries', () => {
   test('No country is existing', async () => {
-    const countryRepository = new InMemoryCountryRepository()
-    const resourceRepository = new InMemoryResourceRepository()
 
-    const game = new Game(countryRepository, resourceRepository)
+    const forListingCountries = testConfigurator.buildForListingCountries([])
 
-    const countries = await game.listCountries()
+    const countries = await forListingCountries.execute()
     expect(countries.length).toEqual(0)
   })
 
   test('One country is existing', async () => {
-    const countryRepository = new InMemoryCountryRepository()
     const spain = new Country('Spain')
-    countryRepository.save(spain)
-    const resourceRepository = new InMemoryResourceRepository()
 
-    const game = new Game(countryRepository, resourceRepository)
+    const forListingCountries = testConfigurator.buildForListingCountries([spain])
 
-    const countries = await game.listCountries()
+    const countries = await forListingCountries.execute()
     expect(countries.length).toEqual(1)
     expect(countries[0].name).toEqual('Spain')
   })

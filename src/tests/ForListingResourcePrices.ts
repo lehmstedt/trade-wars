@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 
 const testConfigurator = new TestConfigurator()
 
-describe('prices', () => {
+describe('For listing resource prices', () => {
   test('Wine, Beer and Chocolate can be expressed from each other when country has those resources in various quantities', async () => {
     const wine = new Resource('Wine')
     const beer = new Resource('Beer')

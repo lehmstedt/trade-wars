@@ -1,12 +1,12 @@
 import { CountryNotFoundError, ResourceNotFoundError } from '@/domain/Errors'
-import type { ICountryRepository } from '@/domain/drivenPorts/ICountryRepository'
+import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 import type { CountryId } from '@/domain/entities/Country'
-import type { IResourceRepository } from '@/domain/drivenPorts/IResourceRepository'
+import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 
 export class SetTariff {
-  countryRepo: ICountryRepository
-  resourceRepo: IResourceRepository
-  constructor(countryRepo: ICountryRepository, resourceRepo: IResourceRepository) {
+  countryRepo: ICountryPort
+  resourceRepo: IResourcePort
+  constructor(countryRepo: ICountryPort, resourceRepo: IResourcePort) {
     this.countryRepo = countryRepo
     this.resourceRepo = resourceRepo
   }

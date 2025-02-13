@@ -1,11 +1,11 @@
 import { CountryNotFoundError } from '@/domain/Errors'
 import type { CountryId } from '@/domain/entities/Country'
 import { Tariff } from '@/domain/entities/Tariff'
-import type { ForListingCountryTariffs } from '../drivenPorts/ForListingCountryTariffs'
+import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 
 export class ForListingTariffs {
-  forListingCountryTariffs: ForListingCountryTariffs
-  constructor(forListingCountryTariffs: ForListingCountryTariffs) {
+  forListingCountryTariffs: ICountryPort
+  constructor(forListingCountryTariffs: ICountryPort) {
     this.forListingCountryTariffs = forListingCountryTariffs
   }
 

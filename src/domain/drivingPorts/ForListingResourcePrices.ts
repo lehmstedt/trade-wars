@@ -1,15 +1,15 @@
-import type { IResourceRepository } from "@/domain/drivenPorts/IResourceRepository"
-import type { ICountryRepository } from "@/domain/drivenPorts/ICountryRepository"
+import type { IResourcePort } from "@/domain/drivenPorts/IResourcePort"
+import type { ICountryPort } from "@/domain/drivenPorts/ICountryPort"
 import type { CountryId } from "@/domain/entities/Country"
-import { CountryNotFoundError } from "../Errors"
+import { CountryNotFoundError } from "@/domain/Errors"
 
 export class ForListingResourcePrices {
 
 
-    forCheckingIfCountryIsExisting: ICountryRepository
-    forListingExistingResources: IResourceRepository
+    forCheckingIfCountryIsExisting: ICountryPort
+    forListingExistingResources: IResourcePort
 
-    constructor(forCheckingIfCountryIsExisting: ICountryRepository, forListingExistingResources: IResourceRepository){
+    constructor(forCheckingIfCountryIsExisting: ICountryPort, forListingExistingResources: IResourcePort){
       this.forCheckingIfCountryIsExisting = forCheckingIfCountryIsExisting
       this.forListingExistingResources = forListingExistingResources
     }

@@ -1,18 +1,18 @@
-import type { ForApplyingTradeOnCountry } from '@/domain/drivenPorts/ForApplyingTradeOnCountry'
-import type { ForValidatingTradeResource } from '@/domain/drivenPorts/ForValidatingTradeResource'
 import type { TradeRequest } from '@/domain/entities/TradeRequest'
-import type { ForCalculatingPrice } from '@/domain/drivenPorts/ForCalculatingPrice'
 import { TradeValidation, TradeValidationStatus } from '@/domain/entities/TradeValidation'
+import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
+import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
+import type { IPriceProvider } from '@/domain/IPriceProvider'
 
 export class ForMakingTrade {
-  forApplyingTradeOnCountry: ForApplyingTradeOnCountry
-  forValidatingTradeResource: ForValidatingTradeResource
-  forCalculatingPrice: ForCalculatingPrice
+  forApplyingTradeOnCountry: ICountryPort
+  forValidatingTradeResource: IResourcePort
+  forCalculatingPrice: IPriceProvider
 
   constructor(
-    forApplyingTradeOnCountry: ForApplyingTradeOnCountry,
-    forValidatingTradeResource: ForValidatingTradeResource,
-    forCalculatingPrice: ForCalculatingPrice
+    forApplyingTradeOnCountry: ICountryPort,
+    forValidatingTradeResource: IResourcePort,
+    forCalculatingPrice: IPriceProvider
   ) {
     this.forApplyingTradeOnCountry = forApplyingTradeOnCountry
     this.forValidatingTradeResource = forValidatingTradeResource

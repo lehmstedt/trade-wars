@@ -1,5 +1,5 @@
-import type { ICountryRepository } from '@/domain/drivenPorts/ICountryRepository'
-import type { IResourceRepository } from '@/domain/drivenPorts/IResourceRepository'
+import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
+import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 import { CountryNotFoundError } from '@/domain/Errors'
 import { CountryId, type Country, type ResourceInventory } from '@/domain/entities/Country'
 import type { Resource } from '@/domain/entities/Resource'
@@ -7,12 +7,12 @@ import type { IPriceProvider } from '../IPriceProvider'
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 
 export class Game {
-  countryRepository: ICountryRepository
-  resourceRepository: IResourceRepository
+  countryRepository: ICountryPort
+  resourceRepository: IResourcePort
   priceProvider: IPriceProvider
   constructor(
-    countryRepository: ICountryRepository,
-    resourceRepository: IResourceRepository,
+    countryRepository: ICountryPort,
+    resourceRepository: IResourcePort,
     priceProvider: IPriceProvider = new CountryPairPriceProvider()
   ) {
     this.countryRepository = countryRepository

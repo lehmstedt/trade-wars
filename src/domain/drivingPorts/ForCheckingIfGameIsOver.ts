@@ -1,4 +1,4 @@
-import type { ForCheckingIfACountryIsWinner } from '@/domain/drivenPorts/ForCheckingIfACountryIsWinner'
+import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 
 class GameState {
   constructor(numberOfProvisoryWinners: number, provisoryWinner?: string) {
@@ -10,9 +10,9 @@ class GameState {
 }
 
 export class ForCheckingIfGameIsOver {
-  forCheckingIfACountryIsWinner: ForCheckingIfACountryIsWinner
+  forCheckingIfACountryIsWinner: ICountryPort
 
-  constructor(forCheckingIfACountryIsWinner: ForCheckingIfACountryIsWinner) {
+  constructor(forCheckingIfACountryIsWinner: ICountryPort) {
     this.forCheckingIfACountryIsWinner = forCheckingIfACountryIsWinner
   }
 

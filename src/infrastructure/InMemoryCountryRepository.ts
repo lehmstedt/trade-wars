@@ -1,9 +1,8 @@
 import { Country, CountryId } from '@/domain/entities/Country'
-import { type ICountryRepository } from '@/domain/drivenPorts/ICountryRepository'
-import type { ForCheckingIfACountryIsWinner } from '@/domain/drivenPorts/ForCheckingIfACountryIsWinner'
+import { type ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 
 export class InMemoryCountryRepository
-  implements ICountryRepository, ForCheckingIfACountryIsWinner
+  implements ICountryPort
 {
   countries = new Map<string, Country>()
 

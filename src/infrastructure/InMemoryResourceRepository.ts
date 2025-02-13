@@ -1,7 +1,7 @@
 import { type Resource } from '@/domain/entities/Resource'
-import type { IResourceRepository } from '@/domain/drivenPorts/IResourceRepository'
+import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 
-export class InMemoryResourceRepository implements IResourceRepository {
+export class InMemoryResourceRepository implements IResourcePort {
   resources = new Map<string, Resource>()
 
   constructor(resources?: Resource[]) {

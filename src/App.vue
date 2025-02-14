@@ -2,10 +2,8 @@
 import Trade from '@/client/TheTrade.vue'
 import CountryResourcePrices from '@/client/country/CountryResourcePrice.vue'
 import { onMounted, ref } from 'vue'
-import { GameFactory } from '@/client/GameFactory'
 import type { Resource } from '@/domain/entities/Resource'
 import type { Country } from '@/domain/entities/Country'
-import type { Game } from '@/domain/application/Game'
 import CountryInventory from '@/client/country/CountryInventory.vue'
 import type { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import { InMemoryConfigurator } from './configurator/InMemoryConfigurator'
@@ -15,7 +13,6 @@ import { ForListingResourcePrices } from './domain/drivingPorts/ForListingResour
 let iteration = ref(0)
 let resources: Resource[] = []
 let countries: Country[] = []
-let game: Game
 let playerPrices: Map<string, Map<string, number | undefined>>
 let otherCountryPrices: Map<string, Map<string, number | undefined>>
 let forValidatingTrade: ForValidatingTrade
@@ -23,6 +20,7 @@ let forMakingTrade: ForMakingTrade
 let forListingResourcePrices: ForListingResourcePrices
 const configurator = new InMemoryConfigurator()
 const forListingResources = configurator.buildForListingResources()
+const forListingCountries = configurator.buildForListingCountries()
 
 const gameReady = ref(false)
 
@@ -33,10 +31,8 @@ const updateGame = async () => {
 }
 
 onMounted(async () => {
-  const gameFactory = new GameFactory()
-  game = await gameFactory.buildInMemoryGame()
   resources = await forListingResources.execute()
-  countries = await game.listCountries()
+  countries = await forListingCountries.execute()
   forValidatingTrade = configurator.buildForValidatingTrade(countries, resources)
   forMakingTrade = configurator.buildForMakingTrade(countries, resources)
   forListingResourcePrices = configurator.buildForListingResourcePrices(countries, resources)

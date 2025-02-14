@@ -28,14 +28,9 @@ describe('countries', () => {
   })
 
   test('Various countries can be listed in not deterministic order', async () => {
-    const countryRepository = new InMemoryCountryRepository()
-    countryRepository.save(new Country('Spain'))
-    countryRepository.save(new Country('France'))
-    const resourceRepository = new InMemoryResourceRepository()
+    const forListingCountries = testConfigurator.buildForListingCountries([new Country('Spain'), new Country('France')])
 
-    const game = new Game(countryRepository, resourceRepository)
-
-    const countries = await game.listCountries()
+    const countries = await forListingCountries.execute()
     expect(countries.length).toEqual(2)
     expect(countries.find((country) => country.id.equals(new CountryId('Spain'))))
     expect(countries.find((country) => country.id.equals(new CountryId('France'))))

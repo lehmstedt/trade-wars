@@ -28,9 +28,7 @@ export class InMemoryConfigurator {
     this.resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
   }
 
-  buildForValidatingTrade(countries: Country[], resources: Resource[]): ForValidatingTrade {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
+  buildForValidatingTrade(): ForValidatingTrade {
     return new ForValidatingTrade(
       this.countryRepository,
       this.resourceRepository,
@@ -38,9 +36,7 @@ export class InMemoryConfigurator {
     )
   }
 
-  buildForMakingTrade(countries: Country[], resources: Resource[]): ForMakingTrade {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
+  buildForMakingTrade(): ForMakingTrade {
     return new ForMakingTrade(
       this.countryRepository,
       this.resourceRepository,
@@ -49,11 +45,7 @@ export class InMemoryConfigurator {
   }
 
   buildForListingResourcePrices(
-    countries: Country[],
-    resources: Resource[]
   ): ForListingResourcePrices {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
     return new ForListingResourcePrices(this.countryRepository, this.resourceRepository)
   }
 

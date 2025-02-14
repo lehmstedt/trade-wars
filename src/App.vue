@@ -11,14 +11,15 @@ import type { ForMakingTrade } from './domain/drivingPorts/ForMakingTrade'
 import { ForListingResourcePrices } from './domain/drivingPorts/ForListingResourcePrices'
 
 let iteration = ref(0)
+const configurator = new InMemoryConfigurator()
 let resources: Resource[] = []
 let countries: Country[] = []
 let playerPrices: Map<string, Map<string, number | undefined>>
 let otherCountryPrices: Map<string, Map<string, number | undefined>>
-let forValidatingTrade: ForValidatingTrade
-let forMakingTrade: ForMakingTrade
-let forListingResourcePrices: ForListingResourcePrices
-const configurator = new InMemoryConfigurator()
+
+const forValidatingTrade: ForValidatingTrade = configurator.buildForValidatingTrade()
+const forMakingTrade: ForMakingTrade = configurator.buildForMakingTrade()
+const forListingResourcePrices: ForListingResourcePrices = configurator.buildForListingResourcePrices()
 const forListingResources = configurator.buildForListingResources()
 const forListingCountries = configurator.buildForListingCountries()
 
@@ -33,11 +34,9 @@ const updateGame = async () => {
 onMounted(async () => {
   resources = await forListingResources.execute()
   countries = await forListingCountries.execute()
-  forValidatingTrade = configurator.buildForValidatingTrade(countries, resources)
-  forMakingTrade = configurator.buildForMakingTrade(countries, resources)
-  forListingResourcePrices = configurator.buildForListingResourcePrices(countries, resources)
   await updateGame()
   gameReady.value = true
+  
 })
 </script>
 

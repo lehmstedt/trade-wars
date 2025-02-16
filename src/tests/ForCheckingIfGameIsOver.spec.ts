@@ -1,17 +1,16 @@
 import { Resource } from '@/domain/entities/Resource'
-import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
 import { describe, expect, it } from 'vitest'
 import { CountryBuilder } from '@/domain/entities/CountryBuilder'
-import { ForCheckingIfGameIsOver } from '@/domain/drivingPorts/ForCheckingIfGameIsOver'
+import { TestConfigurator } from '@/configurator/TestConfigurator'
+
+const testConfigurator = new TestConfigurator()
 
 describe('For checking if game is over', () => {
   it('should not have any winner when no country has goal nor resource', async () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withGoal(pinapple, 10).build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -23,9 +22,7 @@ describe('For checking if game is over', () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withGoal(pinapple, 10).withResource(pinapple, 9).build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -41,9 +38,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -59,9 +54,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 11)
       .build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -84,9 +77,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([loser, winner])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([loser, winner])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -106,9 +97,7 @@ describe('For checking if game is over', () => {
       .withResource(apple, 1)
       .build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -131,9 +120,7 @@ describe('For checking if game is over', () => {
       .withResource(table, 2)
       .build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -156,9 +143,10 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfACountryIsWinner = new InMemoryCountryRepository([country1, country2])
-
-    const forCheckingIfGameIsOver = new ForCheckingIfGameIsOver(forCheckingIfACountryIsWinner)
+    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([
+      country1,
+      country2
+    ])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 

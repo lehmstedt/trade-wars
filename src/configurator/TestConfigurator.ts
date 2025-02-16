@@ -1,10 +1,13 @@
+import { ForCheckingIfGameIsOver } from '@/domain/drivingPorts/ForCheckingIfGameIsOver'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
+import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
+import { ForSettingTariff } from '@/domain/drivingPorts/ForSettingTariff'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
-import type { Country, CountryId } from '@/domain/entities/Country'
+import type { Country } from '@/domain/entities/Country'
 import type { Resource } from '@/domain/entities/Resource'
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
@@ -69,5 +72,21 @@ export class TestConfigurator {
   buildForListingCountryInventory(countries: Country[]): ForListingCountryInventory {
     this.countryRepository.set(countries)
     return new ForListingCountryInventory(this.countryRepository)
+  }
+
+  buildForSettingTariff(countries: Country[], resources: Resource[]): ForSettingTariff {
+    this.countryRepository.set(countries)
+    this.resourceRepository.set(resources)
+    return new ForSettingTariff(this.countryRepository, this.resourceRepository)
+  }
+
+  buildForListingTariffs(countries: Country[]): ForListingTariffs {
+    this.countryRepository.set(countries)
+    return new ForListingTariffs(this.countryRepository)
+  }
+
+  buildForCheckingIfGameIsOver(countries: Country[]): ForCheckingIfGameIsOver {
+    this.countryRepository.set(countries)
+    return new ForCheckingIfGameIsOver(this.countryRepository)
   }
 }

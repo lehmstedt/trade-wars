@@ -45,8 +45,7 @@ export class InMemoryConfigurator {
     )
   }
 
-  buildForListingResourcePrices(
-  ): ForListingResourcePrices {
+  buildForListingResourcePrices(): ForListingResourcePrices {
     return new ForListingResourcePrices(this.countryRepository, this.resourceRepository)
   }
 
@@ -59,6 +58,6 @@ export class InMemoryConfigurator {
   }
 
   buildForListingCountryInventory(): ForListingCountryInventory {
-      return new ForListingCountryInventory(this.countryRepository)
-    }
+    return new ForListingCountryInventory(this.countryRepository)
+  }
 }

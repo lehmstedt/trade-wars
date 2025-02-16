@@ -19,7 +19,8 @@ let otherCountryPrices: Map<string, Map<string, number | undefined>>
 
 const forValidatingTrade: ForValidatingTrade = configurator.buildForValidatingTrade()
 const forMakingTrade: ForMakingTrade = configurator.buildForMakingTrade()
-const forListingResourcePrices: ForListingResourcePrices = configurator.buildForListingResourcePrices()
+const forListingResourcePrices: ForListingResourcePrices =
+  configurator.buildForListingResourcePrices()
 const forListingResources = configurator.buildForListingResources()
 const forListingCountries = configurator.buildForListingCountries()
 const forListingCountryInventory = configurator.buildForListingCountryInventory()
@@ -37,7 +38,6 @@ onMounted(async () => {
   countries = await forListingCountries.execute()
   await updateGame()
   gameReady.value = true
-  
 })
 </script>
 
@@ -56,24 +56,22 @@ onMounted(async () => {
 
     <Suspense>
       <div class="column">
-      <h1>Inventories</h1>
-      
+        <h1>Inventories</h1>
+
         <CountryInventory
-        :country-id="countries[0].id"
-        :for-listing-country-inventory="forListingCountryInventory"
-        :key="iteration"
-        name="The player country"
-      ></CountryInventory>
-      <CountryInventory
-        :country-id="countries[1].id"
-        :for-listing-country-inventory="forListingCountryInventory"
-        :key="iteration"
-        name="Great-Britain"
-      ></CountryInventory>
-      
-    </div>
+          :country-id="countries[0].id"
+          :for-listing-country-inventory="forListingCountryInventory"
+          :key="iteration"
+          name="The player country"
+        ></CountryInventory>
+        <CountryInventory
+          :country-id="countries[1].id"
+          :for-listing-country-inventory="forListingCountryInventory"
+          :key="iteration"
+          name="Great-Britain"
+        ></CountryInventory>
+      </div>
     </Suspense>
-    
 
     <div class="column">
       <h1>Prices</h1>

@@ -6,7 +6,6 @@ const testConfigurator = new TestConfigurator()
 
 describe('countries', () => {
   test('No country is existing', async () => {
-
     const forListingCountries = testConfigurator.buildForListingCountries([])
 
     const countries = await forListingCountries.execute()
@@ -24,7 +23,10 @@ describe('countries', () => {
   })
 
   test('Various countries can be listed in not deterministic order', async () => {
-    const forListingCountries = testConfigurator.buildForListingCountries([new Country('Spain'), new Country('France')])
+    const forListingCountries = testConfigurator.buildForListingCountries([
+      new Country('Spain'),
+      new Country('France')
+    ])
 
     const countries = await forListingCountries.execute()
     expect(countries.length).toEqual(2)

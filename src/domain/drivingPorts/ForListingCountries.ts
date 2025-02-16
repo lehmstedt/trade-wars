@@ -1,15 +1,14 @@
-import type { ICountryPort } from "@/domain/drivenPorts/ICountryPort"
-import type { Country } from "@/domain/entities/Country"
+import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
+import type { Country } from '@/domain/entities/Country'
 
 export class ForListingCountries {
+  forListingCountries: ICountryPort
 
-    forListingCountries: ICountryPort
+  constructor(forListingCountries: ICountryPort) {
+    this.forListingCountries = forListingCountries
+  }
 
-    constructor(forListingCountries: ICountryPort){
-        this.forListingCountries = forListingCountries
-    }
-
-    async execute(): Promise<Country[]> {
-        return await this.forListingCountries.list()
-      }
+  async execute(): Promise<Country[]> {
+    return await this.forListingCountries.list()
+  }
 }

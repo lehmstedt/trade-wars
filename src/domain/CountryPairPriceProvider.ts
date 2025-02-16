@@ -1,6 +1,6 @@
-import type { Country } from './entities/Country'
-import type { Resource } from './entities/Resource'
-import type { IPriceProvider } from './IPriceProvider'
+import type { Country } from '@/domain/entities/Country'
+import type { Resource } from '@/domain/entities/Resource'
+import type { IPriceProvider } from '@/domain/IPriceProvider'
 
 export class CountryPairPriceProvider implements IPriceProvider {
   getPrice(buyer: Country, seller: Country, resource: Resource, currency: Resource): number {

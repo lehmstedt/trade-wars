@@ -1,9 +1,10 @@
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
+import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
-import type { Country } from '@/domain/entities/Country'
+import type { Country, CountryId } from '@/domain/entities/Country'
 import type { Resource } from '@/domain/entities/Resource'
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
@@ -63,5 +64,10 @@ export class TestConfigurator {
   buildForListingCountries(countries: Country[]): ForListingCountries {
     this.countryRepository.set(countries)
     return new ForListingCountries(this.countryRepository)
+  }
+
+  buildForListingCountryInventory(countries: Country[]): ForListingCountryInventory {
+    this.countryRepository.set(countries)
+    return new ForListingCountryInventory(this.countryRepository)
   }
 }

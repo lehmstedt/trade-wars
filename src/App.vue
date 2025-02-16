@@ -22,6 +22,7 @@ const forMakingTrade: ForMakingTrade = configurator.buildForMakingTrade()
 const forListingResourcePrices: ForListingResourcePrices = configurator.buildForListingResourcePrices()
 const forListingResources = configurator.buildForListingResources()
 const forListingCountries = configurator.buildForListingCountries()
+const forListingCountryInventory = configurator.buildForListingCountryInventory()
 
 const gameReady = ref(false)
 
@@ -53,19 +54,26 @@ onMounted(async () => {
       ></Trade>
     </div>
 
-    <div class="column">
+    <Suspense>
+      <div class="column">
       <h1>Inventories</h1>
-      <CountryInventory
-        :country="countries[0]"
+      
+        <CountryInventory
+        :country-id="countries[0].id"
+        :for-listing-country-inventory="forListingCountryInventory"
         :key="iteration"
         name="The player country"
       ></CountryInventory>
       <CountryInventory
-        :country="countries[1]"
+        :country-id="countries[1].id"
+        :for-listing-country-inventory="forListingCountryInventory"
         :key="iteration"
         name="Great-Britain"
       ></CountryInventory>
+      
     </div>
+    </Suspense>
+    
 
     <div class="column">
       <h1>Prices</h1>

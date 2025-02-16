@@ -1,5 +1,6 @@
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
+import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
@@ -56,4 +57,8 @@ export class InMemoryConfigurator {
   buildForListingCountries(): ForListingCountries {
     return new ForListingCountries(this.countryRepository)
   }
+
+  buildForListingCountryInventory(): ForListingCountryInventory {
+      return new ForListingCountryInventory(this.countryRepository)
+    }
 }

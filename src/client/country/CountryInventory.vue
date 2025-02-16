@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { Country } from '@/domain/entities/Country'
+import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory';
+import { CountryId, type ResourceInventory } from '@/domain/entities/Country'
 
 const props = defineProps({
-  country: Country,
-  name: String
+  countryId: {
+    type: CountryId,
+    required: true
+  }
+    ,
+  name: String,
+  forListingCountryInventory: {
+    type: ForListingCountryInventory,
+    required: true
+  }
 })
 
-const inventories = props.country?.getResourceInventories()
+let inventories: ResourceInventory[] = await props.forListingCountryInventory.execute(props.countryId)
 
-defineExpose({ inventories })
 </script>
 <template>
   <h3>{{ name }}</h3>
-  <div v-for="inventory in inventories" :key="inventory.name">
-    {{ inventory.name }} : {{ inventory.qty?.toFixed(2) }}
-  </div>
+    <div v-for="inventory in inventories" :key="inventory.name">
+      {{ inventory.name }} : {{ inventory.qty?.toFixed(2) }}
+    </div>
+  
 </template>

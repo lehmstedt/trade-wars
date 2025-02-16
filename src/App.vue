@@ -9,6 +9,7 @@ import type { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrad
 import { InMemoryConfigurator } from './configurator/InMemoryConfigurator'
 import type { ForMakingTrade } from './domain/drivingPorts/ForMakingTrade'
 import { ForListingResourcePrices } from './domain/drivingPorts/ForListingResourcePrices'
+import CountryDashboard from './client/country/CountryDashboard.vue'
 
 let iteration = ref(0)
 const configurator = new InMemoryConfigurator()
@@ -24,6 +25,7 @@ const forListingResourcePrices: ForListingResourcePrices =
 const forListingResources = configurator.buildForListingResources()
 const forListingCountries = configurator.buildForListingCountries()
 const forListingCountryInventory = configurator.buildForListingCountryInventory()
+const forListingTariffs = configurator.buildForListingTariffs()
 
 const gameReady = ref(false)
 
@@ -43,6 +45,9 @@ onMounted(async () => {
 
 <template>
   <div class="row" v-if="gameReady">
+    <Suspense>
+      <CountryDashboard :country-id="countries[0].id" :for-listing-tariffs="forListingTariffs"></CountryDashboard>
+    </Suspense>
     <div class="column">
       <Trade
         :player-country="countries[0]"

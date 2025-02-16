@@ -3,6 +3,7 @@ import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
+import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import { Country } from '@/domain/entities/Country'
@@ -21,6 +22,7 @@ export class InMemoryConfigurator {
     const playerCountry = new Country('Player')
     playerCountry.setResource(iron, 12)
     playerCountry.setResource(charcoal, 240)
+    playerCountry.setTariff(10, whool)
     const anotherCountry = new Country('Great-Britain')
     anotherCountry.setResource(iron, 30)
     anotherCountry.setResource(whool, 10)
@@ -60,4 +62,8 @@ export class InMemoryConfigurator {
   buildForListingCountryInventory(): ForListingCountryInventory {
     return new ForListingCountryInventory(this.countryRepository)
   }
+
+  buildForListingTariffs(): ForListingTariffs {
+      return new ForListingTariffs(this.countryRepository)
+    }
 }

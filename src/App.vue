@@ -26,6 +26,7 @@ const forListingResources = configurator.buildForListingResources()
 const forListingCountries = configurator.buildForListingCountries()
 const forListingCountryInventory = configurator.buildForListingCountryInventory()
 const forListingTariffs = configurator.buildForListingTariffs()
+const forSettingTariff = configurator.buildForSettingTariff()
 
 const gameReady = ref(false)
 
@@ -46,7 +47,11 @@ onMounted(async () => {
 <template>
   <div class="row" v-if="gameReady">
     <Suspense>
-      <CountryDashboard :country-id="countries[0].id" :for-listing-tariffs="forListingTariffs"></CountryDashboard>
+      <CountryDashboard
+        :country-id="countries[0].id"
+        :for-listing-tariffs="forListingTariffs"
+        :for-setting-tariff="forSettingTariff"
+      ></CountryDashboard>
     </Suspense>
     <div class="column">
       <Trade

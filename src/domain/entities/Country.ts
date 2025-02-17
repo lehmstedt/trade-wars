@@ -72,7 +72,7 @@ export class Country {
     return offeredQty <= this.getResourceQty(offeredResource)
   }
   getTariffOnResource(resource: Resource) {
-    return this.tariffs.get(resource.name)
+    return this.tariffs.get(resource.name) ?? 0
   }
   listTariffs(): Tariff[] {
     const tariffs = []

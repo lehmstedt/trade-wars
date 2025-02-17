@@ -80,9 +80,10 @@ export class TestConfigurator {
     return new ForSettingTariff(this.countryRepository, this.resourceRepository)
   }
 
-  buildForListingTariffs(countries: Country[]): ForListingTariffs {
+  buildForListingTariffs(countries: Country[], resources: Resource[]): ForListingTariffs {
     this.countryRepository.set(countries)
-    return new ForListingTariffs(this.countryRepository)
+    this.resourceRepository.set(resources)
+    return new ForListingTariffs(this.countryRepository, this.resourceRepository)
   }
 
   buildForCheckingIfGameIsOver(countries: Country[]): ForCheckingIfGameIsOver {

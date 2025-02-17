@@ -5,6 +5,7 @@ import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResour
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
 import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
+import { ForSettingTariff } from '@/domain/drivingPorts/ForSettingTariff'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import { Country } from '@/domain/entities/Country'
 import { Resource } from '@/domain/entities/Resource'
@@ -64,6 +65,10 @@ export class InMemoryConfigurator {
   }
 
   buildForListingTariffs(): ForListingTariffs {
-      return new ForListingTariffs(this.countryRepository)
-    }
+    return new ForListingTariffs(this.countryRepository, this.resourceRepository)
+  }
+
+  buildForSettingTariff(): ForSettingTariff {
+    return new ForSettingTariff(this.countryRepository, this.resourceRepository)
+  }
 }

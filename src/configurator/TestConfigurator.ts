@@ -1,5 +1,7 @@
+import type { IConfigurator } from '@/configurator/IConfigurator'
 import { ForCheckingIfGameIsOver } from '@/domain/drivingPorts/ForCheckingIfGameIsOver'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
+import { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryGoals'
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
@@ -13,13 +15,20 @@ import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 import { TestPriceProvider } from '@/tests/TestPriceProvider'
 
-export class TestConfigurator {
+type GameActors = { country: Country }
+export class TestConfigurator implements IConfigurator {
   countryRepository: InMemoryCountryRepository
   resourceRepository: InMemoryResourceRepository
 
-  constructor() {
-    this.countryRepository = new InMemoryCountryRepository()
+  constructor(actors?: GameActors) {
+    this.countryRepository = actors?.country
+      ? new InMemoryCountryRepository([actors.country])
+      : new InMemoryCountryRepository()
     this.resourceRepository = new InMemoryResourceRepository()
+  }
+
+  buildForListingCountryGoals(): ForListingCountryGoals {
+    return new ForListingCountryGoals(this.countryRepository)
   }
 
   buildForValidatingTrade(

@@ -3,7 +3,7 @@ import { Tariff } from '@/domain/entities/Tariff'
 import { UnknownGoalError } from '@/domain/Errors'
 
 export type ResourceInventory = { name: string; qty: number }
-type Goal = { resource: Resource; quantity: number }
+export type Goal = { resource: Resource; quantity: number }
 
 export class CountryId {
   value: string

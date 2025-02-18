@@ -1,5 +1,7 @@
+import type { IConfigurator } from '@/configurator/IConfigurator'
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
+import type { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryGoals'
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingResourcePrices } from '@/domain/drivingPorts/ForListingResourcePrices'
 import { ForListingResources } from '@/domain/drivingPorts/ForListingResources'
@@ -12,7 +14,7 @@ import { Resource } from '@/domain/entities/Resource'
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 
-export class InMemoryConfigurator {
+export class InMemoryConfigurator implements IConfigurator {
   countryRepository: InMemoryCountryRepository
   resourceRepository: InMemoryResourceRepository
 
@@ -30,6 +32,9 @@ export class InMemoryConfigurator {
 
     this.countryRepository = new InMemoryCountryRepository([playerCountry, anotherCountry])
     this.resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
+  }
+  buildForListingCountryGoals(): ForListingCountryGoals {
+    throw new Error('Method not implemented.')
   }
 
   buildForValidatingTrade(): ForValidatingTrade {

@@ -22,6 +22,11 @@ export class CountryBuilder {
     return this
   }
 
+  withTariff(resource: Resource, quantity: number) {
+    this.country.setTariff(quantity, resource)
+    return this
+  }
+
   build() {
     return this.country
   }

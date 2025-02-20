@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryGoals'
 import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForSettingTariff } from '@/domain/drivingPorts/ForSettingTariff'
 import { CountryId } from '@/domain/entities/Country'
@@ -17,12 +18,17 @@ const props = defineProps({
   forSettingTariff: {
     type: ForSettingTariff,
     required: true
+  },
+  forListingCountryGoals: {
+    type: ForListingCountryGoals,
+    required: true
   }
 })
 
 type TariffQuery = { current: Tariff; newRate: number }
 
 let tariffsRef: Ref<TariffQuery[]> = ref([])
+const goals = await props.forListingCountryGoals.execute(props.countryId)
 
 await updateTariffs()
 
@@ -42,11 +48,15 @@ async function updateTariffs() {
     <h1>This should be the country name</h1>
     <h2>Tariffs</h2>
     <div v-for="tariff in tariffsRef" :key="tariff.current.resourceName">
-      {{ tariff.current.resourceName }} : {{ tariff.current.rate }}
+      {{ tariff.current.resourceName }} : {{ tariff.current.rate }} %
       <input v-model="tariff.newRate" type="number" />
       <button @click="setTariff(tariff.newRate, tariff.current.resourceName)">
         Set a tariff of {{ tariff.newRate }} % on {{ tariff.current.resourceName }}
       </button>
+    </div>
+    <h2>Goals</h2>
+    <div v-for="goal in goals" :key="goal.resource.name">
+      {{ goal.resource.name }} : {{ goal.quantity }}
     </div>
   </div>
 </template>

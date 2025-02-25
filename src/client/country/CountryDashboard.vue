@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryGoals'
+import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForSettingTariff } from '@/domain/drivingPorts/ForSettingTariff'
 import { CountryId } from '@/domain/entities/Country'
 import type { Tariff } from '@/domain/entities/Tariff'
 import { ref, type Ref } from 'vue'
+import CountryInventory from './CountryInventory.vue'
 
 const props = defineProps({
   countryId: {
@@ -21,6 +23,10 @@ const props = defineProps({
   },
   forListingCountryGoals: {
     type: ForListingCountryGoals,
+    required: true
+  },
+  forListingCountryInventory: {
+    type: ForListingCountryInventory,
     required: true
   }
 })
@@ -58,6 +64,11 @@ async function updateTariffs() {
     <div v-for="goal in goals" :key="goal.resource.name">
       {{ goal.resource.name }} : {{ goal.quantity }}
     </div>
+    <h2>Inventory</h2>
+    <CountryInventory
+      :country-id="props.countryId"
+      :for-listing-country-inventory="forListingCountryInventory"
+    ></CountryInventory>
   </div>
 </template>
 
@@ -65,5 +76,6 @@ async function updateTariffs() {
 .country-dashboard {
   background-color: burlywood;
   padding: 1rem;
+  margin: 1rem;
 }
 </style>

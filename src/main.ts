@@ -5,15 +5,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TheGame from '@/client/TheGame.vue'
 
 const routes = [
-    { path: '/', component: TheGame},
-    { path: '/gameOver', component: GameOver}
+  { path: '/', component: TheGame },
+  { path: '/gameOver', component: GameOver }
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+  history: createWebHistory(),
+  routes
 })
 
-createApp(App)
-    .use(router)
-    .mount('#app')
+createApp(App).use(router).mount('#app')

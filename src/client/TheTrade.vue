@@ -41,7 +41,6 @@ watch(tradeRequest, async (newRequest) => {
 
 async function trade() {
   await props.forMakingTrade.execute(tradeRequest.value)
-  validation.value = await props.forMakingTrade.execute(tradeRequest.value)
   emit('tradeMade')
 }
 </script>

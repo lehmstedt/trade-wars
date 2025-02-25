@@ -8,7 +8,9 @@ describe('For checking if game is over', () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withGoal(pinapple, 10).build()
 
-    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -20,7 +22,9 @@ describe('For checking if game is over', () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withResource(pinapple, 10).build()
 
-    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -32,7 +36,9 @@ describe('For checking if game is over', () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withGoal(pinapple, 10).withResource(pinapple, 9).build()
 
-    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -48,7 +54,9 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -64,7 +72,9 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 11)
       .build()
 
-      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -87,7 +97,9 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-      const forCheckingIfGameIsOver = new TestConfigurator({countries: [loser, winner]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [loser, winner]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -107,7 +119,9 @@ describe('For checking if game is over', () => {
       .withResource(apple, 1)
       .build()
 
-      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -130,7 +144,9 @@ describe('For checking if game is over', () => {
       .withResource(table, 2)
       .build()
 
-      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -153,7 +169,9 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country1, country2]}).buildForCheckingIfGameIsOver()
+    const forCheckingIfGameIsOver = new TestConfigurator({
+      countries: [country1, country2]
+    }).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 

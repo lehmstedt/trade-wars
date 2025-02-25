@@ -4,7 +4,6 @@ import CountryResourcePrices from '@/client/country/CountryResourcePrice.vue'
 import { onMounted, ref } from 'vue'
 import type { Resource } from '@/domain/entities/Resource'
 import type { Country } from '@/domain/entities/Country'
-import CountryInventory from '@/client/country/CountryInventory.vue'
 import { useRouter } from 'vue-router'
 import { InMemoryConfigurator } from '@/configurator/InMemoryConfigurator'
 import CountryDashboard from './country/CountryDashboard.vue'
@@ -18,7 +17,7 @@ let otherCountryPrices: Map<string, Map<string, number | undefined>>
 
 const forValidatingTrade = configurator.buildForValidatingTrade()
 const forMakingTrade = configurator.buildForMakingTrade()
-const forListingResourcePrices= configurator.buildForListingResourcePrices()
+const forListingResourcePrices = configurator.buildForListingResourcePrices()
 const forListingResources = configurator.buildForListingResources()
 const forListingCountries = configurator.buildForListingCountries()
 const forListingCountryInventory = configurator.buildForListingCountryInventory()
@@ -41,9 +40,9 @@ const updateGame = async () => {
   const gameState = await forCheckingIfGameIsOver.execute()
   winnerName.value = gameState.winnerName ?? ''
 
-  if(gameState.isGameOver){
+  if (gameState.isGameOver) {
     isGameOver.value = true
-    router.push( { path: '/gameOver'})
+    router.push({ path: '/gameOver' })
   }
 }
 
@@ -58,12 +57,24 @@ onMounted(async () => {
 <template>
   <div class="row" v-if="gameReady">
     <Suspense>
-      <CountryDashboard
-        :country-id="countries[0].id"
-        :for-listing-tariffs="forListingTariffs"
-        :for-setting-tariff="forSettingTariff"
-        :for-listing-country-goals="forListingCountryGoals"
-      ></CountryDashboard>
+      <div>
+        <CountryDashboard
+          :country-id="countries[0].id"
+          :for-listing-tariffs="forListingTariffs"
+          :for-setting-tariff="forSettingTariff"
+          :for-listing-country-goals="forListingCountryGoals"
+          :for-listing-country-inventory="forListingCountryInventory"
+          :key="iteration"
+        ></CountryDashboard>
+        <CountryDashboard
+          :country-id="countries[1].id"
+          :for-listing-tariffs="forListingTariffs"
+          :for-setting-tariff="forSettingTariff"
+          :for-listing-country-goals="forListingCountryGoals"
+          :for-listing-country-inventory="forListingCountryInventory"
+          :key="iteration"
+        ></CountryDashboard>
+      </div>
     </Suspense>
     <div class="column">
       <Trade
@@ -75,25 +86,6 @@ onMounted(async () => {
         :for-making-trade="forMakingTrade"
       ></Trade>
     </div>
-
-    <Suspense>
-      <div class="column">
-        <h1>Inventories</h1>
-
-        <CountryInventory
-          :country-id="countries[0].id"
-          :for-listing-country-inventory="forListingCountryInventory"
-          :key="iteration"
-          name="The player country"
-        ></CountryInventory>
-        <CountryInventory
-          :country-id="countries[1].id"
-          :for-listing-country-inventory="forListingCountryInventory"
-          :key="iteration"
-          name="Great-Britain"
-        ></CountryInventory>
-      </div>
-    </Suspense>
 
     <div class="column">
       <h1>Prices</h1>

@@ -7,7 +7,6 @@ const props = defineProps({
     type: CountryId,
     required: true
   },
-  name: String,
   forListingCountryInventory: {
     type: ForListingCountryInventory,
     required: true
@@ -19,7 +18,6 @@ let inventories: ResourceInventory[] = await props.forListingCountryInventory.ex
 )
 </script>
 <template>
-  <h3>{{ name }}</h3>
   <div v-for="inventory in inventories" :key="inventory.name">
     {{ inventory.name }} : {{ inventory.qty?.toFixed(2) }}
   </div>

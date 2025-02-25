@@ -3,14 +3,24 @@ import { describe, expect, it } from 'vitest'
 import { CountryBuilder } from '@/domain/entities/CountryBuilder'
 import { TestConfigurator } from '@/configurator/TestConfigurator'
 
-const testConfigurator = new TestConfigurator()
-
 describe('For checking if game is over', () => {
   it('should not have any winner when no country has goal nor resource', async () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withGoal(pinapple, 10).build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
+    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
+
+    const gameState = await forCheckingIfGameIsOver.execute()
+
+    expect(gameState.isGameOver).toBe(false)
+    expect(gameState.winnerName).toBe(undefined)
+  })
+
+  it('should not have any winner when a country has resources but no goal', async () => {
+    const pinapple = new Resource('Pinapple')
+    const country = new CountryBuilder().withResource(pinapple, 10).build()
+
+    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -22,7 +32,7 @@ describe('For checking if game is over', () => {
     const pinapple = new Resource('Pinapple')
     const country = new CountryBuilder().withGoal(pinapple, 10).withResource(pinapple, 9).build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
+    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -38,7 +48,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
+      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -54,7 +64,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 11)
       .build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
+      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -77,7 +87,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([loser, winner])
+      const forCheckingIfGameIsOver = new TestConfigurator({countries: [loser, winner]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -97,7 +107,7 @@ describe('For checking if game is over', () => {
       .withResource(apple, 1)
       .build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
+      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -120,7 +130,7 @@ describe('For checking if game is over', () => {
       .withResource(table, 2)
       .build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([country])
+      const forCheckingIfGameIsOver = new TestConfigurator({countries: [country]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -143,10 +153,7 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfGameIsOver = testConfigurator.buildForCheckingIfGameIsOver([
-      country1,
-      country2
-    ])
+    const forCheckingIfGameIsOver = new TestConfigurator({countries: [country1, country2]}).buildForCheckingIfGameIsOver()
 
     const gameState = await forCheckingIfGameIsOver.execute()
 

@@ -108,6 +108,9 @@ export class Country {
   }
   hasReachedHisGoals() {
     const goals = this.listGoals()
+    if(goals.length === 0){
+      return false
+    }
     for (const goal of goals) {
       if (!this.hasReachedGoal(goal.resource)) {
         return false

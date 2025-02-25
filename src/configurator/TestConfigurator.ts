@@ -15,14 +15,14 @@ import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 import { TestPriceProvider } from '@/tests/TestPriceProvider'
 
-type GameActors = { country: Country }
+type GameActors = { countries: Country[] }
 export class TestConfigurator implements IConfigurator {
   countryRepository: InMemoryCountryRepository
   resourceRepository: InMemoryResourceRepository
 
   constructor(actors?: GameActors) {
-    this.countryRepository = actors?.country
-      ? new InMemoryCountryRepository([actors.country])
+    this.countryRepository = actors?.countries
+      ? new InMemoryCountryRepository(actors.countries)
       : new InMemoryCountryRepository()
     this.resourceRepository = new InMemoryResourceRepository()
   }
@@ -95,8 +95,7 @@ export class TestConfigurator implements IConfigurator {
     return new ForListingTariffs(this.countryRepository, this.resourceRepository)
   }
 
-  buildForCheckingIfGameIsOver(countries: Country[]): ForCheckingIfGameIsOver {
-    this.countryRepository.set(countries)
+  buildForCheckingIfGameIsOver(): ForCheckingIfGameIsOver {
     return new ForCheckingIfGameIsOver(this.countryRepository)
   }
 }

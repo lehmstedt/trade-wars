@@ -1,5 +1,6 @@
 import type { IConfigurator } from '@/configurator/IConfigurator'
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
+import { ForCheckingIfGameIsOver } from '@/domain/drivingPorts/ForCheckingIfGameIsOver'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
 import { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryGoals'
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
@@ -38,6 +39,9 @@ export class InMemoryConfigurator implements IConfigurator {
 
     this.countryRepository = new InMemoryCountryRepository([playerCountry, anotherCountry])
     this.resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
+  }
+  buildForCheckingIfGameIsOver(): ForCheckingIfGameIsOver {
+    return new ForCheckingIfGameIsOver(this.countryRepository)
   }
 
   buildForListingCountryGoals(): ForListingCountryGoals {

@@ -9,7 +9,7 @@ describe('For listing country goals', () => {
     const countryWithoutGoals = new Country('')
 
     const forListingCountryGoals = new TestConfigurator({
-      country: countryWithoutGoals
+      countries: [countryWithoutGoals]
     }).buildForListingCountryGoals()
 
     const goals = await forListingCountryGoals.execute(countryWithoutGoals.id)
@@ -22,7 +22,7 @@ describe('For listing country goals', () => {
     const countryWithGoal = new CountryBuilder().withGoal(apple, 10).build()
 
     const forListingCountryGoals = new TestConfigurator({
-      country: countryWithGoal
+      countries: [countryWithGoal]
     }).buildForListingCountryGoals()
 
     const goals = await forListingCountryGoals.execute(countryWithGoal.id)
@@ -43,7 +43,7 @@ describe('For listing country goals', () => {
       .build()
 
     const forListingCountryGoals = new TestConfigurator({
-      country: countryWithGoal
+      countries: [countryWithGoal]
     }).buildForListingCountryGoals()
 
     const goals = await forListingCountryGoals.execute(countryWithGoal.id)

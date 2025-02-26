@@ -3,33 +3,20 @@ import { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryG
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
 import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForSettingTariff } from '@/domain/drivingPorts/ForSettingTariff'
-import { Country } from '@/domain/entities/Country'
 import type { Tariff } from '@/domain/entities/Tariff'
 import { ref, type Ref } from 'vue'
 import CountryInventory from './CountryInventory.vue'
+import type { CountryListEntry } from '@/domain/drivingPorts/ForListingCountries'
 
-const props = defineProps({
-  country: {
-    type: Country,
-    required: true
-  },
-  forListingTariffs: {
-    type: ForListingTariffs,
-    required: true
-  },
-  forSettingTariff: {
-    type: ForSettingTariff,
-    required: true
-  },
-  forListingCountryGoals: {
-    type: ForListingCountryGoals,
-    required: true
-  },
-  forListingCountryInventory: {
-    type: ForListingCountryInventory,
-    required: true
-  }
-})
+interface Props {
+  country: CountryListEntry,
+  forListingTariffs: ForListingTariffs,
+  forSettingTariff: ForSettingTariff,
+  forListingCountryGoals: ForListingCountryGoals,
+  forListingCountryInventory: ForListingCountryInventory
+}
+
+const props = defineProps<Props>()
 
 type TariffQuery = { current: Tariff; newRate: number }
 

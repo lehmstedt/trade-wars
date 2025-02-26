@@ -1,5 +1,7 @@
 import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
-import type { Country } from '@/domain/entities/Country'
+import type { CountryId } from '@/domain/entities/Country'
+
+export type CountryListEntry = {id: CountryId, name: string};
 
 export class ForListingCountries {
   forListingCountries: ICountryPort
@@ -8,7 +10,7 @@ export class ForListingCountries {
     this.forListingCountries = forListingCountries
   }
 
-  async execute(): Promise<Country[]> {
+  async execute(): Promise<CountryListEntry[]> {
     return await this.forListingCountries.list()
   }
 }

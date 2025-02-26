@@ -3,15 +3,15 @@ import Trade from '@/client/TheTrade.vue'
 import CountryResourcePrices from '@/client/country/CountryResourcePrice.vue'
 import { onMounted, ref } from 'vue'
 import type { Resource } from '@/domain/entities/Resource'
-import type { Country } from '@/domain/entities/Country'
 import { useRouter } from 'vue-router'
 import { InMemoryConfigurator } from '@/configurator/InMemoryConfigurator'
 import CountryDashboard from './country/CountryDashboard.vue'
+import type { CountryListEntry } from '@/domain/drivingPorts/ForListingCountries'
 
 let iteration = ref(0)
 const configurator = new InMemoryConfigurator()
 let resources: Resource[] = []
-let countries: Country[] = []
+let countries: CountryListEntry[] = []
 let playerPrices: Map<string, Map<string, number | undefined>>
 let otherCountryPrices: Map<string, Map<string, number | undefined>>
 
@@ -42,7 +42,7 @@ const updateGame = async () => {
 
   if (gameState.isGameOver) {
     isGameOver.value = true
-    router.push({ name: 'gameOver', params: {winnerName: gameState.winnerName} })
+    router.push({ name: 'gameOver', params: {winnerName: gameState.winnerName ?? 'Nobody'} })
   }
 }
 

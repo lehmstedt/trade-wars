@@ -10,7 +10,6 @@ import { ForListingTariffs } from '@/domain/drivingPorts/ForListingTariffs'
 import { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
 import { ForSettingTariff } from '@/domain/drivingPorts/ForSettingTariff'
 import { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
-import { Country } from '@/domain/entities/Country'
 import { CountryBuilder } from '@/domain/entities/CountryBuilder'
 import { Resource } from '@/domain/entities/Resource'
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
@@ -33,11 +32,14 @@ export class InMemoryConfigurator implements IConfigurator {
       .withTariff(whool, 10)
       .build()
 
-    const anotherCountry = new Country('Great-Britain')
-    anotherCountry.setResource(iron, 30)
-    anotherCountry.setResource(whool, 10)
+    const greatBritain = new CountryBuilder()
+      .withName('Great-Britain')
+      .withGoal(charcoal, 6)
+      .withResource(iron, 30)
+      .withResource(whool, 10)
+      .build()
 
-    this.countryRepository = new InMemoryCountryRepository([playerCountry, anotherCountry])
+    this.countryRepository = new InMemoryCountryRepository([playerCountry, greatBritain])
     this.resourceRepository = new InMemoryResourceRepository([iron, charcoal, whool])
   }
   buildForCheckingIfGameIsOver(): ForCheckingIfGameIsOver {

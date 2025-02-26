@@ -6,7 +6,7 @@ import TheGame from '@/client/TheGame.vue'
 
 const routes = [
   { path: '/', component: TheGame },
-  { path: '/gameOver', component: GameOver }
+  { path: '/gameOver/:winnerName', name: 'gameOver', component: GameOver, props: true }
 ]
 
 const router = createRouter({

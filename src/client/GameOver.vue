@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+interface Props {
+  winnerName: string
+}
+defineProps<Props>()
+
 const router = useRouter()
-const winnerName = ref('To be implemented')
 
 function restart() {
   router.push({ path: '/' })

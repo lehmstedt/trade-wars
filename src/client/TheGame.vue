@@ -42,7 +42,7 @@ const updateGame = async () => {
 
   if (gameState.isGameOver) {
     isGameOver.value = true
-    router.push({ path: '/gameOver' })
+    router.push({ name: 'gameOver', params: {winnerName: gameState.winnerName} })
   }
 }
 
@@ -59,7 +59,7 @@ onMounted(async () => {
     <Suspense>
       <div>
         <CountryDashboard
-          :country-id="countries[0].id"
+          :country="countries[0]"
           :for-listing-tariffs="forListingTariffs"
           :for-setting-tariff="forSettingTariff"
           :for-listing-country-goals="forListingCountryGoals"
@@ -67,7 +67,7 @@ onMounted(async () => {
           :key="iteration"
         ></CountryDashboard>
         <CountryDashboard
-          :country-id="countries[1].id"
+          :country="countries[1]"
           :for-listing-tariffs="forListingTariffs"
           :for-setting-tariff="forSettingTariff"
           :for-listing-country-goals="forListingCountryGoals"

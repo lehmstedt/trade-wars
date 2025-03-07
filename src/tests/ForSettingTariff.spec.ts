@@ -30,7 +30,7 @@ describe('For setting tariff', () => {
     const forSettingTariff = testConfigurator.buildForSettingTariff([country], [resource])
     await forSettingTariff.execute(country.id, 15, resource.name)
 
-    const countryAfter = (await testConfigurator.countryRepository.getById(country.id)) as Country
+    const countryAfter = (await forSettingTariff.forSettingTariffOnCountry.getById(country.id)) as Country
 
     expect(countryAfter.getTariffOnResource(resource)).toEqual(15)
   })
@@ -45,7 +45,7 @@ describe('For setting tariff', () => {
     const forSettingTariff = testConfigurator.buildForSettingTariff([country], [wine, cheese])
     await forSettingTariff.execute(country.id, 10, cheese.name)
 
-    const countryAfter = (await testConfigurator.countryRepository.getById(country.id)) as Country
+    const countryAfter = (await forSettingTariff.forSettingTariffOnCountry.getById(country.id)) as Country
 
     expect(countryAfter.getTariffOnResource(wine)).toEqual(15)
     expect(countryAfter.getTariffOnResource(cheese)).toEqual(10)

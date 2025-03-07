@@ -1,4 +1,3 @@
-import type { IConfigurator } from '@/configurator/IConfigurator'
 import { ForCheckingIfGameIsOver } from '@/domain/drivingPorts/ForCheckingIfGameIsOver'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
 import { ForListingCountryGoals } from '@/domain/drivingPorts/ForListingCountryGoals'
@@ -15,20 +14,10 @@ import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepos
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 import { TestPriceProvider } from '@/tests/TestPriceProvider'
 
-type GameActors = { countries: Country[] }
-export class TestConfigurator implements IConfigurator {
-  countryRepository: InMemoryCountryRepository
-  resourceRepository: InMemoryResourceRepository
+export class TestConfigurator {
 
-  constructor(actors?: GameActors) {
-    this.countryRepository = actors?.countries
-      ? new InMemoryCountryRepository(actors.countries)
-      : new InMemoryCountryRepository()
-    this.resourceRepository = new InMemoryResourceRepository()
-  }
-
-  buildForListingCountryGoals(): ForListingCountryGoals {
-    return new ForListingCountryGoals(this.countryRepository)
+  buildForListingCountryGoals(countries: Country[]): ForListingCountryGoals {
+    return new ForListingCountryGoals(new InMemoryCountryRepository(countries))
   }
 
   buildForValidatingTrade(
@@ -36,11 +25,9 @@ export class TestConfigurator implements IConfigurator {
     resources: Resource[],
     price: number = 0
   ): ForValidatingTrade {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
     return new ForValidatingTrade(
-      this.countryRepository,
-      this.resourceRepository,
+      new InMemoryCountryRepository(countries),
+      new InMemoryResourceRepository(resources),
       new TestPriceProvider(price)
     )
   }
@@ -50,11 +37,9 @@ export class TestConfigurator implements IConfigurator {
     resources: Resource[],
     price: number = 0
   ): ForMakingTrade {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
     return new ForMakingTrade(
-      this.countryRepository,
-      this.resourceRepository,
+      new InMemoryCountryRepository(countries),
+      new InMemoryResourceRepository(resources),
       new TestPriceProvider(price)
     )
   }
@@ -63,39 +48,34 @@ export class TestConfigurator implements IConfigurator {
     countries: Country[],
     resources: Resource[]
   ): ForListingResourcePrices {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
-    return new ForListingResourcePrices(this.countryRepository, this.resourceRepository)
+    
+    return new ForListingResourcePrices(new InMemoryCountryRepository(countries),
+    new InMemoryResourceRepository(resources),)
   }
 
   buildForListingResources(resources: Resource[]): ForListingResources {
-    this.resourceRepository.set(resources)
-    return new ForListingResources(this.resourceRepository)
+    return new ForListingResources(new InMemoryResourceRepository(resources))
   }
 
   buildForListingCountries(countries: Country[]): ForListingCountries {
-    this.countryRepository.set(countries)
-    return new ForListingCountries(this.countryRepository)
+    return new ForListingCountries(new InMemoryCountryRepository(countries))
   }
 
   buildForListingCountryInventory(countries: Country[]): ForListingCountryInventory {
-    this.countryRepository.set(countries)
-    return new ForListingCountryInventory(this.countryRepository)
+    return new ForListingCountryInventory(new InMemoryCountryRepository(countries))
   }
 
   buildForSettingTariff(countries: Country[], resources: Resource[]): ForSettingTariff {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
-    return new ForSettingTariff(this.countryRepository, this.resourceRepository)
+    return new ForSettingTariff(new InMemoryCountryRepository(countries),
+    new InMemoryResourceRepository(resources))
   }
 
   buildForListingTariffs(countries: Country[], resources: Resource[]): ForListingTariffs {
-    this.countryRepository.set(countries)
-    this.resourceRepository.set(resources)
-    return new ForListingTariffs(this.countryRepository, this.resourceRepository)
+    return new ForListingTariffs(new InMemoryCountryRepository(countries),
+    new InMemoryResourceRepository(resources))
   }
 
-  buildForCheckingIfGameIsOver(): ForCheckingIfGameIsOver {
-    return new ForCheckingIfGameIsOver(this.countryRepository)
+  buildForCheckingIfGameIsOver(countries: Country[]): ForCheckingIfGameIsOver {
+    return new ForCheckingIfGameIsOver(new InMemoryCountryRepository(countries))
   }
 }

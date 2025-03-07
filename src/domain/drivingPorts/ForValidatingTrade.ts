@@ -57,6 +57,12 @@ export class ForValidatingTrade {
 
     const price = unitPrice * request.soldQuantity
 
+    const tariff = buyer.getTariffOnResource(buyerResource)
+
+    if(tariff > 0){
+      return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer)
+    }
+
     if (buyer.getResourceQty(buyerResource) < price) {
       return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer, price)
     }

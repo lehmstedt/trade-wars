@@ -1,4 +1,3 @@
-import type { IConfigurator } from '@/configurator/IConfigurator'
 import { CountryPairPriceProvider } from '@/domain/CountryPairPriceProvider'
 import { ForCheckingIfGameIsOver } from '@/domain/drivingPorts/ForCheckingIfGameIsOver'
 import { ForListingCountries } from '@/domain/drivingPorts/ForListingCountries'
@@ -15,7 +14,7 @@ import { Resource } from '@/domain/entities/Resource'
 import { InMemoryCountryRepository } from '@/infrastructure/InMemoryCountryRepository'
 import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRepository'
 
-export class InMemoryConfigurator implements IConfigurator {
+export class InMemoryConfigurator {
   countryRepository: InMemoryCountryRepository
   resourceRepository: InMemoryResourceRepository
 

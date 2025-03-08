@@ -65,7 +65,7 @@ export class ForMakingTrade {
 
     const tariff = validation.tariff ?? 0
     if (tariff > 0) {
-      buyer.resources.moveTo(buyer.stateResources, buyerResource, tariff)
+      buyer.payTariff(buyerResource, tariff)
     }
 
     await this.forApplyingTradeOnCountry.save(buyer)

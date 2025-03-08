@@ -361,7 +361,7 @@ describe('For validating and making trade', () => {
     const buyerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(buyer.id)
 
     expect(buyerAfter?.getResourceQty(buyerRes)).toEqual(0.95)
-    expect(buyerAfter?.stateResources.getQuantity(buyerRes)).toEqual(0.05)
+    expect(buyerAfter?.getStateResourceQuantity(buyerRes)).toEqual(0.05)
 
     const sellerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(seller.id)
 
@@ -403,7 +403,7 @@ describe('For validating and making trade', () => {
     const buyerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(buyer.id)
 
     expect(buyerAfter?.getResourceQty(buyerRes)).toEqual(1)
-    expect(buyerAfter?.stateResources.getQuantity(buyerRes)).toEqual(0)
+    expect(buyerAfter?.getStateResourceQuantity(buyerRes)).toEqual(0)
 
     const sellerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(seller.id)
 
@@ -446,7 +446,7 @@ describe('For validating and making trade', () => {
     const buyerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(buyer.id)
 
     expect(buyerAfter?.getResourceQty(buyerRes)).toEqual(0.95)
-    expect(buyerAfter?.stateResources.getQuantity(buyerRes)).toEqual(1.05)
+    expect(buyerAfter?.getStateResourceQuantity(buyerRes)).toEqual(1.05)
 
     const sellerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(seller.id)
 

@@ -20,7 +20,7 @@ export class ForListingCountries {
     return (await this.forListingCountries.list()).map((country) => ({
       id: country.id,
       name: country.name,
-      stateResources: country.stateResources.list()
+      stateResources: country.listStateResources()
     }))
   }
 }

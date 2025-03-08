@@ -18,7 +18,7 @@ export class ResourceInventory {
     return Array.from(this.#map.entries()).map((entry) => ({ name: entry[0], quantity: entry[1] }))
   }
 
-  moveTo(inventory: ResourceInventory, resource: Resource, quantity: number){
+  moveTo(inventory: ResourceInventory, resource: Resource, quantity: number) {
     inventory.add(resource, quantity)
     this.add(resource, -quantity)
   }

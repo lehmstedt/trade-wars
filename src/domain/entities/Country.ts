@@ -18,20 +18,20 @@ export class CountryId {
 }
 
 export class Country {
-  resources: ResourceInventory
+  #resources: ResourceInventory
   id: CountryId
   tariffs: Map<string, number>
   name: string
   goals: Map<string, Goal>
-  stateResources: ResourceInventory
+  #stateResources: ResourceInventory
 
   constructor(name: string = 'unnamed') {
-    this.resources = new ResourceInventory()
+    this.#resources = new ResourceInventory()
     this.tariffs = new Map<string, number>()
     this.id = new CountryId(name)
     this.name = name
     this.goals = new Map<string, Goal>()
-    this.stateResources = new ResourceInventory()
+    this.#stateResources = new ResourceInventory()
   }
 
   setTariff(rate: number, resource: Resource) {
@@ -39,10 +39,10 @@ export class Country {
   }
 
   getResourceQty(resource: Resource): number {
-    return this.resources.getQuantity(resource)
+    return this.#resources.getQuantity(resource)
   }
   receiveResource(resource: Resource, resourceQty: number) {
-    this.resources.add(resource, resourceQty)
+    this.#resources.add(resource, resourceQty)
   }
   tradeWith(
     country: Country,
@@ -59,7 +59,7 @@ export class Country {
     country.receiveResource(resource, qty)
   }
   getResourceInventories(): ResourceInventoryEntry[] {
-    return this.resources.list()
+    return this.#resources.list()
   }
   canTrade(offeredResource: Resource, offeredQty: number) {
     return offeredQty <= this.getResourceQty(offeredResource)
@@ -110,5 +110,17 @@ export class Country {
       }
     }
     return true
+  }
+  payTariff(resource: Resource, amount: number) {
+    this.#resources.moveTo(this.#stateResources, resource, amount)
+  }
+  getStateResourceQuantity(resource: Resource) {
+    return this.#stateResources.getQuantity(resource)
+  }
+  listStateResources() {
+    return this.#stateResources.list()
+  }
+  receiveStateResource(resource: Resource, quantity: number) {
+    this.#stateResources.add(resource, quantity)
   }
 }

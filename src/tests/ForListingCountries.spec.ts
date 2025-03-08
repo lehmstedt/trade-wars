@@ -1,10 +1,12 @@
 import { TestConfigurator } from '@/configurator/TestConfigurator'
 import { Country, CountryId } from '@/domain/entities/Country'
-import { describe, expect, test } from 'vitest'
+import { CountryBuilder } from '@/domain/entities/CountryBuilder'
+import { Resource } from '@/domain/entities/Resource'
+import { describe, expect, it, test } from 'vitest'
 
 const testConfigurator = new TestConfigurator()
 
-describe('countries', () => {
+describe('For listing countries', () => {
   test('No country is existing', async () => {
     const forListingCountries = testConfigurator.buildForListingCountries([])
 
@@ -32,5 +34,23 @@ describe('countries', () => {
     expect(countries.length).toEqual(2)
     expect(countries.find((country) => country.id.equals(new CountryId('Spain'))))
     expect(countries.find((country) => country.id.equals(new CountryId('France'))))
+  })
+
+  it('Should return state resources when there is', async() => {
+
+    const resource = new Resource("Resource");
+
+    const country = new CountryBuilder()
+      .withName("Country")
+      .withStateResource(resource, 1)
+      .build()
+
+    const forListingCountries = testConfigurator.buildForListingCountries([country])
+    const countries = await forListingCountries.execute()
+
+    expect(countries[0].stateResources[0].name).toEqual(resource.name)
+    expect(countries[0].stateResources[0].quantity).toEqual(1)
+
+
   })
 })

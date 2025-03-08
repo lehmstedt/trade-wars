@@ -23,6 +23,7 @@ export class Country {
   tariffs: Map<string, number>
   name: string
   goals: Map<string, Goal>
+  stateResources: Map<string, number>
 
   constructor(name: string = 'unnamed') {
     this.resources = new Map<string, number>()
@@ -30,6 +31,7 @@ export class Country {
     this.id = new CountryId(name)
     this.name = name
     this.goals = new Map<string, Goal>()
+    this.stateResources = new Map<string, number>()
   }
 
   setTariff(rate: number, resource: Resource) {

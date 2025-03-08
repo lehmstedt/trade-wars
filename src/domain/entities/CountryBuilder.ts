@@ -27,6 +27,11 @@ export class CountryBuilder {
     return this
   }
 
+  withStateResource(resource: Resource, quantity: number){
+    this.country.stateResources.set(resource.name, quantity)
+    return this
+  }
+
   build() {
     return this.country
   }

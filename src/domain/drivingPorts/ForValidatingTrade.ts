@@ -3,6 +3,7 @@ import { TradeValidation, TradeValidationStatus } from '@/domain/entities/TradeV
 import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 import type { IPriceProvider } from '@/domain/IPriceProvider'
+import { ValidateTrade } from '@/domain/entities/Trade'
 
 export class ForValidatingTrade {
   forValidatingTradeCountry: ICountryPort
@@ -41,32 +42,6 @@ export class ForValidatingTrade {
       return new TradeValidation(TradeValidationStatus.BuyerResourceNotFound)
     }
 
-    if (seller.getResourceQty(request.soldResource) < request.soldQuantity) {
-      return new TradeValidation(TradeValidationStatus.InsufficientResourceFromSeller)
-    }
-
-    const unitPrice = this.forCalculatingPrice.getPrice(
-      buyer,
-      seller,
-      request.soldResource,
-      request.currency
-    )
-    if (!unitPrice) {
-      return new TradeValidation(TradeValidationStatus.NoPriceEstablished)
-    }
-
-    const price = unitPrice * request.soldQuantity
-
-    const tariff = buyer.getTariffOnResource(buyerResource)
-
-    if (tariff > 0) {
-      return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer)
-    }
-
-    if (buyer.getResourceQty(buyerResource) < price) {
-      return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer, price)
-    }
-
-    return new TradeValidation(TradeValidationStatus.OK, price)
+    return ValidateTrade(buyer, seller, sellerResource, request.soldQuantity, buyerResource, this.forCalculatingPrice)
   }
 }

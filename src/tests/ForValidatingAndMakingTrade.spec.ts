@@ -307,14 +307,12 @@ describe('For validating and making trade', () => {
     const buyer = new CountryBuilder()
       .withName('Buyer')
       .withResource(buyerRes, 1)
-      .withTariff(buyerRes, 5)
+      .withTariff(sellerRes, 5)
       .build()
 
     const seller = new CountryBuilder().withName('Seller').withResource(sellerRes, 1).build()
 
-    const configurator = new TestConfigurator()
-
-    const forValidatingTrade = configurator.buildForValidatingTrade(
+    const forValidatingTrade = testConfigurator.buildForValidatingTrade(
       [buyer, seller],
       [buyerRes, sellerRes],
       1
@@ -326,5 +324,47 @@ describe('For validating and making trade', () => {
 
     expect(validation.isValid).toBe(false)
     expect(validation.status).toEqual(TradeValidationStatus.InsufficientResourceFromBuyer)
+  })
+
+  it('Exchange trade resources and transfer tariff on country state resources when buyer has enough resources for trade and tariff', async() => {
+    const buyerRes = new Resource('Buyer res')
+    const sellerRes = new Resource('Seller res')
+
+    const buyer = new CountryBuilder()
+      .withName('Buyer')
+      .withResource(buyerRes, 2)
+      .withTariff(sellerRes, 5)
+      .build()
+
+    const seller = new CountryBuilder().withName('Seller').withResource(sellerRes, 1).build()
+
+    const forValidatingTrade = testConfigurator.buildForValidatingTrade(
+      [buyer, seller],
+      [buyerRes, sellerRes],
+      1
+    )
+
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, sellerRes, 1, buyerRes)
+
+    const validation = await forValidatingTrade.execute(tradeRequest)
+
+    expect(validation.isValid).toBe(true)
+
+    const forMakingTrade = testConfigurator.buildForMakingTrade(
+      [buyer, seller],
+      [buyerRes, sellerRes],
+      1
+    )
+
+    await forMakingTrade.execute(tradeRequest)
+
+    const buyerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(buyer.id)
+
+    expect(buyerAfter?.getResourceQty(buyerRes)).toEqual(0.95)
+    expect(buyerAfter?.stateResources.get(buyerRes.name)).toEqual(0.05)
+
+    const sellerAfter = await forMakingTrade.forApplyingTradeOnCountry.getById(seller.id)
+
+    expect(sellerAfter?.getResourceQty(sellerRes)).toEqual(0)
   })
 })

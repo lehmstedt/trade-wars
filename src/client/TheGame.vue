@@ -35,6 +35,7 @@ const winnerName = ref('')
 const updateGame = async () => {
   playerPrices = await forListingResourcePrices.execute(countries[0].id)
   otherCountryPrices = await forListingResourcePrices.execute(countries[1].id)
+  countries = await forListingCountries.execute()
   iteration.value = iteration.value + 1
 
   const gameState = await forCheckingIfGameIsOver.execute()

@@ -39,6 +39,10 @@ async function updateTariffs() {
 <template>
   <div class="country-dashboard">
     <h1>{{ country.name }}</h1>
+    <h2>State Resources</h2>
+    <div v-for="stateResource in country.stateResources" :key="stateResource.name">
+      {{ stateResource.name }} : {{ stateResource.quantity }}
+    </div>
     <h2>Tariffs</h2>
     <div v-for="tariff in tariffsRef" :key="tariff.current.resourceName">
       {{ tariff.current.resourceName }} : {{ tariff.current.rate }} %

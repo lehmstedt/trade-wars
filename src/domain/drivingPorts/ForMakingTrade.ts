@@ -3,6 +3,7 @@ import { TradeValidation, TradeValidationStatus } from '@/domain/entities/TradeV
 import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
 import type { IResourcePort } from '@/domain/drivenPorts/IResourcePort'
 import type { IPriceProvider } from '@/domain/IPriceProvider'
+import { ValidateTrade } from '@/domain/entities/Trade'
 
 export class ForMakingTrade {
   forApplyingTradeOnCountry: ICountryPort
@@ -41,27 +42,11 @@ export class ForMakingTrade {
       return new TradeValidation(TradeValidationStatus.BuyerResourceNotFound)
     }
 
-    if (seller.getResourceQty(request.soldResource) < request.soldQuantity) {
-      return new TradeValidation(TradeValidationStatus.InsufficientResourceFromSeller)
+    const validation = ValidateTrade(buyer, seller, sellerResource, request.soldQuantity, buyerResource, this.forCalculatingPrice)
+
+    if(!validation.isValid){
+      return validation
     }
-
-    const unitPrice = this.forCalculatingPrice.getPrice(
-      buyer,
-      seller,
-      request.soldResource,
-      request.currency
-    )
-    if (!unitPrice) {
-      return new TradeValidation(TradeValidationStatus.NoPriceEstablished)
-    }
-
-    const price = unitPrice * request.soldQuantity
-
-    if (buyer.getResourceQty(buyerResource) < price) {
-      return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer, price)
-    }
-
-    const validation = new TradeValidation(TradeValidationStatus.OK, price)
 
     buyer.tradeWith(
       seller,
@@ -70,6 +55,13 @@ export class ForMakingTrade {
       request.soldResource,
       request.soldQuantity
     )
+
+    const tariff = validation.tariff ?? 0;
+    if(tariff > 0){
+      buyer.stateResources.set(buyerResource.name, tariff)
+      const buyerResourceQty = buyer.getResourceQty(buyerResource)
+      buyer.setResource(buyerResource, buyerResourceQty - tariff)
+    }
 
     await this.forApplyingTradeOnCountry.save(buyer)
     await this.forApplyingTradeOnCountry.save(seller)

@@ -5,7 +5,6 @@ import { TestConfigurator } from '@/configurator/TestConfigurator'
 import { TradeRequest } from '@/domain/entities/TradeRequest'
 import { TradeValidationStatus } from '@/domain/entities/TradeValidation'
 import { CountryBuilder } from '@/domain/entities/CountryBuilder'
-import { TestPriceProvider } from '@/tests/TestPriceProvider'
 
 const testConfigurator = new TestConfigurator()
 
@@ -18,7 +17,7 @@ describe('For validating and making trade', () => {
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer], [])
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -39,7 +38,7 @@ describe('For validating and making trade', () => {
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade([seller], [])
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -61,7 +60,7 @@ describe('For validating and making trade', () => {
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [apple])
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -83,7 +82,7 @@ describe('For validating and making trade', () => {
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [banana])
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -108,7 +107,7 @@ describe('For validating and making trade', () => {
       [apple, banana]
     )
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -133,7 +132,7 @@ describe('For validating and making trade', () => {
       [apple, banana]
     )
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 2, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 2, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -155,7 +154,7 @@ describe('For validating and making trade', () => {
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [banana])
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -181,7 +180,7 @@ describe('For validating and making trade', () => {
       [apple, banana]
     )
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -208,7 +207,7 @@ describe('For validating and making trade', () => {
       3
     )
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(false)
@@ -235,7 +234,7 @@ describe('For validating and making trade', () => {
       3
     )
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 1, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 1, banana)
     const validation = await forValidatingTrade.execute(tradeRequest)
 
     expect(validation.isValid).toBe(true)
@@ -254,7 +253,9 @@ describe('For validating and making trade', () => {
     expect(buyerAfter.getResourceQty(banana)).toEqual(1)
     expect(buyerAfter.getResourceQty(apple)).toEqual(1)
 
-    const sellerAfter = (await forMakingTrade.forApplyingTradeOnCountry.getById(seller.id)) as Country
+    const sellerAfter = (await forMakingTrade.forApplyingTradeOnCountry.getById(
+      seller.id
+    )) as Country
 
     expect(sellerAfter.getResourceQty(banana)).toEqual(3)
     expect(sellerAfter.getResourceQty(apple)).toEqual(3)
@@ -275,7 +276,7 @@ describe('For validating and making trade', () => {
     )
     const forMakingTrade = testConfigurator.buildForMakingTrade([buyer, seller], [apple, banana], 3)
 
-    const tradeRequest = new TradeRequest(buyer, seller, apple, 2, banana)
+    const tradeRequest = new TradeRequest(buyer.id, seller.id, apple, 2, banana)
 
     const validation = await forValidatingTrade.execute(tradeRequest)
 
@@ -291,16 +292,17 @@ describe('For validating and making trade', () => {
     expect(buyerAfter.getResourceQty(banana)).toEqual(1)
     expect(buyerAfter.getResourceQty(apple)).toEqual(2)
 
-    const sellerAfter = (await forMakingTrade.forApplyingTradeOnCountry.getById(seller.id)) as Country
+    const sellerAfter = (await forMakingTrade.forApplyingTradeOnCountry.getById(
+      seller.id
+    )) as Country
 
     expect(sellerAfter.getResourceQty(banana)).toEqual(6)
     expect(sellerAfter.getResourceQty(apple)).toEqual(2)
   })
 
   it('Cannot be made when the buyer has just enough resource but a 5 percent tariff is set on it', async () => {
-
-    const buyerRes = new Resource('Buyer res');
-    const sellerRes = new Resource('Seller res');
+    const buyerRes = new Resource('Buyer res')
+    const sellerRes = new Resource('Seller res')
 
     const buyer = new CountryBuilder()
       .withName('Buyer')
@@ -308,16 +310,19 @@ describe('For validating and making trade', () => {
       .withTariff(buyerRes, 5)
       .build()
 
-    const seller = new CountryBuilder()
-      .withName('Seller')
-      .withResource(sellerRes, 1)
-      .build()
+    const seller = new CountryBuilder().withName('Seller').withResource(sellerRes, 1).build()
 
-    const configurator = new TestConfigurator();
+    const configurator = new TestConfigurator()
 
-    const forValidatingTrade = configurator.buildForValidatingTrade([buyer, seller], [buyerRes, sellerRes], 1);
+    const forValidatingTrade = configurator.buildForValidatingTrade(
+      [buyer, seller],
+      [buyerRes, sellerRes],
+      1
+    )
 
-    const validation = await forValidatingTrade.execute(new TradeRequest(buyer, seller, sellerRes, 1, buyerRes))
+    const validation = await forValidatingTrade.execute(
+      new TradeRequest(buyer.id, seller.id, sellerRes, 1, buyerRes)
+    )
 
     expect(validation.isValid).toBe(false)
     expect(validation.status).toEqual(TradeValidationStatus.InsufficientResourceFromBuyer)

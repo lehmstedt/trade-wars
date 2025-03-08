@@ -15,7 +15,6 @@ import { InMemoryResourceRepository } from '@/infrastructure/InMemoryResourceRep
 import { TestPriceProvider } from '@/tests/TestPriceProvider'
 
 export class TestConfigurator {
-
   buildForListingCountryGoals(countries: Country[]): ForListingCountryGoals {
     return new ForListingCountryGoals(new InMemoryCountryRepository(countries))
   }
@@ -48,9 +47,10 @@ export class TestConfigurator {
     countries: Country[],
     resources: Resource[]
   ): ForListingResourcePrices {
-    
-    return new ForListingResourcePrices(new InMemoryCountryRepository(countries),
-    new InMemoryResourceRepository(resources),)
+    return new ForListingResourcePrices(
+      new InMemoryCountryRepository(countries),
+      new InMemoryResourceRepository(resources)
+    )
   }
 
   buildForListingResources(resources: Resource[]): ForListingResources {
@@ -66,13 +66,17 @@ export class TestConfigurator {
   }
 
   buildForSettingTariff(countries: Country[], resources: Resource[]): ForSettingTariff {
-    return new ForSettingTariff(new InMemoryCountryRepository(countries),
-    new InMemoryResourceRepository(resources))
+    return new ForSettingTariff(
+      new InMemoryCountryRepository(countries),
+      new InMemoryResourceRepository(resources)
+    )
   }
 
   buildForListingTariffs(countries: Country[], resources: Resource[]): ForListingTariffs {
-    return new ForListingTariffs(new InMemoryCountryRepository(countries),
-    new InMemoryResourceRepository(resources))
+    return new ForListingTariffs(
+      new InMemoryCountryRepository(countries),
+      new InMemoryResourceRepository(resources)
+    )
   }
 
   buildForCheckingIfGameIsOver(countries: Country[]): ForCheckingIfGameIsOver {

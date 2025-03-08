@@ -1,16 +1,16 @@
-import type { Country } from '@/domain/entities/Country'
+import type { Country, CountryId } from '@/domain/entities/Country'
 import type { Resource } from '@/domain/entities/Resource'
 
 export class TradeRequest {
-  buyer: Country
-  seller: Country
+  buyer: CountryId
+  seller: CountryId
   soldResource: Resource
   soldQuantity: number
   currency: Resource
 
   constructor(
-    buyer: Country,
-    seller: Country,
+    buyer: CountryId,
+    seller: CountryId,
     soldResource: Resource,
     soldQuantity: number,
     currency: Resource

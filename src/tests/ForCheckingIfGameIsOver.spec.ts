@@ -87,7 +87,10 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfGameIsOver = new TestConfigurator().buildForCheckingIfGameIsOver([loser, winner])
+    const forCheckingIfGameIsOver = new TestConfigurator().buildForCheckingIfGameIsOver([
+      loser,
+      winner
+    ])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 
@@ -153,7 +156,10 @@ describe('For checking if game is over', () => {
       .withResource(pinapple, 10)
       .build()
 
-    const forCheckingIfGameIsOver = new TestConfigurator().buildForCheckingIfGameIsOver([country1, country2])
+    const forCheckingIfGameIsOver = new TestConfigurator().buildForCheckingIfGameIsOver([
+      country1,
+      country2
+    ])
 
     const gameState = await forCheckingIfGameIsOver.execute()
 

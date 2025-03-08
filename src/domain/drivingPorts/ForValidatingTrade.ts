@@ -20,11 +20,11 @@ export class ForValidatingTrade {
   }
 
   async execute(request: TradeRequest): Promise<TradeValidation> {
-    const buyer = await this.forValidatingTradeCountry.getById(request.buyer.id)
+    const buyer = await this.forValidatingTradeCountry.getById(request.buyer)
     if (!buyer) {
       return new TradeValidation(TradeValidationStatus.BuyerCountryNotFound)
     }
-    const seller = await this.forValidatingTradeCountry.getById(request.seller.id)
+    const seller = await this.forValidatingTradeCountry.getById(request.seller)
     if (!seller) {
       return new TradeValidation(TradeValidationStatus.SellerCountryNotFound)
     }
@@ -59,7 +59,7 @@ export class ForValidatingTrade {
 
     const tariff = buyer.getTariffOnResource(buyerResource)
 
-    if(tariff > 0){
+    if (tariff > 0) {
       return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer)
     }
 

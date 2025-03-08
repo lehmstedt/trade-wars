@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Country } from '@/domain/entities/Country'
 import { computed, ref, watch, type Ref } from 'vue'
 import { Resource } from '@/domain/entities/Resource'
 import { TradeRequest } from '@/domain/entities/TradeRequest'
 import { TradeValidation, TradeValidationStatus } from '@/domain/entities/TradeValidation'
 import type { ForValidatingTrade } from '@/domain/drivingPorts/ForValidatingTrade'
 import type { ForMakingTrade } from '@/domain/drivingPorts/ForMakingTrade'
+import type { CountryListEntry } from '@/domain/drivingPorts/ForListingCountries'
 
 interface Props {
-  playerCountry: Country
-  otherCountry: Country
+  playerCountry: CountryListEntry
+  otherCountry: CountryListEntry
   resources: Resource[]
   forValidatingTrade: ForValidatingTrade
   forMakingTrade: ForMakingTrade
@@ -27,8 +27,8 @@ const validation: Ref<TradeValidation | null> = ref(null)
 const tradeRequest = computed(
   () =>
     new TradeRequest(
-      props.playerCountry,
-      props.otherCountry,
+      props.playerCountry.id,
+      props.otherCountry.id,
       soldResource.value,
       soldQuantity.value,
       currency.value

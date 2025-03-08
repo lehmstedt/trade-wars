@@ -8,7 +8,9 @@ describe('For listing country goals', () => {
   it('should return no goal when country has not', async () => {
     const countryWithoutGoals = new Country('')
 
-    const forListingCountryGoals = new TestConfigurator().buildForListingCountryGoals([countryWithoutGoals])
+    const forListingCountryGoals = new TestConfigurator().buildForListingCountryGoals([
+      countryWithoutGoals
+    ])
 
     const goals = await forListingCountryGoals.execute(countryWithoutGoals.id)
 
@@ -19,7 +21,9 @@ describe('For listing country goals', () => {
     const apple = new Resource('Apple')
     const countryWithGoal = new CountryBuilder().withGoal(apple, 10).build()
 
-    const forListingCountryGoals = new TestConfigurator().buildForListingCountryGoals([countryWithGoal])
+    const forListingCountryGoals = new TestConfigurator().buildForListingCountryGoals([
+      countryWithGoal
+    ])
 
     const goals = await forListingCountryGoals.execute(countryWithGoal.id)
 
@@ -38,7 +42,9 @@ describe('For listing country goals', () => {
       .withGoal(tomato, 15)
       .build()
 
-    const forListingCountryGoals = new TestConfigurator().buildForListingCountryGoals([countryWithGoal])
+    const forListingCountryGoals = new TestConfigurator().buildForListingCountryGoals([
+      countryWithGoal
+    ])
 
     const goals = await forListingCountryGoals.execute(countryWithGoal.id)
 

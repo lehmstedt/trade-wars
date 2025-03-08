@@ -42,7 +42,7 @@ const updateGame = async () => {
 
   if (gameState.isGameOver) {
     isGameOver.value = true
-    router.push({ name: 'gameOver', params: {winnerName: gameState.winnerName ?? 'Nobody'} })
+    router.push({ name: 'gameOver', params: { winnerName: gameState.winnerName ?? 'Nobody' } })
   }
 }
 

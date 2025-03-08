@@ -20,11 +20,11 @@ export class ForMakingTrade {
   }
 
   async execute(request: TradeRequest): Promise<TradeValidation> {
-    const buyer = await this.forApplyingTradeOnCountry.getById(request.buyer.id)
+    const buyer = await this.forApplyingTradeOnCountry.getById(request.buyer)
     if (!buyer) {
       return new TradeValidation(TradeValidationStatus.BuyerCountryNotFound)
     }
-    const seller = await this.forApplyingTradeOnCountry.getById(request.seller.id)
+    const seller = await this.forApplyingTradeOnCountry.getById(request.seller)
     if (!seller) {
       return new TradeValidation(TradeValidationStatus.SellerCountryNotFound)
     }
@@ -63,16 +63,16 @@ export class ForMakingTrade {
 
     const validation = new TradeValidation(TradeValidationStatus.OK, price)
 
-    request.buyer.tradeWith(
-      request.seller,
+    buyer.tradeWith(
+      seller,
       request.currency,
       validation.price ?? 0,
       request.soldResource,
       request.soldQuantity
     )
 
-    await this.forApplyingTradeOnCountry.save(request.buyer)
-    await this.forApplyingTradeOnCountry.save(request.seller)
+    await this.forApplyingTradeOnCountry.save(buyer)
+    await this.forApplyingTradeOnCountry.save(seller)
 
     return validation
   }

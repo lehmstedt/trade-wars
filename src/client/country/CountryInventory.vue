@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
-import { CountryId, type ResourceInventory } from '@/domain/entities/Country'
+import { CountryId, type ResourceInventoryEntry } from '@/domain/entities/Country'
 
 const props = defineProps({
   countryId: {
@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-let inventories: ResourceInventory[] = await props.forListingCountryInventory.execute(
+let inventories: ResourceInventoryEntry[] = await props.forListingCountryInventory.execute(
   props.countryId
 )
 </script>

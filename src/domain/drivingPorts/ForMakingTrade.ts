@@ -42,9 +42,16 @@ export class ForMakingTrade {
       return new TradeValidation(TradeValidationStatus.BuyerResourceNotFound)
     }
 
-    const validation = ValidateTrade(buyer, seller, sellerResource, request.soldQuantity, buyerResource, this.forCalculatingPrice)
+    const validation = ValidateTrade(
+      buyer,
+      seller,
+      sellerResource,
+      request.soldQuantity,
+      buyerResource,
+      this.forCalculatingPrice
+    )
 
-    if(!validation.isValid){
+    if (!validation.isValid) {
       return validation
     }
 
@@ -56,9 +63,9 @@ export class ForMakingTrade {
       request.soldQuantity
     )
 
-    const tariff = validation.tariff ?? 0;
-    if(tariff > 0){
-      buyer.stateResources.set(buyerResource.name, tariff)
+    const tariff = validation.tariff ?? 0
+    if (tariff > 0) {
+      buyer.stateResources.add(buyerResource, tariff)
       const buyerResourceQty = buyer.getResourceQty(buyerResource)
       buyer.setResource(buyerResource, buyerResourceQty - tariff)
     }

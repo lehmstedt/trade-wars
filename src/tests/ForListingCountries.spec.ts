@@ -36,21 +36,15 @@ describe('For listing countries', () => {
     expect(countries.find((country) => country.id.equals(new CountryId('France'))))
   })
 
-  it('Should return state resources when there is', async() => {
+  it('Should return state resources when there is', async () => {
+    const resource = new Resource('Resource')
 
-    const resource = new Resource("Resource");
-
-    const country = new CountryBuilder()
-      .withName("Country")
-      .withStateResource(resource, 1)
-      .build()
+    const country = new CountryBuilder().withName('Country').withStateResource(resource, 1).build()
 
     const forListingCountries = testConfigurator.buildForListingCountries([country])
     const countries = await forListingCountries.execute()
 
     expect(countries[0].stateResources[0].name).toEqual(resource.name)
     expect(countries[0].stateResources[0].quantity).toEqual(1)
-
-
   })
 })

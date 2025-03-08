@@ -42,6 +42,13 @@ export class ForValidatingTrade {
       return new TradeValidation(TradeValidationStatus.BuyerResourceNotFound)
     }
 
-    return ValidateTrade(buyer, seller, sellerResource, request.soldQuantity, buyerResource, this.forCalculatingPrice)
+    return ValidateTrade(
+      buyer,
+      seller,
+      sellerResource,
+      request.soldQuantity,
+      buyerResource,
+      this.forCalculatingPrice
+    )
   }
 }

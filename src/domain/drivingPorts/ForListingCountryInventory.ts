@@ -1,5 +1,5 @@
 import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
-import type { CountryId, ResourceInventory } from '@/domain/entities/Country'
+import type { CountryId, ResourceInventoryEntry } from '@/domain/entities/Country'
 import { CountryNotFoundError } from '@/domain/Errors'
 
 export class ForListingCountryInventory {
@@ -9,7 +9,7 @@ export class ForListingCountryInventory {
     this.forGettingExistingCountryWithInventory = forGettingExistingCountryWithInventory
   }
 
-  async execute(id: CountryId): Promise<ResourceInventory[]> {
+  async execute(id: CountryId): Promise<ResourceInventoryEntry[]> {
     const country = await this.tryGetCountry(id)
 
     return country.getResourceInventories()

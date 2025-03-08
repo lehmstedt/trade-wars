@@ -1,8 +1,9 @@
 import { Resource } from '@/domain/entities/Resource'
+import { ResourceInventory } from '@/domain/entities/ResourceInventory'
 import { Tariff } from '@/domain/entities/Tariff'
 import { UnknownGoalError } from '@/domain/Errors'
 
-export type ResourceInventory = { name: string; qty: number }
+export type ResourceInventoryEntry = { name: string; qty: number }
 export type Goal = { resource: Resource; quantity: number }
 
 export class CountryId {
@@ -23,7 +24,7 @@ export class Country {
   tariffs: Map<string, number>
   name: string
   goals: Map<string, Goal>
-  stateResources: Map<string, number>
+  stateResources: ResourceInventory
 
   constructor(name: string = 'unnamed') {
     this.resources = new Map<string, number>()
@@ -31,7 +32,7 @@ export class Country {
     this.id = new CountryId(name)
     this.name = name
     this.goals = new Map<string, Goal>()
-    this.stateResources = new Map<string, number>()
+    this.stateResources = new ResourceInventory()
   }
 
   setTariff(rate: number, resource: Resource) {
@@ -63,8 +64,8 @@ export class Country {
     this.receiveResource(resource, -qty)
     country.receiveResource(resource, qty)
   }
-  getResourceInventories(): ResourceInventory[] {
-    const inventories: ResourceInventory[] = []
+  getResourceInventories(): ResourceInventoryEntry[] {
+    const inventories: ResourceInventoryEntry[] = []
     for (const [name, qty] of this.resources) {
       inventories.push({ name, qty })
     }

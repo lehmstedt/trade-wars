@@ -1,9 +1,8 @@
 import { Resource } from '@/domain/entities/Resource'
-import { ResourceInventory } from '@/domain/entities/ResourceInventory'
+import { ResourceInventory, type ResourceInventoryEntry } from '@/domain/entities/ResourceInventory'
 import { Tariff } from '@/domain/entities/Tariff'
 import { UnknownGoalError } from '@/domain/Errors'
 
-export type ResourceInventoryEntry = { name: string; qty: number }
 export type Goal = { resource: Resource; quantity: number }
 
 export class CountryId {
@@ -19,7 +18,7 @@ export class CountryId {
 }
 
 export class Country {
-  resources: Map<string, number>
+  resources: ResourceInventory
   id: CountryId
   tariffs: Map<string, number>
   name: string
@@ -27,7 +26,7 @@ export class Country {
   stateResources: ResourceInventory
 
   constructor(name: string = 'unnamed') {
-    this.resources = new Map<string, number>()
+    this.resources = new ResourceInventory()
     this.tariffs = new Map<string, number>()
     this.id = new CountryId(name)
     this.name = name
@@ -39,16 +38,11 @@ export class Country {
     this.tariffs.set(resource.name, rate)
   }
 
-  setResource(resource: Resource, resourceQty: number): void {
-    this.resources.set(resource.name, resourceQty)
-  }
-
   getResourceQty(resource: Resource): number {
-    return this.resources.get(resource.name) ?? 0
+    return this.resources.getQuantity(resource)
   }
   receiveResource(resource: Resource, resourceQty: number) {
-    const qty = this.getResourceQty(resource) + resourceQty
-    this.setResource(resource, qty)
+    this.resources.add(resource, resourceQty)
   }
   tradeWith(
     country: Country,
@@ -65,11 +59,7 @@ export class Country {
     country.receiveResource(resource, qty)
   }
   getResourceInventories(): ResourceInventoryEntry[] {
-    const inventories: ResourceInventoryEntry[] = []
-    for (const [name, qty] of this.resources) {
-      inventories.push({ name, qty })
-    }
-    return inventories
+    return this.resources.list()
   }
   canTrade(offeredResource: Resource, offeredQty: number) {
     return offeredQty <= this.getResourceQty(offeredResource)

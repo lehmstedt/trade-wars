@@ -66,8 +66,7 @@ export class ForMakingTrade {
     const tariff = validation.tariff ?? 0
     if (tariff > 0) {
       buyer.stateResources.add(buyerResource, tariff)
-      const buyerResourceQty = buyer.getResourceQty(buyerResource)
-      buyer.setResource(buyerResource, buyerResourceQty - tariff)
+      buyer.resources.add(buyerResource, -tariff)
     }
 
     await this.forApplyingTradeOnCountry.save(buyer)

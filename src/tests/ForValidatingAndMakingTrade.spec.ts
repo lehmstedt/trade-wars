@@ -125,7 +125,7 @@ describe('For validating and making trade', () => {
     const seller = new Country('Seller')
     const apple = new Resource('Apple')
     const banana = new Resource('Banana')
-    seller.setResource(apple, 1)
+    seller.receiveResource(apple, 1)
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade(
       [buyer, seller],
@@ -150,7 +150,7 @@ describe('For validating and making trade', () => {
     const seller = new Country('Seller')
     const apple = new Resource('Apple')
     const banana = new Resource('Banana')
-    seller.setResource(apple, 1)
+    seller.receiveResource(apple, 1)
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade([buyer, seller], [banana])
 
@@ -172,8 +172,8 @@ describe('For validating and making trade', () => {
     const seller = new Country('Seller')
     const apple = new Resource('Apple')
     const banana = new Resource('Banana')
-    seller.setResource(apple, 1)
-    buyer.setResource(banana, 2)
+    seller.receiveResource(apple, 1)
+    buyer.receiveResource(banana, 2)
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade(
       [buyer, seller],
@@ -198,8 +198,8 @@ describe('For validating and making trade', () => {
     const seller = new Country('Seller')
     const apple = new Resource('Apple')
     const banana = new Resource('Banana')
-    seller.setResource(apple, 1)
-    buyer.setResource(banana, 2)
+    seller.receiveResource(apple, 1)
+    buyer.receiveResource(banana, 2)
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade(
       [buyer, seller],
@@ -225,8 +225,8 @@ describe('For validating and making trade', () => {
     const seller = new Country('Seller')
     const apple = new Resource('Apple')
     const banana = new Resource('Banana')
-    seller.setResource(apple, 4)
-    buyer.setResource(banana, 4)
+    seller.receiveResource(apple, 4)
+    buyer.receiveResource(banana, 4)
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade(
       [buyer, seller],
@@ -266,8 +266,8 @@ describe('For validating and making trade', () => {
     const seller = new Country('Seller')
     const apple = new Resource('Apple')
     const banana = new Resource('Banana')
-    seller.setResource(apple, 4)
-    buyer.setResource(banana, 7)
+    seller.receiveResource(apple, 4)
+    buyer.receiveResource(banana, 7)
 
     const forValidatingTrade = testConfigurator.buildForValidatingTrade(
       [buyer, seller],

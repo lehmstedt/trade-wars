@@ -13,7 +13,7 @@ export class CountryBuilder {
   }
 
   withResource(resource: Resource, quantity: number) {
-    this.country.setResource(resource, quantity)
+    this.country.receiveResource(resource, quantity)
     return this
   }
 

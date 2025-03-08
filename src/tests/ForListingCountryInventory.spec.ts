@@ -10,14 +10,14 @@ describe('For listing country inventory', () => {
     const country = new Country('France')
     const wine = new Resource('Wine')
     const cheese = new Resource('Cheese')
-    country.setResource(wine, 1)
-    country.setResource(cheese, 2)
+    country.receiveResource(wine, 1)
+    country.receiveResource(cheese, 2)
 
     const forListingCountryInventory = testConfigurator.buildForListingCountryInventory([country])
 
     const inventory = await forListingCountryInventory.execute(country.id)
 
-    expect(inventory).toContainEqual({ name: wine.name, qty: 1 })
-    expect(inventory).toContainEqual({ name: cheese.name, qty: 2 })
+    expect(inventory).toContainEqual({ name: wine.name, quantity: 1 })
+    expect(inventory).toContainEqual({ name: cheese.name, quantity: 2 })
   })
 })

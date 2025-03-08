@@ -7,10 +7,10 @@ describe('CountryPairPriceProvider', () => {
   it('should return 1 when both countries cannot establish a local price', () => {
     const buyer = new Country('Buyer')
     const apple = new Resource('Apple')
-    buyer.setResource(apple, 1)
+    buyer.receiveResource(apple, 1)
     const seller = new Country('Seller')
     const banana = new Resource('Banana')
-    seller.setResource(banana, 2)
+    seller.receiveResource(banana, 2)
 
     const provider = new CountryPairPriceProvider()
     const price = provider.getPrice(buyer, seller, apple, banana)
@@ -23,11 +23,11 @@ describe('CountryPairPriceProvider', () => {
     const banana = new Resource('Banana')
 
     const buyer = new Country('Buyer')
-    buyer.setResource(apple, 1)
-    buyer.setResource(banana, 2)
+    buyer.receiveResource(apple, 1)
+    buyer.receiveResource(banana, 2)
 
     const seller = new Country('Seller')
-    seller.setResource(banana, 2)
+    seller.receiveResource(banana, 2)
 
     const provider = new CountryPairPriceProvider()
     const price = provider.getPrice(buyer, seller, apple, banana)
@@ -40,12 +40,12 @@ describe('CountryPairPriceProvider', () => {
     const banana = new Resource('Banana')
 
     const buyer = new Country('Buyer')
-    buyer.setResource(apple, 1)
-    buyer.setResource(banana, 2)
+    buyer.receiveResource(apple, 1)
+    buyer.receiveResource(banana, 2)
 
     const seller = new Country('Seller')
-    seller.setResource(banana, 2)
-    seller.setResource(apple, 3)
+    seller.receiveResource(banana, 2)
+    seller.receiveResource(apple, 3)
 
     const provider = new CountryPairPriceProvider()
     const price = provider.getPrice(buyer, seller, apple, banana)

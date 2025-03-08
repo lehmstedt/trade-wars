@@ -12,9 +12,9 @@ describe('For listing resource prices', () => {
     const chocolate = new Resource('Chocolate')
 
     const country = new Country('')
-    country.setResource(wine, 2)
-    country.setResource(beer, 4)
-    country.setResource(chocolate, 5)
+    country.receiveResource(wine, 2)
+    country.receiveResource(beer, 4)
+    country.receiveResource(chocolate, 5)
 
     const forListingResourcePrices = testConfigurator.buildForListingResourcePrices(
       [country],

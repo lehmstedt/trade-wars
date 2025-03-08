@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ForListingCountryInventory } from '@/domain/drivingPorts/ForListingCountryInventory'
-import { CountryId, type ResourceInventoryEntry } from '@/domain/entities/Country'
+import { CountryId } from '@/domain/entities/Country'
+import type { ResourceInventoryEntry } from '@/domain/entities/ResourceInventory'
 
 const props = defineProps({
   countryId: {
@@ -19,6 +20,6 @@ let inventories: ResourceInventoryEntry[] = await props.forListingCountryInvento
 </script>
 <template>
   <div v-for="inventory in inventories" :key="inventory.name">
-    {{ inventory.name }} : {{ inventory.qty?.toFixed(2) }}
+    {{ inventory.name }} : {{ inventory.quantity?.toFixed(2) }}
   </div>
 </template>

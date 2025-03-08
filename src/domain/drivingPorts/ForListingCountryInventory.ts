@@ -1,5 +1,6 @@
 import type { ICountryPort } from '@/domain/drivenPorts/ICountryPort'
-import type { CountryId, ResourceInventoryEntry } from '@/domain/entities/Country'
+import type { CountryId } from '@/domain/entities/Country'
+import type { ResourceInventoryEntry } from '@/domain/entities/ResourceInventory'
 import { CountryNotFoundError } from '@/domain/Errors'
 
 export class ForListingCountryInventory {

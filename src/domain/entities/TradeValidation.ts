@@ -16,7 +16,12 @@ export class TradeValidation {
   sellerTariff: number = 0
   buyerTariff: number = 0
 
-  constructor(status: TradeValidationStatus, price?: number, sellerTariff: number = 0, buyerTariff: number = 0) {
+  constructor(
+    status: TradeValidationStatus,
+    price?: number,
+    sellerTariff: number = 0,
+    buyerTariff: number = 0
+  ) {
     this.price = price
     this.status = status
     this.sellerTariff = sellerTariff

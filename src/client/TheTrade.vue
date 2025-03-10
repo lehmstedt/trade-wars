@@ -65,7 +65,9 @@ async function trade() {
       </select>
       <p>Price in {{ currency.name }} : {{ validation?.price?.toFixed(2) }}</p>
       <p>Tariff value: {{ (validation?.buyerTariff ?? 0).toFixed(2) }}</p>
-      <p>Total price: {{ ((validation?.price ?? 0) + (validation?.buyerTariff ?? 0)).toFixed(2) }}</p>
+      <p>
+        Total price: {{ ((validation?.price ?? 0) + (validation?.buyerTariff ?? 0)).toFixed(2) }}
+      </p>
       <p>Tariff for the seller : {{ (validation?.sellerTariff ?? 0).toFixed(2) }}</p>
       <button :disabled="!validation?.isValid" @click="trade">Trade</button>
       <p v-if="validation?.status">{{ TradeValidationStatus[validation.status] }}</p>

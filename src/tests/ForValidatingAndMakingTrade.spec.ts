@@ -428,14 +428,11 @@ describe('For validating and making trade', () => {
     expect(sellerAfter?.getResourceQty(sellerRes)).toEqual(0)
   })
 
-  it('should make the seller pay a tariff when it has one set on sold resource', async() => {
+  it('should make the seller pay a tariff when it has one set on sold resource', async () => {
     const buyerRes = new Resource('Buyer res')
     const sellerRes = new Resource('Seller res')
 
-    const buyer = new CountryBuilder()
-      .withName('Buyer')
-      .withResource(buyerRes, 1)
-      .build()
+    const buyer = new CountryBuilder().withName('Buyer').withResource(buyerRes, 1).build()
 
     const seller = new CountryBuilder()
       .withName('Seller')
@@ -444,7 +441,6 @@ describe('For validating and making trade', () => {
       .build()
 
     const tradeRequest = new TradeRequest(buyer.id, seller.id, sellerRes, 1, buyerRes)
-
 
     const forMakingTrade = testConfigurator.buildForMakingTrade(
       [buyer, seller],
@@ -460,14 +456,11 @@ describe('For validating and making trade', () => {
     expect(sellerAfter?.getStateResourceQuantity(sellerRes)).toEqual(0.1)
   })
 
-  it('should make the seller pay a tariff when it has one set on sold resource, and resources have not the same price', async() => {
+  it('should make the seller pay a tariff when it has one set on sold resource, and resources have not the same price', async () => {
     const buyerRes = new Resource('Buyer res')
     const sellerRes = new Resource('Seller res')
 
-    const buyer = new CountryBuilder()
-      .withName('Buyer')
-      .withResource(buyerRes, 2)
-      .build()
+    const buyer = new CountryBuilder().withName('Buyer').withResource(buyerRes, 2).build()
 
     const seller = new CountryBuilder()
       .withName('Seller')
@@ -476,7 +469,6 @@ describe('For validating and making trade', () => {
       .build()
 
     const tradeRequest = new TradeRequest(buyer.id, seller.id, sellerRes, 1, buyerRes)
-
 
     const forMakingTrade = testConfigurator.buildForMakingTrade(
       [buyer, seller],
@@ -492,7 +484,7 @@ describe('For validating and making trade', () => {
     expect(sellerAfter?.getStateResourceQuantity(sellerRes)).toEqual(0.2)
   })
 
-  it('should make the buyer pay a tariff when it has one on sold resource, and resources have not the same price', async() => {
+  it('should make the buyer pay a tariff when it has one on sold resource, and resources have not the same price', async () => {
     const buyerRes = new Resource('Buyer res')
     const sellerRes = new Resource('Seller res')
 
@@ -502,13 +494,9 @@ describe('For validating and making trade', () => {
       .withTariff(sellerRes, 25)
       .build()
 
-    const seller = new CountryBuilder()
-      .withName('Seller')
-      .withResource(sellerRes, 2)
-      .build()
+    const seller = new CountryBuilder().withName('Seller').withResource(sellerRes, 2).build()
 
     const tradeRequest = new TradeRequest(buyer.id, seller.id, sellerRes, 1, buyerRes)
-
 
     const forMakingTrade = testConfigurator.buildForMakingTrade(
       [buyer, seller],

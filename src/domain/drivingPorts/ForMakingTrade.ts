@@ -64,12 +64,10 @@ export class ForMakingTrade {
     )
 
     if (validation.buyerTariff > 0) {
-
       buyer.payTariff(buyerResource, validation.buyerTariff)
     }
 
     if (validation.sellerTariff > 0) {
-
       seller.payTariff(sellerResource, validation.sellerTariff)
     }
 

@@ -22,12 +22,19 @@ export function ValidateTrade(
 
   const price = unitPrice * soldQuantity
 
-  const tariffRate = buyer.getTariffOnResource(soldResource)
-  const tariffValue = price * 0.01 * tariffRate
+  const buyerTariffRate = buyer.getTariffOnResource(soldResource)
+  const buyerTariffValue = soldQuantity * 0.01 * buyerTariffRate
 
-  if (buyer.getResourceQty(currency) < price + tariffValue) {
-    return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer, price)
+  if (buyer.getResourceQty(currency) < price + buyerTariffValue) {
+    return new TradeValidation(TradeValidationStatus.InsufficientResourceFromBuyer, price, 0, buyerTariffValue)
+  } 
+
+  const sellerTariffRate = seller.getTariffOnResource(currency)
+  const sellerTariffValue = price * 0.01 * sellerTariffRate
+
+  if (seller.getResourceQty(soldResource) < soldQuantity + sellerTariffValue) {
+    return new TradeValidation(TradeValidationStatus.InsufficientResourceFromSeller, price, sellerTariffValue)
   }
 
-  return new TradeValidation(TradeValidationStatus.OK, price, tariffValue)
+  return new TradeValidation(TradeValidationStatus.OK, price, sellerTariffValue, buyerTariffValue)
 }

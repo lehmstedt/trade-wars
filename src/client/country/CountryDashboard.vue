@@ -22,12 +22,13 @@ type TariffQuery = { current: Tariff; newRate: number }
 
 let tariffsRef: Ref<TariffQuery[]> = ref([])
 const goals = await props.forListingCountryGoals.execute(props.country.id)
+const emit = defineEmits(['tariffUpdated'])
 
 await updateTariffs()
 
 async function setTariff(rate: number, resourceName: string) {
   await props.forSettingTariff.execute(props.country.id, rate, resourceName)
-  await updateTariffs()
+  emit('tariffUpdated')
 }
 
 async function updateTariffs() {
@@ -41,7 +42,7 @@ async function updateTariffs() {
     <h1>{{ country.name }}</h1>
     <h2>State Resources</h2>
     <div v-for="stateResource in country.stateResources" :key="stateResource.name">
-      {{ stateResource.name }} : {{ stateResource.quantity }}
+      {{ stateResource.name }} : {{ stateResource.quantity.toFixed(2) }}
     </div>
     <h2>Tariffs</h2>
     <div v-for="tariff in tariffsRef" :key="tariff.current.resourceName">

@@ -12,13 +12,15 @@ export enum TradeValidationStatus {
 export class TradeValidation {
   isValid: Boolean = false
   price?: number = 0
-  tariff?: number = 0
   status: TradeValidationStatus
+  sellerTariff: number = 0
+  buyerTariff: number = 0
 
-  constructor(status: TradeValidationStatus, price?: number, tariff?: number) {
+  constructor(status: TradeValidationStatus, price?: number, sellerTariff: number = 0, buyerTariff: number = 0) {
     this.price = price
     this.status = status
-    this.tariff = tariff
+    this.sellerTariff = sellerTariff
+    this.buyerTariff = buyerTariff
 
     if (this.status === TradeValidationStatus.OK) {
       this.isValid = true

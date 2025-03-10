@@ -66,6 +66,7 @@ onMounted(async () => {
           :for-listing-country-goals="forListingCountryGoals"
           :for-listing-country-inventory="forListingCountryInventory"
           :key="iteration"
+          @tariff-updated="updateGame"
         ></CountryDashboard>
         <CountryDashboard
           :country="countries[1]"
@@ -74,6 +75,7 @@ onMounted(async () => {
           :for-listing-country-goals="forListingCountryGoals"
           :for-listing-country-inventory="forListingCountryInventory"
           :key="iteration"
+          @tariff-updated="updateGame"
         ></CountryDashboard>
       </div>
     </Suspense>

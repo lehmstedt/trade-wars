@@ -63,9 +63,14 @@ export class ForMakingTrade {
       request.soldQuantity
     )
 
-    const tariff = validation.tariff ?? 0
-    if (tariff > 0) {
-      buyer.payTariff(buyerResource, tariff)
+    if (validation.buyerTariff > 0) {
+
+      buyer.payTariff(buyerResource, validation.buyerTariff)
+    }
+
+    if (validation.sellerTariff > 0) {
+
+      seller.payTariff(sellerResource, validation.sellerTariff)
     }
 
     await this.forApplyingTradeOnCountry.save(buyer)
